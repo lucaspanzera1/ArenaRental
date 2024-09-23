@@ -1,0 +1,80 @@
+body{
+    font-family: "Inter", sans-serif;
+    transition: background-image 0.3s ease, color 0.3s ease;
+    background-image: url(../../resources/images/fundo.senha.png);
+    background-attachment: fixed;
+    background-position: 50%;
+  }
+  body.dark-mode {
+    background-color: #262626;
+    color: #ffffff;
+    background-image: url(../../resources/images/fundo.senha.dark.png);
+  }
+#QuadCinza2{
+    width: 95%;
+    height: 3px;
+    background-color: #22222217;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+body.dark-mode #QuadCinza2{
+    background-color: white;
+}
+section{
+    padding-top: 150px;
+    padding-bottom: 100px;
+    margin-left: 230px;
+}
+section h1{
+    font-size: 45px;
+}
+section h2{
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: -30px;
+}
+input[type=password]{
+    font-size: 25px;
+    width: 600px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: transparent;
+}
+body.dark-mode input[type=password]{
+    border:  1px solid white;
+}
+input[type=submit]{
+    font-size: 24px;
+    font-weight: 100;
+    width: 220px;
+    height: 50px;
+    border: solid 1px black;
+    border-radius: 10px;
+    transition: 0.6s;
+    margin-top: 2%;
+}
+input[type=submit]{
+    font-size: 24px;
+    font-weight: 100;
+    width: 220px;
+    height: 50px;
+    border: solid 1px black;
+    border-radius: 10px;
+    transition: 0.6s;
+    margin-top: 2%;
+}
+input[type=submit]:hover{
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}    
+div div{
+    font-size: 28px;
+    font-weight: 200;
+    margin-top: 2%;
+}
+#SenhaS{
+    margin-left: 230px;
+}

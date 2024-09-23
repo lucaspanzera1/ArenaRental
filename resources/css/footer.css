@@ -1,0 +1,33 @@
+body{
+    font-family: "Inter", sans-serif;
+    background-color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+}
+
+body.dark-mode {
+    background-color: #262626;
+    color: #ffffff;
+}
+footer{
+font-size: 15px;
+   width: 98%;
+  height: 30px;
+  border-top: 3px solid #22222217;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+body.dark-mode footer{
+    border-top: 3px solid #ffffff17;
+}
+.footer-content{
+    display: flex;
+    gap: 0px 50px;
+}
+a{
+    color: black;
+}
+body.dark-mode a{
+    color: white;
+}

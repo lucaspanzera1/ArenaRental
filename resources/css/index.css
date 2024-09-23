@@ -1,0 +1,55 @@
+body{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0;
+}
+a{
+    text-decoration: none;
+}
+header{
+    background-color: white;
+}
+.quadra-list-container {
+    flex: 1;
+    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.quadra-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px 30px;
+    justify-content: center;
+    max-width: 1650px;
+    line-height: 0.4;
+}
+.quadra-item {
+    width: 250px;
+    margin-bottom: 30px;
+}
+.quadra-item img {
+    width: 250px;
+    height: 250px;
+    border-radius: 18px;
+    object-fit: cover;
+}
+.quadra-item h2 {
+    font-size: 20px;
+    margin-left: 10px;
+    line-height: 0.8;
+}
+.quadra-item p {
+    font-size: 19px;
+    font-weight: 200;
+    margin-left: 10px;
+    line-height: 0.4;
+}
+#search-container{
+    margin-top: 150px;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0 10px;
+    justify-content: center;
+}

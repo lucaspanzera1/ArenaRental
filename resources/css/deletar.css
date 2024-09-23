@@ -1,0 +1,79 @@
+body{
+    margin: 0;
+    font-family: "Inter", sans-serif;
+}
+body.dark-mode {
+    background-size: 100%;
+    background-color: #262626;
+    color: white;
+}
+#QuadCinza2{
+    width: 95%;
+    height: 3px;
+    background-color: #22222217;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+body.dark-mode #QuadCinza2{
+    background-color: white;
+}
+section{
+    display: grid;
+    grid-template-columns: auto;
+    padding-top: 250px;
+    padding-bottom: 100px;
+    margin-left: 15%;
+}
+section h1{
+    font-size: 45px;
+}
+section h2{
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: -30px;
+}
+section div h2 a{
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+#TT{
+    margin-left: 15%;
+    margin-top: 3%;
+    display: grid;
+    grid-template-columns: auto; 
+}
+#TT img{
+    margin-top: -50%;
+}
+div h3{
+    font-size: 25px;
+}
+#Continuar{
+    font-size: 24px;
+    font-weight: 100;
+    width: 220px;
+    height: 50px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.6s;
+    border: none;
+}
+body.dark-mode #Continuar{
+    background-color: #262626;
+    color: white;
+    border-style: none;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
+}
+ #Continuar:hover{
+    background-color: #d6d6d6;
+    font-weight: 600;
+}
+body.dark-mode #Continuar:hover{
+    background-color: black;
+    font-weight: 600;
+}
+@media (max-width: 1000px){
+  }
+

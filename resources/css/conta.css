@@ -1,0 +1,140 @@
+body{
+    font-family: "Inter", sans-serif;
+    transition: background-image 0.3s ease, color 0.3s ease;
+    background-image: url(../../resources/images/fundo.conta.png);
+    background-attachment: fixed;
+}
+body.dark-mode {
+    background-color: #262626;
+    color: #ffffff;
+    background-image: url(../../resources/images/fundo.conta.dark.png);
+}
+header{
+    background-color: #FFFFFF;
+}
+#Info h1{
+    font-size: 45px;
+    color: #0000FF;
+    transition: color 0.3s ease;
+}
+body.dark-mode #Info h1{
+    color: #9c079c;
+}
+#Info h2{
+  
+    font-size: 30px;
+}
+#Info{
+    padding-top: 150px;
+    margin-left: 10%;
+}
+section{
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 55% 45%;
+    justify-content: center;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+#Quadrados div{
+    background-color: #FFFFFF;
+    border: solid 1px black;
+    border-radius: 25px;
+    width: 465px;
+    height: 168px;
+    transition: 0.6s;
+    line-height: 1.0;
+}
+
+@media (max-width: 1700px) {
+    section {
+        grid-template-columns: 30% 30% 30%;
+        grid-template-rows: auto;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    #Quadrados div {
+        margin-top: 3.5%;
+        width: 95%;
+        height: auto;
+    }
+}
+/* Para telas de tamanho médio (tablets) */
+@media (max-width: 768px) {
+    section {
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    #Quadrados div {
+        width: 90%;
+        height: auto;
+    }
+}
+
+/* Para telas pequenas (smartphones) */
+@media (max-width: 480px) {
+    section {
+        grid-template-columns: 100%;
+        grid-template-rows: auto;
+        place-items: center;
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+
+    #Quadrados div {
+        width: 90%;
+        height: auto;
+    }
+
+    #Info h1{
+        margin-top: 50px;
+        font-size: 35px;
+    }
+    #Info h2{
+        font-size: 25px;
+    }
+    
+}
+body.dark-mode #Quadrados div{
+    background-color: #262626;
+    border: solid 1px white;
+    border-radius: 25px;
+    transition: 0.6s;
+}
+#Quadrados div h5{
+    margin-top: -3%;
+    font-size: 25px;
+    font-weight: 300;
+    margin-left: 5%;
+}
+#Quadrados div h6{
+    margin-left: 5%;
+    margin-top: -8%;
+    font-size: 20px;
+    font-weight: 300;
+}
+.quadrado svg path {
+    fill: black;
+  }
+body.dark-mode .quadrado svg path{
+    fill: white;
+  }
+body.dark-mode #Quadrados div h5{
+color: white;
+}
+body.dark-mode #Quadrados div h6{
+    color: white;
+  }
+
+section div:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+
+

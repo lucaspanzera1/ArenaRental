@@ -1,0 +1,77 @@
+body{
+  font-family: "Inter", sans-serif;
+  transition: background-image 0.3s ease, color 0.3s ease;
+  background-image: url(../../resources/images/fundo.minhaquadra.png);
+  background-attachment: fixed;
+  background-position: 50%;
+}
+body.dark-mode {
+  background-color: #262626;
+  color: #ffffff;
+  background-image: url(../../resources/images/fundo.minhaquadra.dark.png);
+}
+
+section{ 
+    width: 450px;
+    height: 675px;
+    border-right: 1px solid black;
+    padding-top: 2%;
+    padding-left: 2%;
+    padding-right: 4%;
+    transition: 0.6s;
+
+}
+section img{
+    width: 450px;
+    height: 450px;
+    border-radius: 15px;
+}
+section:hover{
+    cursor: pointer;
+}
+section h1{
+    font-size: 45px;
+    margin-bottom: -20px;
+   
+}
+section h2{
+    font-size: 32px;
+    font-weight: 300;
+}
+section h3{
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: -20px;
+}
+#form-cantainer{
+    padding-top: 150px;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 50px;
+}
+#dono-container{
+    display: grid;
+    grid-template-columns: 65px auto;
+    justify-content: left;
+    gap: 0px 15px;
+  }
+  #dono-container img{
+    width: 65px;
+    height: 65px;
+    border-radius: 100%;
+  }
+  #info-container h3{
+    font-weight: 300;
+    line-height: 0.1;
+  }
+  #dono-container h4{
+    font-size: 18px;
+  }
+  #dono-container h5{
+    font-size: 15px;
+    font-weight: 300;
+  }
+  #client-container{
+    line-height: 0.0;
+  }

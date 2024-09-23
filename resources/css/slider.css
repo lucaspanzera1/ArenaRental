@@ -1,0 +1,135 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+svg path {
+  fill: black;
+}
+body.dark-mode svg path{
+  fill: white;
+}
+body.dark-mode #filter-button {
+  background-color: #262626;
+  box-shadow: 0px 8px 16px 0px rgba(255, 255, 255, 0.2);
+
+}
+#filter-button {
+  width: 45px;
+  height: 45px;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.filter-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+.filter-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  max-width: 300px;
+  width: 90%;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+body.dark-mode .filter-container{
+  background-color: #262626;
+}
+.close-btn {
+  float: right;
+  cursor: pointer;
+  font-size: 18px;
+}
+.sport-options {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+.sport-option {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.sport-option.selected {
+  background-color: black;
+  color: white;
+}
+.price-range {
+  margin-bottom: 15px;
+}
+.price-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.price-inputs input {
+  width: 60px;
+}
+#filter-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#price-slider {
+  margin-top: 20px;
+  height: 10px;
+}
+.noUi-connect {
+  height: 10px;
+  background: #262626;
+}
+.noUi-touch-area {
+  background-color: rgb(146, 142, 142); 
+  border-radius: 15px;
+  width: 20px;
+  height: 20px;
+}
+.noUi-handle.noUi-handle-upper{
+  background-color: white;
+  border-radius: 15px;
+  width: 20px;
+  height: 20px;
+}
+.noUi-horizontal .noUi-handle{
+  background-color: white;
+  border-radius: 15px;
+  width: 20px;
+  height: 20px;
+}
+.noUi-handle:after{
+  display: none;
+}
+.noUi-handle:after, .noUi-handle:before{
+  display: none;
+}
+input#min-price{
+  border: none;
+  font-size: 17px;
+}
+input#max-price{
+  border: none;
+  font-size: 17px;
+}

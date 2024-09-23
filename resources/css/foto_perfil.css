@@ -1,0 +1,170 @@
+body{
+  font-family: "Inter", sans-serif;
+  background-color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-image: url(../../resources/images/fundo.registra.png);
+  background-attachment: fixed;
+  background-position: 100%;
+}
+body.dark-mode {
+  background-image: url(../../resources/images/fundo.registra.dark.png);
+  background-attachment: fixed;
+  background-color: #262626;
+  color: #ffffff;
+}
+section{
+  height: 89vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+#Quad{
+  width: 650px;
+  height: 551px;
+  background-color: white;
+  border-radius: 52px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+body.dark-mode #Quad{
+  background-color:  #262626;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
+}
+#Quad h1{
+  text-align: center;
+  font-weight: 500;
+  font-size: 30px;
+}
+#Quad h2{
+  font-size: 28px;
+  font-weight: 400;
+}
+#QuadCinza2{
+    width: 98%;
+    height: 3px;
+    background-color: #22222217;
+}
+body.dark-mode #QuadCinza{
+  background-color: white;
+}
+nav{
+    padding-top: 15px;
+}
+#picture__input {
+    display: none;
+  }
+  .picture {
+    margin-left: 35%;
+    width: 170px;
+    height: 170px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: color 300ms ease-in-out, background 300ms ease-in-out;
+    transition: 0.6s;
+    outline: none;
+    overflow: hidden;
+    border-radius: 100%;
+  }
+  
+  .picture:hover {
+    color: white;
+    background-color: black;
+    width: 180px;
+    height: 180px;
+  }
+  
+  .picture:active {
+    color: turquoise;
+    background: #eee;
+  }
+  
+  .picture:focus {
+    color: #777;
+    background: #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .picture__img {
+    max-width: 100%;
+  }
+
+  #Continuar{
+    margin-top: 5%;
+    border: none;
+    font-weight: 350;
+    font-size: 32px;
+    font-weight: bolde;
+    width: 85%;
+    height: 74px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.6s;
+}
+body.dark-mode #Continuar{
+    background-color: #262626;
+    color: white;
+    border-style: none;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
+}
+ #Continuar:hover{
+    background-color: #d6d6d6;
+    font-weight: 600;
+}
+body.dark-mode #Continuar:hover{
+    background-color: black;
+    font-weight: 600;
+}
+input::placeholder{
+    color: black;
+}
+#txt1{
+    font-size: 50px;
+}
+.picture img{
+    width: 180px;
+    height: 180px;
+  }
+  .dropdown-child{
+    display: none;
+}
+@media (max-width: 480px){
+  #Quad {
+      width: 307.5px; /* 650px - 25% */
+      height: 413.25px; /* 551px - 25% */
+      background-color: white;
+      border-radius: 52px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+      text-align: center;
+  }
+  
+  #Quad h1 {
+      text-align: center;
+      font-weight: 500;
+      font-size: 22.5px; /* 30px - 25% */
+  }
+  
+  #Quad h2 {
+      font-size: 24px; /* 32px - 25% */
+      font-weight: 400;
+  }
+  #Continuar {
+      margin-top: 5%;
+      border: none;
+      font-weight: 350;
+      font-size: 24px; /* 32px - 25% */
+      width: 63.75%; /* 85% - 25% */
+      height: 55.5px; /* 74px - 25% */
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.6s;
+  }
+  .picture {
+    margin-left: 35%;
+    width: 100px;
+    height: 100px;
+   }
+ }

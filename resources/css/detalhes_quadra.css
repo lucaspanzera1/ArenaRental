@@ -1,0 +1,60 @@
+header{
+  background-color: white;
+}
+section{
+  padding-top: 100px;
+  padding-left: 15%;  
+}
+section h1{
+  font-size: 35px;
+}
+section img{
+  width: 680px;
+  height: 500px;
+  border-radius: 45px 0px 0px 45px;
+}
+.info-container h3{
+  font-weight: 300;
+  line-height: 0.1;
+}
+#images-container{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: left;
+  gap: 10px;
+}
+#mini-images-container{
+  display: grid;
+}
+#mini-images-container img{
+  width: 300px;
+  height: 245px;
+  border-radius: 0px;
+}
+#mini1 img{
+  border-radius: 0px 45px 0px 0px;
+}
+#mini2 img{
+  border-radius: 0px 0px 45px 0px;
+}
+#dono-container{
+  display: grid;
+  grid-template-columns: 65px auto;
+  justify-content: left;
+  gap: 0px 15px;
+}
+#dono-container img{
+  width: 65px;
+  height: 65px;
+  border-radius: 100%;
+}
+#dono-container h4{
+  font-size: 18px;
+}
+#dono-container h5{
+  font-size: 15px;
+  font-weight: 300;
+}
+#client-container{
+  line-height: 0.0;
+}
