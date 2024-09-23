@@ -1,6 +1,6 @@
-create database bd_arenauser;
+create database arenarental;
 
-use bd_arenauser;
+use arenarental;
 
 CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,36 +16,37 @@ CREATE TABLE cliente (
     imagem_perfil VARCHAR(220) NOT NULL
 );
 
-    CREATE TABLE imagem (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome_imagem VARCHAR(220) NOT NULL,
-        id_user INT NOT NULL,
-        FOREIGN KEY (id_user) REFERENCES cadastro(id)
-    );
-    
-    CREATE TABLE quadra (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome_quadra VARCHAR(255) NOT NULL,
-    esporte VARCHAR(255) NOT NULL,
+CREATE TABLE proprietario (
+    id INT PRIMARY KEY,
+    nome_espaco VARCHAR(255) NOT NULL,
     localizacao VARCHAR(255) NOT NULL,
+    cep VARCHAR(10) NOT NULL,
     descricao TEXT,
-    valor DECIMAL(10, 2) NOT NULL,
-    id_user INT NOT NULL,
-    nome_dono VARCHAR(255) NOT NULL,
-    horario_abre VARCHAR(5) NOT NULL,
-    horario_fecha VARCHAR(5) NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES cadastro(id),
-    FOREIGN KEY (nome_dono) REFERENCES cadastro(nome)
+    FOREIGN KEY (id) REFERENCES Cliente(id)
+);
+CREATE TABLE recursos_espaco (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    proprietario_id INT,
+    recurso VARCHAR(50) NOT NULL,
+    FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)
 );
 
-   CREATE TABLE imagem_quadra (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome_imagem VARCHAR(220) NOT NULL,
-        id_dono INT NOT NULL,
-        FOREIGN KEY (id_dono) REFERENCES quadra(id)
-    );
+CREATE TABLE quadra (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    proprietario_id INT,
+    nome VARCHAR(255) NOT NULL,
+    esporte VARCHAR(100) NOT NULL,
+    coberta BOOLEAN NOT NULL,
+    tipo_aluguel ENUM('day_use', 'por_hora') NOT NULL,
+    FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)
+);
 
-SELECT * FROM cadastro;	
-SELECT * FROM quadra;	
-SELECT * FROM imagem;
-SELECT * FROM imagem_quadra;
+CREATE TABLE horario_funcionamento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quadra_id INT,
+    dia_semana ENUM('domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado') NOT NULL,
+    hora_abertura TIME NOT NULL,
+    hora_fechamento TIME NOT NULL,
+    FOREIGN KEY (quadra_id) REFERENCES quadra(id)
+);
+
