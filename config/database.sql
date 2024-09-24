@@ -2,6 +2,7 @@ create database arenarental;
 
 use arenarental;
 
+-- Tabela Cliente
 CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL,
@@ -16,6 +17,7 @@ CREATE TABLE cliente (
     imagem_perfil VARCHAR(220) NOT NULL
 );
 
+-- Tabela Proprietario (herda de Cliente)
 CREATE TABLE proprietario (
     id INT PRIMARY KEY,
     nome_espaco VARCHAR(255) NOT NULL,
@@ -38,6 +40,8 @@ CREATE TABLE quadra (
     esporte VARCHAR(100) NOT NULL,
     coberta BOOLEAN NOT NULL,
     tipo_aluguel ENUM('day_use', 'por_hora') NOT NULL,
+	valor DECIMAL(10, 2) NOT NULL,
+    imagem_quadra VARCHAR(220) NOT NULL,
     FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)
 );
 
@@ -49,4 +53,3 @@ CREATE TABLE horario_funcionamento (
     hora_fechamento TIME NOT NULL,
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)
 );
-

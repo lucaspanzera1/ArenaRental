@@ -5,19 +5,16 @@ class User
 {
     public static function getAllQuadras($esporte = null, $valor_min = null, $valor_max = null) {
         $pdo = Conexao::getInstance();
-        $sql = "SELECT q.*, iq.nome_imagem 
-                FROM quadra q
-                LEFT JOIN imagem_quadra iq ON q.id = iq.id_dono
-                WHERE 1=1";
+        $sql = "SELECT * FROM quadra WHERE 1=1";
         
         // Adiciona a cláusula de esporte somente se $esporte for diferente de 'todos' e não for null
         if ($esporte && $esporte !== 'todos') {
-            $sql .= " AND q.esporte = :esporte";
+            $sql .= " AND esporte = :esporte";
         }
     
         // Filtro por faixa de valores
         if ($valor_min !== null && $valor_max !== null) {
-            $sql .= " AND q.valor BETWEEN :valor_min AND :valor_max";
+            $sql .= " AND valor BETWEEN :valor_min AND :valor_max";
         }
     
         // Ordenar de forma aleatória
@@ -31,8 +28,8 @@ class User
     
         // Vincula os parâmetros de valor mínimo e máximo
         if ($valor_min !== null && $valor_max !== null) {
-            $statement->bindValue(':valor_min', $valor_min, PDO::PARAM_INT);
-            $statement->bindValue(':valor_max', $valor_max, PDO::PARAM_INT);
+            $statement->bindValue(':valor_min', $valor_min, PDO::PARAM_STR);
+            $statement->bindValue(':valor_max', $valor_max, PDO::PARAM_STR);
         }
     
         $statement->execute();
