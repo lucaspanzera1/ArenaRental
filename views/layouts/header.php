@@ -49,7 +49,7 @@ if (isset($_SESSION['client'])) {
             <button id="Name"> <?php echo "" . htmlspecialchars($client->getFirstName()); ?></button>
             <a href="../client/conta.php"><button>Conta</button></a>
             <?php if ($client->getType() === 'cliente'): ?>
-                <a href="../owner/form.owner1.php"><button>Anuncie!</button></a>
+                <a href="../client/form.owner1.php"><button>Anuncie!</button></a>
                 <?php endif; ?>
             <form method="POST">
                 <button type="submit" name="logoff" class="logoff-btn">Logoff</button>

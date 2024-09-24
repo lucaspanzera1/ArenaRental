@@ -2,6 +2,10 @@ create database arenarental;
 
 use arenarental;
 
+select * from cliente;
+select * from proprietario;
+select * from recursos_espaco;
+
 -- Tabela Cliente
 CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,15 +28,9 @@ CREATE TABLE proprietario (
     localizacao VARCHAR(255) NOT NULL,
     cep VARCHAR(10) NOT NULL,
     descricao TEXT,
+    recursos TEXT,
     FOREIGN KEY (id) REFERENCES Cliente(id)
 );
-CREATE TABLE recursos_espaco (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    proprietario_id INT,
-    recurso VARCHAR(50) NOT NULL,
-    FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)
-);
-
 CREATE TABLE quadra (
     id INT PRIMARY KEY AUTO_INCREMENT,
     proprietario_id INT,
