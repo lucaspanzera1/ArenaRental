@@ -17,7 +17,7 @@
 
 <section>
    <div> 
-    <h1>Olá,  <?php echo "" . htmlspecialchars($client->getFirstName()); ?>!</h1>
+    <h1>Olá,  <?php echo "" . htmlspecialchars($client->getName()); ?>!</h1>
     <h2>Lamentamos ver você partir!</h2>
     </div> 
 </section>

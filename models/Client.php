@@ -37,7 +37,7 @@ class Client extends User
             'nome' => $this->name,
             'email' => $this->email,
             'tipo' => $this->type,
-            'data_registro' => $this->registrationDate,
+            'data_registro' => $this->registrationDate
         ];
     }
 
@@ -61,12 +61,7 @@ class Client extends User
     public function getRegistrationDate() {
         return $this->registrationDate;
     }
-    // Função para obter a primeira palavra do nome
-    public function getFirstName()
-    {
-        // Divide o nome em palavras e retorna a primeira
-        return explode(' ', $this->name)[0];
-    }
+    // Função para obter a primeira palavra do nom
 
     public function getProfilePicture()
     {
