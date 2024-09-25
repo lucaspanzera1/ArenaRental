@@ -3,8 +3,7 @@ require_once '../../models/Owner.php';
 require_once '../../models/Client.php';
 require_once '../../models/User.php';
 
-session_start(); // Certifique-se de iniciar a sessão se ainda não foi feito
-
+session_start(); // Iniciar sessão
 
 // Verifique se há dados de cliente na sessão
 if (isset($_SESSION['client'])) {
@@ -14,13 +13,17 @@ if (isset($_SESSION['client'])) {
         $_SESSION['client']['nome'],
         $_SESSION['client']['email'],
         $_SESSION['client']['tipo'],
-        $_SESSION['client']['data_registro'],
-
+        $_SESSION['client']['data_registro']
     );
-    if (isset($_SESSION['client'])) {
-        $dataRegistro = $_SESSION['client']['data_registro'];
-        // Converte e formata a data para o formato brasileiro
-        $dataFormatoBrasileiro = date('d/m/Y', strtotime($dataRegistro));
+
+    // Formatar a data de registro
+    $dataRegistro = $_SESSION['client']['data_registro'];
+    $dataFormatoBrasileiro = date('d/m/Y', strtotime($dataRegistro));
+
+    // Verifique se o cliente é do tipo "Dono"
+    if ($client->getType() === 'Dono') {
+        // Carregue as informações do proprietário usando o ID do cliente
+        $owner = Owner::getOwnerById($client->getId());
     }
     // Verifique se o botão de logoff foi pressionado
     if (isset($_POST['logoff'])) {

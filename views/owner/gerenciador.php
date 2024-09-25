@@ -1,18 +1,4 @@
-<?php
-require_once '../../models/Owner.php';
 
-$owner = null;
-if (isset($_SESSION['owner']) && isset($_SESSION['client'])) {
-    $owner = Owner::fromClientData($_SESSION['client'], $_SESSION['owner']);
-}
-
-// Verifique se o botão de logoff foi pressionado
-if (isset($_POST['logoff'])) {
-    session_destroy();
-    header("Location: index.php"); // Redireciona para a página inicial após o logoff
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -29,17 +15,23 @@ if (isset($_POST['logoff'])) {
 
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/verification.php'; ?>
-
 <section>
-<?php if ($owner): ?>
-<div id="Info">
-    <h1>Conta</h1>
-    <h2><p>Nome do Espaço: <?php echo htmlspecialchars($owner->getNomeEspaco()); ?></p></h2>
-</div>
-<?php else: ?>
-        <p>Informações do proprietário não disponíveis.</p>
-    <?php endif; ?>
+<h1>Bem-vindo, <?php echo htmlspecialchars($client->getName()); ?></h1>
+        <p>Tipo de usuário: <?php echo htmlspecialchars($client->getType()); ?></p>
+    <?php 
+         if ($owner) {
+            // Exiba informações adicionais do proprietário
+            echo "<h2>Informações do Proprietário</h2>";
+            echo "<p>Nome do Espaço: " . htmlspecialchars($owner->getNomeEspaco()) . "</p>";
+            echo "<p>Localização: " . htmlspecialchars($owner->getLocalizacao()) . "</p>";
+            echo "<p>CEP: " . htmlspecialchars($owner->getCep()) . "</p>";
+            echo "<p>Descrição: " . htmlspecialchars($owner->getDescricao()) . "</p>";
+            echo "<p>Recursos: " . htmlspecialchars($owner->getRecursos()) . "</p>"; // Exibe recursos
+        }
+    
+    ?>
 </section>
+
 
 </body>
 </html>

@@ -288,15 +288,16 @@ public function updateClient($name, $email)
         }
     }
 
- public function registerOwner($nomeEspaco, $localizacao, $cep, $descricao)
+    public function registerOwner($nomeEspaco, $localizacao, $cep, $descricao)
     {
         $pdo = Conexao::getInstance();
-
+    
         try {
             $pdo->beginTransaction();
-
+    
             // Inserir na tabela Proprietario
-            $sql = "INSERT INTO proprietario (id, nome_espaco, localizacao, cep, descricao) VALUES (:id, :nome_espaco, :localizacao, :cep, :descricao)";
+            $sql = "INSERT INTO proprietario (id, nome_espaco, localizacao, cep, descricao) 
+                    VALUES (:id, :nome_espaco, :localizacao, :cep, :descricao)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
             $stmt->bindParam(':nome_espaco', $nomeEspaco, PDO::PARAM_STR);
@@ -304,57 +305,56 @@ public function updateClient($name, $email)
             $stmt->bindParam(':cep', $cep, PDO::PARAM_STR);
             $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
             $stmt->execute();
-
+    
             // Atualizar o tipo do cliente para 'Dono'
             $sqlUpdateTipo = "UPDATE cliente SET tipo = 'Dono' WHERE id = :id";
             $stmtUpdateTipo = $pdo->prepare($sqlUpdateTipo);
             $stmtUpdateTipo->bindParam(':id', $this->id, PDO::PARAM_INT);
             $stmtUpdateTipo->execute();
-
+    
             $pdo->commit();
-
-            // Atualizar o tipo na sessão
+    
+            // Atualizar o tipo na sessão e redirecionar
             $this->type = 'Dono';
             $this->saveToSession();
-
-            echo "<script type='text/javascript'>alert('Registro de proprietário realizado com sucesso!'); window.location.href='../views/client/form.owner2.php';</script>";
+    
+            echo "<script>alert('Registro de proprietário realizado com sucesso!'); 
+                  window.location.href='../views/client/form.owner2.php';</script>";
             exit();
         } catch (Exception $e) {
             $pdo->rollBack();
-            echo "<script type='text/javascript'>alert('Erro ao registrar proprietário. Tente novamente.'); window.location.href='../views/client/form.owner1.php';</script>";
+            echo "<script>alert('Erro ao registrar proprietário. Tente novamente.'); 
+                  window.location.href='../views/client/form.owner1.php';</script>";
             exit();
         }
     }
     public function registerOwnerResources($recursos)
     {
         $pdo = Conexao::getInstance();
-
+    
         try {
-            // Ensure $recursos is an array
-            if (!is_array($recursos)) {
-                $recursos = [$recursos];
-            }
-
-            // Remove any empty values
-            $recursos = array_filter($recursos);
-
-            // Convert the array of resources to a JSON string
+            // Certifique-se de que $recursos é um array, removendo valores vazios
+            $recursos = array_filter((array) $recursos);
+    
+            // Converter o array de recursos para uma string JSON
             $recursosJson = json_encode($recursos);
-
-            // Update the proprietario table with the resources
+    
+            // Atualizar a tabela proprietario com os recursos
             $sql = "UPDATE proprietario SET recursos = :recursos WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':recursos', $recursosJson, PDO::PARAM_STR);
             $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
             $stmt->execute();
-
+    
             if ($stmt->rowCount() > 0) {
-                echo "<script type='text/javascript'>alert('Recursos registrados com sucesso!'); window.location.href='../views/owner/gerenciador.php';</script>";
+                echo "<script>alert('Recursos registrados com sucesso!'); 
+                      window.location.href='../views/owner/gerenciador.php';</script>";
             } else {
                 throw new Exception("Nenhum registro foi atualizado. Verifique se o proprietário existe.");
             }
         } catch (Exception $e) {
-            echo "<script type='text/javascript'>alert('Erro ao registrar recursos: " . $e->getMessage() . "'); window.location.href='../views/client/form.owner2.php';</script>";
+            echo "<script>alert('Erro ao registrar recursos: " . $e->getMessage() . "'); 
+                  window.location.href='../views/client/form.owner2.php';</script>";
         }
         exit();
     }

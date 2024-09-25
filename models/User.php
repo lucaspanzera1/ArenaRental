@@ -212,7 +212,7 @@ class User
             $this->showErrorAndRedirect("Sessão de usuário não encontrada.", "../views/auth/login.php");
         }
         $clientData = $_SESSION['client'];
-        $client = new Client($clientData['id'], $clientData['nome'], $clientData['email'], $clientData['tipo'], $clientData['data_registro'], $clientData['username']);
+        $client = new Client($clientData['id'], $clientData['nome'], $clientData['email'], $clientData['tipo'], $clientData['data_registro']);
         $userId = $client->getId();
 
         // Atualizar o registro do usuário
