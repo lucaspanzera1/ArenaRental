@@ -7,7 +7,7 @@ class Owner extends Client {
     private $localizacao;
     private $cep;
     private $descricao;
-    private $recursos; // Nova propriedade
+    private $recursos;
 
     public function __construct($id, $name, $email, $type, $registrationDate, $nomeEspaco, $localizacao, $cep, $descricao, $recursos) {
         parent::__construct($id, $name, $email, $type, $registrationDate);
@@ -15,7 +15,7 @@ class Owner extends Client {
         $this->localizacao = $localizacao;
         $this->cep = $cep;
         $this->descricao = $descricao;
-        $this->recursos = $recursos; // Inicializa a nova propriedade
+        $this->recursos = $recursos;
     }
     // Getters para acessar os atributos
     public function getNomeEspaco() {
@@ -90,5 +90,18 @@ class Owner extends Client {
             echo "Erro ao cadastrar quadra.";
         }
     }
-    
+    public function getQuadras() {
+        $pdo = Conexao::getInstance();
+        $stmt = $pdo->prepare("
+            SELECT id, nome, esporte, coberta, tipo_aluguel, valor, imagem_quadra
+            FROM quadra
+            WHERE proprietario_id = :proprietario_id
+        ");
+        
+        $id = $this->getId(); // Armazena o ID em uma variável
+        $stmt->bindParam(':proprietario_id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

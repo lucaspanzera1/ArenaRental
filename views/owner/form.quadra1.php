@@ -14,7 +14,6 @@
 
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/verification.php'; ?>
-<h1><?php echo "" . htmlspecialchars($owner->getId()) ?></h1>
 <form action="../../controllers/OwnerController.php?action=registerQuadra" method="POST">
 <section>
     <h1>Cadastre sua quadra!</h1>

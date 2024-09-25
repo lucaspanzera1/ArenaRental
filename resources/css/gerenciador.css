@@ -43,5 +43,15 @@ a{
     text-decoration: none;
     color: black;
 }
+.quadra {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
 
+.quadra img {
+    max-width: 100%;
+    height: auto;
+}
 
