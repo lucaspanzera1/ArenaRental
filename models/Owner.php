@@ -69,25 +69,27 @@ class Owner extends Client {
         }
         return null;
     }
-    public function registerQuadra($nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor) {
+    public function registerQuadra($ownerId, $nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor) {
         $pdo = Conexao::getInstance();
-
+    
         $stmt = $pdo->prepare("
             INSERT INTO quadra (proprietario_id, nome, esporte, coberta, tipo_aluguel, valor, imagem_quadra)
             VALUES (:proprietario_id, :nome, :esporte, :coberta, :tipo_aluguel, :valor, 'default.jpg')
         ");
-
-        $stmt->bindParam(':proprietario_id', $this->id, PDO::PARAM_INT); // ID do proprietário
+    
+        $stmt->bindParam(':proprietario_id', $ownerId, PDO::PARAM_INT);
         $stmt->bindParam(':nome', $nomeQuadra, PDO::PARAM_STR);
         $stmt->bindParam(':esporte', $esporte, PDO::PARAM_STR);
         $stmt->bindParam(':coberta', $coberta, PDO::PARAM_BOOL);
         $stmt->bindParam(':tipo_aluguel', $tipoAluguel, PDO::PARAM_STR);
         $stmt->bindParam(':valor', $valor, PDO::PARAM_STR);
-
+    
         if ($stmt->execute()) {
             echo "Quadra cadastrada com sucesso!";
         } else {
             echo "Erro ao cadastrar quadra.";
+            // Para depuração: exibir erros SQL
+            print_r($stmt->errorInfo());
         }
     }
     public function getQuadras() {

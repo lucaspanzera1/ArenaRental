@@ -19,19 +19,19 @@
     <h1>Cadastre sua quadra!</h1>
     <input type="text" placeholder="Nome" id="nome" name="nome">
     <select id="esporte" name="esporte" required>
-            <option value="" disabled selected>Esporte</option>
-            <option value="Futebol">Futebol</option>
-            <option value="Futsal">Futsal</option>
-            <option value="Futvôlei">Futvôlei</option>
+        <option value="" disabled selected>Esporte</option>
+        <option value="Futebol">Futebol</option>
+        <option value="Futsal">Futsal</option>
+        <option value="Futvôlei">Futvôlei</option>
     </select>
     <select id="quadrac" name="quadrac" required>
-            <option value="coberta">Quadra coberta</option>
-            <option value="descoberta">Quadra descoberta</option>
+        <option value="coberta">Quadra coberta</option>
+        <option value="descoberta">Quadra descoberta</option>
     </select>
     <div class="radio-group">
         <h3>Aluguel por:</h3>
         <div class="radio-option">
-            <input type="radio" id="day-use" name="rental-type" value="day use">
+            <input type="radio" id="day-use" name="rental-type" value="day use" checked>
             <h3>Day use</h3>
         </div>
         <div class="radio-option">
