@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registre sua quadra! | © 2024 Arena Rental, Inc.</title>
+    <title>Gerenciador de quadras. | © 2024 Arena Rental, Inc.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -15,19 +14,50 @@
 
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/verification.php'; ?>
-
+<h1><?php echo "" . htmlspecialchars($owner->getId()) ?></h1>
+<form action="../../controllers/OwnerController.php?action=registerQuadra" method="POST">
 <section>
-    <div>
-    <h2>Etapa 1</h2>
-    <h1>Fale um pouco da sua quadra.</h1>
-    <form action="../../controllers/OwnerController.php?action=etapa1" method="post">
-    <input id="Desc" name="descricao" type="text" placeholder="Descrição"></br>
-    <button type="submit" id="Continuar">Continuar</button>
-  </form>
+    <h1>Cadastre sua quadra!</h1>
+    <input type="text" placeholder="Nome" id="nome" name="nome">
+    <select id="esporte" name="esporte" required>
+            <option value="" disabled selected>Esporte</option>
+            <option value="Futebol">Futebol</option>
+            <option value="Futsal">Futsal</option>
+            <option value="Futvôlei">Futvôlei</option>
+    </select>
+    <select id="quadrac" name="quadrac" required>
+            <option value="coberta">Quadra coberta</option>
+            <option value="descoberta">Quadra descoberta</option>
+    </select>
+    <div class="radio-group">
+        <h3>Aluguel por:</h3>
+        <div class="radio-option">
+            <input type="radio" id="day-use" name="rental-type" value="day use">
+            <h3>Day use</h3>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="por-hora" name="rental-type" value="por hora">
+            <h3>Por hora</h3>
+        </div>
     </div>
-    <div>
-  </div>
+    <div id="priceText">Determine o preço <span id="selectedOption">por hora</span>.</div>
+    <div id="priceValue">R$<input type="number" id="priceInput" name="priceInput" value="99" min="0"></div>
+    <button type="submit">Registrar</button>
 </section>
-  
+</form>
+<script>
+        const radioButtons = document.querySelectorAll('input[name="rental-type"]');
+        const selectedOption = document.getElementById('selectedOption');
+        const priceInput = document.getElementById('priceInput');
+
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                selectedOption.textContent = this.value;
+            });
+        });
+
+        // Inicializar com o valor padrão
+        document.getElementById('por-hora').checked = true;
+    </script>
 </body>
 </html>

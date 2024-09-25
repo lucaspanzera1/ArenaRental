@@ -21,10 +21,24 @@
 <div id="Info">
 <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?></h1>
 <h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?></h2>
-   
 
 <?php $recursos = $owner->getRecursos();?>
 <p id="recursos"></p>
+
+<a href="form.quadra1.php">Adicionar nova quadra.</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
     // Recebendo os recursos do PHP via JSON

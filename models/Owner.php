@@ -17,7 +17,6 @@ class Owner extends Client {
         $this->descricao = $descricao;
         $this->recursos = $recursos; // Inicializa a nova propriedade
     }
-
     // Getters para acessar os atributos
     public function getNomeEspaco() {
         return $this->nomeEspaco;
@@ -68,8 +67,28 @@ class Owner extends Client {
                 $ownerData['recursos']
             );
         }
-    
         return null;
+    }
+    public function registerQuadra($nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor) {
+        $pdo = Conexao::getInstance();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO quadra (proprietario_id, nome, esporte, coberta, tipo_aluguel, valor, imagem_quadra)
+            VALUES (:proprietario_id, :nome, :esporte, :coberta, :tipo_aluguel, :valor, 'default.jpg')
+        ");
+
+        $stmt->bindParam(':proprietario_id', $this->id, PDO::PARAM_INT); // ID do proprietário
+        $stmt->bindParam(':nome', $nomeQuadra, PDO::PARAM_STR);
+        $stmt->bindParam(':esporte', $esporte, PDO::PARAM_STR);
+        $stmt->bindParam(':coberta', $coberta, PDO::PARAM_BOOL);
+        $stmt->bindParam(':tipo_aluguel', $tipoAluguel, PDO::PARAM_STR);
+        $stmt->bindParam(':valor', $valor, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            echo "Quadra cadastrada com sucesso!";
+        } else {
+            echo "Erro ao cadastrar quadra.";
+        }
     }
     
 }

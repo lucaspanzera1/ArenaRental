@@ -1,73 +1,30 @@
 <?php
-
-require_once '../models/Owner.php';
-require_once '../models/Client.php';
+include '../models/Conexao.php';
+include '../models/Quadra.php';
+include '../models/Owner.php';
 
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verifica qual é a ação solicitada na URL
-    if (isset($_GET['action']) && $_GET['action'] === 'etapa1') {
-        $descricao = $_POST["descricao"];
-        $id_user = $_SESSION['client']['id'];
-        $nome_dono = $_SESSION['client']['nome'];
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
-        $owner = new Owner();
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if ($action === 'registerQuadra' && isset($_SESSION['client'])) {
+        $clientData = $_SESSION['client'];
+        $ownerId = $clientData['id']; // Supondo que o ID do proprietário está na sessão
 
-        // Insere os dados da quadra no banco
-        if ($owner->inserirEtapa1($descricao, $id_user, $nome_dono)) {
-            echo "
-                <script type=\"text/javascript\">
-                    alert('Quadra registrada com sucesso!');
-                    window.location.href = '../views/owner/form.quadra2.php';
-                </script>
-            ";
-            exit();
-        } else {
-            echo "
-                <script type=\"text/javascript\">
-                    alert('Erro ao registrar a quadra.');
-                    window.location.href = '../views/owner/form.quadra1.php';
-                </script>
-            ";
-            exit();
-        }
-    } elseif (isset($_GET['action']) && $_GET['action'] === 'etapa2') {
-        $titulo = $_POST["Titulo"];
-        $esporte = $_POST["esporte"];
-        $localizacao = $_POST["Localizacao"];
-        $descricao = "";
-        $valor = $_POST["Valor"];
-        $id_user = $_SESSION['client']['id'];
-        $nome_dono = $_SESSION['client']['nome'];
+        $nome = $_POST['nome'];
+        $esporte = $_POST['esporte'];
+        $quadrac = $_POST['quadrac'] === 'coberta' ? 1 : 0; // Converte para booleano (coberta = 1)
+        $rentalType = $_POST['rental-type'];
+        $price = $_POST['priceInput'];
+        
+        // Crie a instância da classe Quadra e salve no banco de dados
+        $quadra = new Quadra();
+        $quadra->registerQuadra($ownerId, $nome, $esporte, $quadrac, $rentalType, $price);
 
-        $owner = new Owner();
-
-        // Atualiza ou insere os dados adicionais da quadra
-        if ($owner->atualizarQuadra($titulo, $esporte, $localizacao, $descricao, $valor, $id_user, $nome_dono)) {
-            echo "
-                <script type=\"text/javascript\">
-                    alert('Quadra atualizada com sucesso!');
-                    window.location.href = '../index.php';
-                </script>
-            ";
-            exit();
-        } else {
-            echo "
-                <script type=\"text/javascript\">
-                    alert('Erro ao atualizar a quadra.');
-                    window.location.href = '../views/owner/form.quadra2.php';
-                </script>
-            ";
-            exit();
-        }
-    } if ($_GET['action'] === 'FotoQuadra') {
-         $owner = new Owner();
-        if (isset($_SESSION['client']['id'])) {
-            $owner->uploadFotoQuadra();
-        }
-        $origem = isset($_POST['origem']) ? $_POST['origem'] : null;
-        $owner->uploadFotoQuadra($origem);
-        }
+        // Redirecionar ou mostrar mensagem de sucesso
+        header("Location: ../views/success.php");
+        exit();
     }
+}
 ?>
