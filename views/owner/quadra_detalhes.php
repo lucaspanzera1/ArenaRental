@@ -37,7 +37,7 @@ if (isset($_GET['id'])) {
         echo "<p>Coberta: " . ($quadra['coberta'] ? 'Sim' : 'Não') . "</p>";
         echo "<p>Tipo de Aluguel: " . htmlspecialchars($quadra['tipo_aluguel']) . "</p>";
         echo "<p>Valor: R$ " . number_format($quadra['valor'], 2, ',', '.') . "</p>";
-        echo "<img src='../../resources/images/quadras/" . htmlspecialchars($quadra['imagem_quadra']) . "' alt='Imagem da Quadra'>";
+        echo "<img src='../" . htmlspecialchars($quadra['imagem_quadra']) . "' alt='Imagem da Quadra'>";
         // Outras informações que desejar exibir
     } else {
         echo "<p>Quadra não encontrada.</p>";

@@ -37,7 +37,7 @@ CREATE TABLE quadra (
     nome VARCHAR(255) NOT NULL,
     esporte VARCHAR(100) NOT NULL,
     coberta BOOLEAN NOT NULL,
-    tipo_aluguel ENUM('day_use', 'por_hora') NOT NULL,
+    tipo_aluguel ENUM('day use', 'por hora') NOT NULL,
 	valor DECIMAL(10, 2) NOT NULL,
     imagem_quadra VARCHAR(220) NOT NULL,
     FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)

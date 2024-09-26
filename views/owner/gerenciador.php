@@ -17,40 +17,35 @@
 <?php include '../layouts/verification.php'; ?>
 <?php 
          if ($owner){ ?>
-<section>
+<section id="SecInfo">
 <div id="Info">
 <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?></h1>
 <h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?></h2>
+ </div>
 
-<?php $recursos = $owner->getRecursos();?>
+<?php $recursos = $owner->getRecursos(); ?>
 <p id="recursos"></p>
 
-<a href="form.quadra1.php">Adicionar nova quadra.</a>
-
+<section id="quadras">
 <?php
 $quadras = $owner->getQuadras();
 if (!empty($quadras)) {
-    foreach ($quadras as $quadra) {
-        echo "<a href='quadra_detalhes.php?id=" . $quadra['id'] . "' class='quadra-link'>";
-        echo "<div class='quadra'>";
-        echo "<h3>" . htmlspecialchars($quadra['nome']) . "</h3>";
-        echo "<p>Esporte: " . htmlspecialchars($quadra['esporte']) . "</p>";
-        echo "<p>Coberta: " . ($quadra['coberta'] ? 'Sim' : 'Não') . "</p>";
-        echo "<p>Tipo de Aluguel: " . htmlspecialchars($quadra['tipo_aluguel']) . "</p>";
-        echo "<p>Valor: R$ " . number_format($quadra['valor'], 2, ',', '.') . "</p>";
-        echo "<img src='../../resources/images/quadras/" . htmlspecialchars($quadra['imagem_quadra']) . "' alt='Imagem da Quadra'>";
-        echo "</div>";
-        echo "</a>";
-    }
-} else {
-    echo "<p>Você ainda não possui quadras cadastradas.</p>";
-}
-?>
+    foreach ($quadras as $quadra) { ?>
+        <div id="quadra-item">
+            <?php echo "<a href='quadra_detalhes.php?id=" . $quadra['id'] . "' class='quadra-link'>"; ?>
+            <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+            <label for=""></label>
+            <h1><?php echo htmlspecialchars($quadra['nome']); ?> </h1>
+            <h2><?php echo htmlspecialchars($quadra['esporte']) . ", " . ($quadra['coberta'] ? 'coberta' : 'descoberta'); ?></h2>
+            <h2><?php echo "<b>R$" . number_format($quadra['valor'], 2, ',', '.') . "</b>/". htmlspecialchars($quadra['tipo_aluguel']) ?></h2>
+    </div>
+    <?php }
+} else { ?>
+    <p>Não há quadras cadastradas.</p>
+<?php } ?>
+</section>
 
-
-
-
-
+<a href="form.quadra1.php">Adicionar nova quadra.</a>
 
 
 
@@ -125,13 +120,10 @@ const svgFestas = `
         document.getElementById("recursos").innerHTML = "Nenhum recurso disponível";
     }
 </script>
-
-</div>
-
 </section>
+
+
 <?php } ?>
-
-
 <script src="../java/dark.js"></script>
 </body>
 </html>

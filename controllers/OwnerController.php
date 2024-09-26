@@ -8,9 +8,6 @@ session_start();
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    echo "<pre>";
-    print_r($_POST);  // Verificar o conteúdo do POST
-    echo "</pre>";
 
     if ($action === 'registerQuadra' && isset($_SESSION['client'])) {
         $clientData = $_SESSION['client'];
@@ -27,8 +24,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $quadra = new Quadra();
         $quadra->registerQuadra($ownerId, $nome, $esporte, $quadrac, $rentalType, $price);
 
-        // Redireciona para a página de sucesso
-        header("Location: ../views/success.php");
+        echo "<script type=\"text/javascript\">
+        alert(\"Quadra registrada!\");
+            </script>";
+        header("refresh: 0.4; url=../views/owner/imagem.quadra.php");
         exit();
+    }
+    
+    if ($action === 'FotoQuadra' && isset($_SESSION['client'])) {
+        $clientData = $_SESSION['client'];
+        $owner = Owner::getOwnerById($clientData['id']); // Obtém a instância do Owner
+
+        if ($owner) {
+            $origem = isset($_POST['origem']) ? $_POST['origem'] : null;
+            $owner->uploadFotoPerfilOwner($origem); // Chama a função de upload
+            
+            // Redireciona após o upload bem-sucedido
+            header("Location: ../views/owner/gerenciador.php");
+            exit();
+        }
     }
 }

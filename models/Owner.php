@@ -3,6 +3,7 @@ require_once 'Client.php';
 require_once 'Conexao.php';
 
 class Owner extends Client {
+    private $id; // Declare a propriedade id
     private $nomeEspaco;
     private $localizacao;
     private $cep;
@@ -11,6 +12,7 @@ class Owner extends Client {
 
     public function __construct($id, $name, $email, $type, $registrationDate, $nomeEspaco, $localizacao, $cep, $descricao, $recursos) {
         parent::__construct($id, $name, $email, $type, $registrationDate);
+        $this->id = $id; // Atribua o valor do id
         $this->nomeEspaco = $nomeEspaco;
         $this->localizacao = $localizacao;
         $this->cep = $cep;
@@ -106,4 +108,49 @@ class Owner extends Client {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function uploadFotoPerfilOwner($origem = null)
+{
+    // Configurações de upload
+    $_UP['pasta'] = '../upload/quadra_img/';
+    $_UP['tamanho'] = 1024 * 1024 * 100; // 100MB
+    $_UP['extensoes'] = array('png', 'jpg', 'jpeg', 'gif');
+
+    // Verifica se houve algum erro no upload
+    if ($_FILES['arquivo']['error'] != 0) {
+        die("Não foi possível fazer o upload, erro: " . $_FILES['arquivo']['error']);
+    }
+
+    // Verifica o tamanho do arquivo
+    if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
+        $this->exibirAlerta("Arquivo muito grande.", $origem);
+        return;
+    }
+
+    // Verifica a extensão do arquivo
+    $extensao = strtolower(pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION));
+    if (!in_array($extensao, $_UP['extensoes'])) {
+        $this->exibirAlerta("Extensão não permitida.", $origem);
+        return;
+    }
+
+    // Define o nome do arquivo
+    $nome_final = uniqid() . '.' . $extensao;
+
+    // Tenta mover o arquivo para a pasta de upload
+    if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
+        $pdo = Conexao::getInstance();
+        
+        // Atualiza a coluna imagem_quadra na tabela proprietario
+        $stmt = $pdo->prepare("UPDATE quadra SET imagem_quadra = :imagem_quadra WHERE id = :id_user");
+        $imagem_quadra = $_UP['pasta'] . $nome_final;
+        $stmt->bindParam(':imagem_quadra', $imagem_quadra);
+        $stmt->bindParam(':id_user', $this->id, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        // Não coloque o exit aqui, permitindo o redirecionamento após o upload
+    } else {
+        $this->exibirAlerta("Não foi possível atualizar a imagem de perfil.", $origem);
+    }
+}
+
 }
