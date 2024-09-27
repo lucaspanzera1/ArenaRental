@@ -26,6 +26,8 @@
 <?php $recursos = $owner->getRecursos(); ?>
 <p id="recursos"></p>
 
+<a href="form.quadra1.php">Adicionar nova quadra.</a>
+
 <section id="quadras">
 <?php
 $quadras = $owner->getQuadras();
@@ -44,9 +46,6 @@ if (!empty($quadras)) {
     <p>Não há quadras cadastradas.</p>
 <?php } ?>
 </section>
-
-<a href="form.quadra1.php">Adicionar nova quadra.</a>
-
 
 
 

@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $owner->uploadFotoPerfilOwner($quadraId, $origem);
 
             // Redireciona após o upload bem-sucedido
-            header("Location: ../views/owner/gerenciador.php");
+            header("Location: ../views/owner/horarios.quadra.php");
             exit();
         }
     }
