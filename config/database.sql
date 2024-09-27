@@ -42,12 +42,23 @@ CREATE TABLE quadra (
     imagem_quadra VARCHAR(220) NOT NULL,
     FOREIGN KEY (proprietario_id) REFERENCES proprietario(id)
 );
-
-CREATE TABLE horario_funcionamento (
+CREATE TABLE horarios_disponiveis (
     id INT PRIMARY KEY AUTO_INCREMENT,
     quadra_id INT,
-    dia_semana ENUM('domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado') NOT NULL,
-    hora_abertura TIME NOT NULL,
-    hora_fechamento TIME NOT NULL,
+    data DATE,
+    horario_inicio TIME,
+    horario_fim TIME,
+    status ENUM('disponível', 'reservado') DEFAULT 'disponível',
+    FOREIGN KEY (quadra_id) REFERENCES quadra(id)
+);
+CREATE TABLE reservas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cliente_id INT,
+    quadra_id INT,
+    data DATE,
+    horario_inicio TIME,
+    horario_fim TIME,
+    status ENUM('pendente', 'confirmada', 'cancelada') DEFAULT 'pendente',
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)
 );

@@ -51,8 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Associa a foto à quadra usando o ID da quadra
             $owner->uploadFotoPerfilOwner($quadraId, $origem);
 
-            // Redireciona após o upload bem-sucedido
-            header("Location: ../views/owner/horarios.quadra.php");
+            echo "<script type=\"text/javascript\">
+            alert(\"Imagem da quadra enviada com sucesso!\");
+            window.location.href = '../views/owner/horarios.quadra.php?id=" . $quadraId . "';
+            </script>";
             exit();
         }
     }

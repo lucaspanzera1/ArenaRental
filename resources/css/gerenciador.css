@@ -20,7 +20,7 @@ header{
 #Info h2{
     font-size: 40px;
     font-weight: 400;
-    margin-top: -2%;
+    margin-top: -5%;
 }
 body.dark-mode #Info h1{
     color: #9c079c;
@@ -63,6 +63,7 @@ a{
     height: 380px;
     border: 1px solid black;
     border-radius: 15px;
+    background-color: white;
 }
 #quadra-item img{
     width: 500px;
@@ -73,10 +74,23 @@ a{
     font-size: 34px;
     font-weight: 600;
     margin-left: 5%;
+    margin-top: -2%;
 }
 #quadra-item h2{
     font-size: 30px;
     font-weight: 300;
-    margin-top: -3%;
+    margin-top: -10%;
     margin-left: 5%;
+}
+p{
+    color: black;
+}
+body.dark-mode p{
+    color: white;
+}
+a{
+    color: black;
+}
+body.dark-mode a{
+    color: white;
 }
