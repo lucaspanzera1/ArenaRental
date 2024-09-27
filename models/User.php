@@ -4,36 +4,68 @@ require_once 'Client.php';
 class User
 {
     public static function getAllQuadras($esporte = null, $valor_min = null, $valor_max = null) {
-        $pdo = Conexao::getInstance();
-        $sql = "SELECT * FROM quadra WHERE 1=1";
-        
-        // Adiciona a cláusula de esporte somente se $esporte for diferente de 'todos' e não for null
-        if ($esporte && $esporte !== 'todos') {
-            $sql .= " AND esporte = :esporte";
+        try {
+            $pdo = Conexao::getInstance();
+            $sql = "SELECT q.*, p.nome_espaco as nome_proprietario 
+                    FROM quadra q
+                    LEFT JOIN proprietario p ON q.proprietario_id = p.id
+                    WHERE 1=1";
+            
+            if ($esporte && $esporte !== 'todos') {
+                $sql .= " AND q.esporte = :esporte";
+            }
+    
+            if ($valor_min !== null && $valor_max !== null) {
+                $sql .= " AND q.valor BETWEEN :valor_min AND :valor_max";
+            }
+    
+            $sql .= " ORDER BY RAND()";
+            $statement = $pdo->prepare($sql);
+    
+            if ($esporte && $esporte !== 'todos') {
+                $statement->bindValue(':esporte', $esporte);
+            }
+    
+            if ($valor_min !== null && $valor_max !== null) {
+                $statement->bindValue(':valor_min', $valor_min, PDO::PARAM_STR);
+                $statement->bindValue(':valor_max', $valor_max, PDO::PARAM_STR);
+            }
+    
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            error_log("Número de quadras retornadas: " . count($result));
+            
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Erro na função getAllQuadras: " . $e->getMessage());
+            return false;
         }
-    
-        // Filtro por faixa de valores
-        if ($valor_min !== null && $valor_max !== null) {
-            $sql .= " AND valor BETWEEN :valor_min AND :valor_max";
+    }
+    public static function getQuadraById($id) {
+        try {
+            $pdo = Conexao::getInstance();
+            $sql = "SELECT q.*, p.nome_espaco as nome_proprietario 
+                    FROM quadra q
+                    LEFT JOIN proprietario p ON q.proprietario_id = p.id
+                    WHERE q.id = :id";
+            
+            $statement = $pdo->prepare($sql);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+            
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$result) {
+                error_log("Nenhuma quadra encontrada com o ID: " . $id);
+                return false;
+            }
+            
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar quadra por ID: " . $e->getMessage());
+            return false;
         }
-    
-        // Ordenar de forma aleatória
-        $sql .= " ORDER BY RAND()";
-        $statement = $pdo->prepare($sql);
-    
-        // Vincula o parâmetro esporte se necessário
-        if ($esporte && $esporte !== 'todos') {
-            $statement->bindValue(':esporte', $esporte);
-        }
-    
-        // Vincula os parâmetros de valor mínimo e máximo
-        if ($valor_min !== null && $valor_max !== null) {
-            $statement->bindValue(':valor_min', $valor_min, PDO::PARAM_STR);
-            $statement->bindValue(':valor_max', $valor_max, PDO::PARAM_STR);
-        }
-    
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     
 

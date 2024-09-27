@@ -14,9 +14,19 @@
 </head>
 
 <body>
-    <?php
-    require_once '../../models/User.php';
-    ?>
+<?php
+// No topo do seu arquivo PHP
+require_once '../../models/User.php'; // Ajuste o caminho conforme necessário
+
+// Chamada da função
+$quadras = User::getAllQuadras();
+
+// Verificação de erros
+if ($quadras === false) {
+    echo "Ocorreu um erro ao buscar as quadras.";
+} else {
+}
+?>
 
 
     <?php include '../layouts/header.php'; ?>
@@ -28,25 +38,26 @@
     
   <section class="quadra-list-container">
     <?php if (!empty($quadras)): ?>
-    <div class="quadra-list">
-        <?php foreach ($quadras as $quadra): ?>
-        <div class="quadra-item">
-            <a  href="quadra_detalhes.php?id=<?php echo htmlspecialchars($quadra['id']); ?>">
-                <?php if (!empty($quadra['nome_imagem'])): ?>
-                <img src="../../upload/quadra_img/<?php echo htmlspecialchars($quadra['nome_imagem']); ?>"
-                    alt="<?php echo htmlspecialchars($quadra['nome_quadra']); ?>" class="quadra-image">
-                <?php else: ?>
-                <div class="quadra-image">Sem imagem disponível</div>
-                <?php endif; ?>
-                <h2><?php echo htmlspecialchars($quadra['nome_quadra']); ?></h2>
-                <p><?php echo htmlspecialchars($quadra['esporte']); ?></p>
-                <p><b>R$<?php echo number_format($quadra['valor'], 2, ',', '.'); ?></b>/hora</p>
-            </a>
+        <div class="quadra-list">
+            <?php foreach ($quadras as $quadra): ?>
+                <div class="quadra-item">
+                    <a href="quadra_detalhes.php?id=<?php echo htmlspecialchars($quadra['id']); ?>">
+                        <?php if (!empty($quadra['imagem_quadra'])): ?>
+                            <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+                                 alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image">
+                        <?php else: ?>
+                            <div class="quadra-image">Sem imagem disponível</div>
+                        <?php endif; ?>
+                        <h2><?php echo htmlspecialchars($quadra['nome_proprietario']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h2>
+                        <p><?php echo htmlspecialchars($quadra['esporte']); ?></p>
+                        <p><b>R$<?php echo number_format($quadra['valor'], 2, ',', '.'); ?></b>/<?php echo $quadra['tipo_aluguel'] == 'por hora' ? 'hora' : 'dia'; ?></p>
+                        <p><?php echo $quadra['coberta'] ? 'Coberta' : 'Descoberta'; ?></p>
+                    </a>
+                </div>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
-    </div>
     <?php else: ?>
-    <p>Nenhuma quadra disponível no momento.</p>
+        <p>Nenhuma quadra disponível no momento.</p>
     <?php endif; ?>
 </section>
 

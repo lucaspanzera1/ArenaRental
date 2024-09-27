@@ -152,10 +152,13 @@ public function salvarHorarios($quadraId, $horarios) {
     $db = Conexao::getInstance();
     
     // Preparar a declaração SQL para inserir horários
-    $stmt = $db->prepare("INSERT INTO horarios_disponiveis (quadra_id, data, horario_inicio, horario_fim, status) VALUES (?, ?, ?, ?, 'disponível')");
+    $stmt = $db->prepare("INSERT INTO horarios_disponiveis (quadra_id, data, dia_da_semana, horario_inicio, horario_fim, status) VALUES (?, ?, ?, ?, ?, 'disponível')");
     
     // Obter a data atual
     $dataAtual = new DateTime();
+    
+    // Array para mapear números do dia da semana para nomes em português
+    $diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     
     foreach ($horarios as $dia => $dados) {
         // Validar os horários
@@ -171,6 +174,9 @@ public function salvarHorarios($quadraId, $horarios) {
         while ($data->format('w') != $diaNumerico) {
             $data->modify('+1 day');
         }
+        
+        // Obter o nome do dia da semana em português
+        $diaDaSemana = $diasSemana[$diaNumerico];
         
         // Criar objetos DateTime para o início e fim do período
         $horaInicio = DateTime::createFromFormat('H:i', $dados['inicio']);
@@ -191,6 +197,7 @@ public function salvarHorarios($quadraId, $horarios) {
             $stmt->execute([
                 $quadraId,
                 $data->format('Y-m-d'),
+                $diaDaSemana,
                 $intervaloAtual->format('H:i'),
                 $proximoIntervalo->format('H:i')
             ]);

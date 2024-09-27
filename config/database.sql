@@ -4,7 +4,8 @@ use arenarental;
 
 select * from cliente;
 select * from proprietario;
-select * from recursos_espaco;
+select * from horarios_disponiveis;
+
 
 -- Tabela Cliente
 CREATE TABLE cliente (
@@ -46,6 +47,7 @@ CREATE TABLE horarios_disponiveis (
     id INT PRIMARY KEY AUTO_INCREMENT,
     quadra_id INT,
     data DATE,
+    dia_da_semana VARCHAR(100) NOT NULL,
     horario_inicio TIME,
     horario_fim TIME,
     status ENUM('disponível', 'reservado') DEFAULT 'disponível',
