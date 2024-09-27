@@ -14,12 +14,23 @@
 <body>
 
 <?php include '../layouts/header.php'; ?>
-<?php include '../layouts/verification.php'; ?>
+<?php include '../layouts/verification.php'; 
+
+// Verifica se o ID da quadra foi passado na URL
+$quadraId = isset($_GET['id']) ? intval($_GET['id']) : null;
+
+if (!$quadraId) {
+    echo "<p>Erro: Nenhum ID de quadra válido foi fornecido.</p>";
+    exit;
+}
+?>
+
+
 
 <div class="container">
         <h2>Selecione os dias da semana e seus respectivos horários que sua quadra está aberta.</h2>
-        <form id="horarioForm" action="../../controllers/HorarioController.php?action=registrar" method="POST">
-            <input type="hidden" name="quadra_id" value="<?php echo $_GET['quadra_id']; ?>">
+        <form id="horarioForm" action="../../controllers/OwnerController.php?action=registrarHorarios" method="POST">
+             <input type="hidden" name="quadra_id" value="<?php echo $quadraId; ?>">
             <?php
             $dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
             foreach ($dias as $dia) :

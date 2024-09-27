@@ -20,7 +20,7 @@ header{
 #Info h2{
     font-size: 40px;
     font-weight: 400;
-    margin-top: -5%;
+    margin-top: -2%;
 }
 body.dark-mode #Info h1{
     color: #9c079c;
@@ -74,12 +74,11 @@ a{
     font-size: 34px;
     font-weight: 600;
     margin-left: 5%;
-    margin-top: -2%;
 }
 #quadra-item h2{
     font-size: 30px;
     font-weight: 300;
-    margin-top: -10%;
+    margin-top: -5%;
     margin-left: 5%;
 }
 p{

@@ -77,9 +77,13 @@ input[type="checkbox"]:checked {
     background-color: #262626;
     border-color: #262626;
 }
+body.dark-mode input[type="checkbox"]:checked {
+    background-color: white;
+    border-color: white;
+}
 
 input[type="checkbox"]:checked::after {
-    content: '✓';
+    content: '✘';
     font-size: 18px;
     color: white;
     position: absolute;
@@ -87,6 +91,10 @@ input[type="checkbox"]:checked::after {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+body.dark-mode input[type="checkbox"]:checked::after{
+    color: #262626;
+}
+
 
 label {
     font-size: 30px;

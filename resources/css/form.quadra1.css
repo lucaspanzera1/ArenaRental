@@ -15,7 +15,6 @@ height: 75px;
 border-radius: 15px 15px 0px 0px;
 border: solid black 1px;
 background-color: white;
-margin-top: -3%;
 }
 body.dark-mode #nome{
     border: solid white 1px;
@@ -85,12 +84,10 @@ body.dark-mode .radio-option input[type="radio"]:checked {
     font-size: 30px;
     margin-bottom: 10px;
     font-weight: 600;
-    margin-top: -2%;
 }
 #priceValue {
     font-size: 80px;
     font-weight: bold;
-    margin-top: -4%;
 }
 #priceInput {
     font-size: 80px;

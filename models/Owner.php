@@ -147,6 +147,96 @@ class Owner extends Client {
     } else {
         $this->exibirAlerta("Não foi possível atualizar a imagem de perfil.", $origem);
     }
+}   
+public function salvarHorarios($quadraId, $horarios) {
+    $db = Conexao::getInstance();
+    
+    // Preparar a declaração SQL para inserir horários
+    $stmt = $db->prepare("INSERT INTO horarios_disponiveis (quadra_id, data, horario_inicio, horario_fim, status) VALUES (?, ?, ?, ?, 'disponível')");
+    
+    // Obter a data atual
+    $dataAtual = new DateTime();
+    
+    foreach ($horarios as $dia => $dados) {
+        // Validar os horários
+        if (!$this->validarHorarios($dados['inicio'], $dados['fim'], $dados['intervalo_inicio'], $dados['intervalo_fim'])) {
+            throw new Exception("Horários inválidos para o dia: " . ucfirst($dia));
+        }
+        
+        // Converter o dia da semana para um número (0 = Domingo, 1 = Segunda, etc.)
+        $diaNumerico = array_search($dia, ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado']);
+        
+        // Encontrar a próxima data para este dia da semana
+        $data = clone $dataAtual;
+        while ($data->format('w') != $diaNumerico) {
+            $data->modify('+1 day');
+        }
+        
+        // Criar objetos DateTime para o início e fim do período
+        $horaInicio = DateTime::createFromFormat('H:i', $dados['inicio']);
+        $horaFim = DateTime::createFromFormat('H:i', $dados['fim']);
+        
+        // Calcular e inserir os intervalos de 1 hora
+        $intervaloAtual = clone $horaInicio;
+        while ($intervaloAtual < $horaFim) {
+            $proximoIntervalo = clone $intervaloAtual;
+            $proximoIntervalo->modify('+1 hour');
+            
+            // Se o próximo intervalo ultrapassar o horário de fim, ajustar para o horário de fim
+            if ($proximoIntervalo > $horaFim) {
+                $proximoIntervalo = clone $horaFim;
+            }
+            
+            // Inserir o intervalo de 1 hora
+            $stmt->execute([
+                $quadraId,
+                $data->format('Y-m-d'),
+                $intervaloAtual->format('H:i'),
+                $proximoIntervalo->format('H:i')
+            ]);
+            
+            // Mover para o próximo intervalo
+            $intervaloAtual = $proximoIntervalo;
+        }
+        
+        // Tratar o intervalo de indisponibilidade, se existir
+        if ($dados['intervalo_inicio'] !== '' && $dados['intervalo_fim'] !== '') {
+            $horaIntervaloInicio = DateTime::createFromFormat('H:i', $dados['intervalo_inicio']);
+            $horaIntervaloFim = DateTime::createFromFormat('H:i', $dados['intervalo_fim']);
+            
+            $stmtIntervalo = $db->prepare("UPDATE horarios_disponiveis SET status = 'indisponível' WHERE quadra_id = ? AND data = ? AND horario_inicio >= ? AND horario_fim <= ?");
+            $stmtIntervalo->execute([
+                $quadraId,
+                $data->format('Y-m-d'),
+                $horaIntervaloInicio->format('H:i'),
+                $horaIntervaloFim->format('H:i')
+            ]);
+        }
+    }
+    
+    return true;
+}
+
+private function validarHorarios($inicio, $fim, $intervaloInicio, $intervaloFim) {
+    $horaInicio = DateTime::createFromFormat('H:i', $inicio);
+    $horaFim = DateTime::createFromFormat('H:i', $fim);
+    
+    if ($horaFim <= $horaInicio) {
+        return false;
+    }
+    
+    if ($intervaloInicio !== '' && $intervaloFim !== '') {
+        $horaIntervaloInicio = DateTime::createFromFormat('H:i', $intervaloInicio);
+        $horaIntervaloFim = DateTime::createFromFormat('H:i', $intervaloFim);
+        
+        if ($horaIntervaloFim <= $horaIntervaloInicio ||
+            $horaIntervaloInicio < $horaInicio ||
+            $horaIntervaloFim > $horaFim) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 }
