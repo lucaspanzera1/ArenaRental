@@ -9,7 +9,13 @@ body.dark-mode {
     background-color: #262626;
     color: #ffffff;
 }
-
+a{
+    text-decoration: none;
+    color: black;
+}
+body.dark-mode a{
+    color: white;
+}
 header {
     width: 98%;
     height: 100px;

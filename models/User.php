@@ -45,11 +45,24 @@ class User
     public static function getQuadraById($id) {
         try {
             $pdo = Conexao::getInstance();
-            $sql = "SELECT q.*, p.nome_espaco as nome_proprietario 
+            
+            // Consulta SQL para buscar todas as informações das tabelas cliente, proprietario e quadra
+            $sql = "SELECT 
+                        q.*, 
+                        p.nome_espaco, 
+                        p.localizacao, 
+                        p.cep, 
+                        p.descricao as descricao_proprietario, 
+                        p.recursos, 
+                        c.nome as nome_proprietario, 
+                        c.email as email_proprietario, 
+                        c.telefone as telefone_proprietario, 
+                        c.imagem_perfil as imagem_proprietario
                     FROM quadra q
                     LEFT JOIN proprietario p ON q.proprietario_id = p.id
+                    LEFT JOIN cliente c ON p.id = c.id
                     WHERE q.id = :id";
-            
+    
             $statement = $pdo->prepare($sql);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->execute();
@@ -67,8 +80,66 @@ class User
             return false;
         }
     }
+    public static function getProprietarioById($id) {
+        try {
+            $pdo = Conexao::getInstance();
+            $sql = "SELECT c.*, p.*, 
+                           GROUP_CONCAT(
+                               CONCAT_WS('|', 
+                                   q.id, 
+                                   q.nome, 
+                                   q.esporte, 
+                                   q.coberta, 
+                                   q.tipo_aluguel, 
+                                   q.valor, 
+                                   q.imagem_quadra
+                               ) SEPARATOR ';;'
+                           ) AS quadras
+                    FROM cliente c 
+                    JOIN proprietario p ON c.id = p.id 
+                    LEFT JOIN quadra q ON p.id = q.proprietario_id
+                    WHERE c.id = :id
+                    GROUP BY c.id";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$result) {
+                error_log("Nenhum proprietário encontrado com o ID: " . $id);
+                return false;
+            }
+            
+            // Process the quadras string into an array of quadra objects
+            if ($result['quadras']) {
+                $quadrasArray = [];
+                $quadras = explode(';;', $result['quadras']);
+                foreach ($quadras as $quadra) {
+                    $quadraData = explode('|', $quadra);
+                    $quadrasArray[] = [
+                        'id' => $quadraData[0],
+                        'nome' => $quadraData[1],
+                        'esporte' => $quadraData[2],
+                        'coberta' => $quadraData[3],
+                        'tipo_aluguel' => $quadraData[4],
+                        'valor' => $quadraData[5],
+                        'imagem_quadra' => $quadraData[6]
+                    ];
+                }
+                $result['quadras'] = $quadrasArray;
+            } else {
+                $result['quadras'] = [];
+            }
+            
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar proprietário por ID: " . $e->getMessage());
+            return false;
+        }
+    }
     
-
 
     // Função para login
     public function login($data)

@@ -23,7 +23,7 @@ if (!$quadra) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($quadra['nome_proprietario']); ?> <?php echo htmlspecialchars($quadra['nome']); ?> | © 2024 Arena Rental, Inc.</title>
+    <title><?php echo htmlspecialchars($quadra['nome_espaco']); ?> <?php echo htmlspecialchars($quadra['nome']); ?> | © 2024 Arena Rental, Inc.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@ if (!$quadra) {
 <?php include '../layouts/header.php'; ?>
 
 <section>
-    <h1><?php echo htmlspecialchars($quadra['nome_proprietario']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
+    <h1><?php echo htmlspecialchars($quadra['nome_espaco']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
     <div class="container">
       
     <div id="images-container">
@@ -44,27 +44,28 @@ if (!$quadra) {
         <?php endif; ?>
 
         <div id="mini-images-container" class="mini-images">
-        <img src="../../upload/quadra_img/CELPE.JPG">
-        <img src="../../upload/quadra_img/CELPE.JPG">
+        <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large">
+        <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large">
         </div>
 
         <div id="mini-images-container">
-        <div id="mini1"><img src="../../upload/quadra_img/CELPE.JPG"></div>
-        <div id="mini2"><img src="../../upload/quadra_img/CELPE.JPG"></div>
+        <div id="mini1"> <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large"></div>
+        <div id="mini2"> <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large"></div>
         </div>
 
     </div>
-        
 
-        
-        <p><strong>Proprietário:</strong> <?php echo htmlspecialchars($quadra['nome_proprietario']); ?></p>
-        <p><strong>Esporte:</strong> <?php echo htmlspecialchars($quadra['esporte']); ?></p>
-        <p><strong>Valor:</strong> R$<?php echo number_format($quadra['valor'], 2, ',', '.'); ?>/<?php echo $quadra['tipo_aluguel'] == 'por hora' ? 'hora' : 'dia'; ?></p>
-        <p><strong>Coberta:</strong> <?php echo $quadra['coberta'] ? 'Sim' : 'Não'; ?></p>
-        
-        <!-- Adicione mais detalhes conforme necessário -->
-        
-        <a href="javascript:history.back()" class="btn-voltar">Voltar para a lista de quadras</a>
-    </div>
+    <h2><?php echo htmlspecialchars($quadra['esporte']); ?> , <?php echo htmlspecialchars($quadra['localizacao']); ?> - <?php echo htmlspecialchars($quadra['cep']); ?></h2>
+    <h3><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, <?php echo htmlspecialchars($quadra['descricao_proprietario']); ?></h3>
+    <div id="dono-container">
+    <img src="../<?php echo htmlspecialchars($quadra['imagem_proprietario']); ?>" alt="Imagem de perfil de <?php echo htmlspecialchars($quadra['nome_proprietario']); ?>" class="imagem-perfil">
+    <a href="perfil_dono.php?id=<?php echo htmlspecialchars($quadra['proprietario_id']); ?>" id="client-container">
+        <div>
+            <h4>Anfitriã(o): <?php echo htmlspecialchars($quadra['nome_proprietario']); ?></h4>
+            <h5>Entrou em </h5>
+        </div>
+    </a>
+</div>
+</div>
 </body>
 </html>

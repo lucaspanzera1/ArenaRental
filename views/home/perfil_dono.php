@@ -1,94 +1,64 @@
 <?php
-require_once '../../models/Conexao.php';
+require_once '../../config/Conexao.php';
 require_once '../../models/User.php';
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-    $pdo = Conexao::getInstance();
-
-    $sql = "SELECT c.*, ip.nome_imagem AS dono_imagem
-            FROM cadastro c
-            LEFT JOIN imagem ip ON c.id = ip.id_user
-            WHERE c.id = :id";
-    
-    $statement = $pdo->prepare($sql);
-    $statement->bindValue(':id', $id, PDO::PARAM_INT);
-    $statement->execute();
-
-    $dono = $statement->fetch(PDO::FETCH_ASSOC);
-    if (!$dono) {
-        echo "Perfil não encontrado.";
-        exit;
-    }
-} else {
-    echo "ID do dono não foi fornecido.";
-    exit;
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    die('ID do proprietário não fornecido ou inválido.');
 }
 
-function getPrimeiroUltimoNome($nomeCompleto) {
-  $nomes = explode(' ', $nomeCompleto);
-  if (count($nomes) > 1) {
-      return $nomes[0] . ' ' . end($nomes);
-  }
-  return $nomeCompleto;
+$id_proprietario = (int)$_GET['id'];
+
+// Busca os detalhes do proprietário
+$proprietario = User::getProprietarioById($id_proprietario);
+
+if (!$proprietario) {
+    die('Proprietário não encontrado.');
 }
 
-// Função para formatar a data
-function formatarData($data) {
-  $dataObj = new DateTime($data);
-  return $dataObj->format('d/m/Y'); // Formato: dia/mês/ano
-}
-
-if (isset($_GET['id'])) {
-  $id = intval($_GET['id']);
-  $pdo = Conexao::getInstance();
-
-  $sql = "SELECT c.*, ip.nome_imagem AS dono_imagem
-          FROM cadastro c
-          LEFT JOIN imagem ip ON c.id = ip.id_user
-          WHERE c.id = :id";
-  
-  $statement = $pdo->prepare($sql);
-  $statement->bindValue(':id', $id, PDO::PARAM_INT);
-  $statement->execute();
-
-  $dono = $statement->fetch(PDO::FETCH_ASSOC);
-  if (!$dono) {
-      echo "Perfil não encontrado.";
-      exit;
-  }
-
-  $nomeFormatado = getPrimeiroUltimoNome($dono['nome']);
-  $dataFormatada = formatarData($dono['data_registro']);
-} else {
-  echo "ID do dono não foi fornecido.";
-  exit;
-}
+// HTML da página de perfil do proprietário
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<title>Perfil <?php echo htmlspecialchars($nomeFormatado); ?> | © 2024 Arena Rental, Inc.</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel='shorcut icon' href="../../resources/images/favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../resources/css/perfil.css?v=<?= time() ?>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de <?php echo htmlspecialchars($proprietario['nome']); ?> | © 2024 Arena Rental, Inc.</title>
+    <link rel="stylesheet" href="../../resources/css/perfil_dono.css">
 </head>
 <body>
-<?php include '../layouts/header.php'; ?>
+    <?php include '../layouts/header.php'; ?>
 
-<div id="Corpo">
-<div id="Quad">
-<?php if (!empty($dono['dono_imagem'])): ?>
-<div id="Perfil"><img src="../../upload/user_pfp/<?php echo htmlspecialchars($dono['dono_imagem']); ?>" alt="Foto de perfil"></div>
-<?php else: ?><p>Sem foto de perfil disponível</p><?php endif; ?>
-  <h1><?php echo htmlspecialchars($nomeFormatado); ?></h1>
-<h2><?php echo htmlspecialchars($dono['email']); ?></h2>
-<h3>Membro desde:</strong> <?php echo htmlspecialchars($dataFormatada); ?></h3>
-</div>
-</div>
+    <main>
+        <h1>Perfil de <?php echo htmlspecialchars($proprietario['nome']); ?></h1>
+        <img src="../<?php echo htmlspecialchars($proprietario['imagem_perfil']); ?>" alt="Imagem de perfil de <?php echo htmlspecialchars($proprietario['nome']); ?>">
+        <p>Nome do Espaço: <?php echo htmlspecialchars($proprietario['nome_espaco']); ?></p>
+        <p>Localização: <?php echo htmlspecialchars($proprietario['localizacao']); ?></p>
+        <p>CEP: <?php echo htmlspecialchars($proprietario['cep']); ?></p>
+        <p>Descrição: <?php echo htmlspecialchars($proprietario['descricao']); ?></p>
+        <p>Recursos: <?php echo htmlspecialchars($proprietario['recursos']); ?></p>
+        <p>Email: <?php echo htmlspecialchars($proprietario['email']); ?></p>
+        <p>Telefone: <?php echo htmlspecialchars($proprietario['telefone']); ?></p>
+        <p>Data de Registro: <?php echo htmlspecialchars($proprietario['data_registro']); ?></p>
 
+        <h2>Quadras</h2>
+        <?php if (!empty($proprietario['quadras'])): ?>
+            <ul>
+            <?php foreach ($proprietario['quadras'] as $quadra): ?>
+                <li>
+                    <h3><?php echo htmlspecialchars($quadra['nome']); ?></h3>
+                    <p>Esporte: <?php echo htmlspecialchars($quadra['esporte']); ?></p>
+                    <p>Tipo: <?php echo $quadra['coberta'] ? 'Coberta' : 'Descoberta'; ?></p>
+                    <p>Aluguel: <?php echo htmlspecialchars($quadra['tipo_aluguel']); ?></p>
+                    <p>Valor: R$ <?php echo htmlspecialchars($quadra['valor']); ?></p>
+                    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" alt="Imagem da quadra <?php echo htmlspecialchars($quadra['nome']); ?>">
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Este proprietário não possui quadras cadastradas.</p>
+        <?php endif; ?>
+    </main>
+
+    <?php include '../layouts/footer.php'; ?>
 </body>
 </html>
