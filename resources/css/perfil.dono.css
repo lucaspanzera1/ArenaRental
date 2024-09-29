@@ -1,0 +1,191 @@
+body{
+    font-family: "Inter", sans-serif;
+    background-image: url(../../resources/images/fundo.perfil.png);
+    background-position: bottom;
+    background-attachment: fixed;
+    transition: background-image 0.3s ease, color 0.3s ease;
+}
+body.dark-mode {
+    background-image: url(../../resources/images/fundo.perfil.dark.png);
+    background-color: #262626;
+    color: white;
+}
+header{
+    background-color: #FFFFFF;
+}
+#grid-container{
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-top: 150px;
+}
+#Corpo{
+    height: 80vh;
+}
+#Quad {
+    background-color: white;
+    border: 1px solid #22222260;
+    width: 600px;
+    height: 600px;
+    border-radius: 30px;
+    display: grid;
+    place-items: center;
+    padding-top: 2%;
+    transition: 0.6s;
+    line-height: 0.1;   
+}
+body.dark-mode #Quad {
+    background-color: #262626;
+    border: 1px solid white;
+    color: white;
+}
+#Quad:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+#Perfil img{
+    border: 1px solid #22222260;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+}
+#Quad h1{
+    font-size: 45px;
+}
+#Quad h2{
+    font-size: 25px;
+    font-weight: 300;
+    margin-top: -1%;
+}
+#Quad h3{
+    font-size: 20px;
+    font-weight: 200;
+}
+#Quad h4{
+    font-weight: 200;
+    margin-top: -2%;
+}
+
+#Corpo{
+    display: grid;
+    place-items: center;
+}
+#Info h1{
+    font-size: 62px;
+    color: #0000FF;
+    transition: color 0.3s ease;
+}
+#Info h2{
+    font-size: 40px;
+    font-weight: 400;
+    margin-top: -2%;
+}
+body.dark-mode #Info h1{
+    color: #9c079c;
+}
+#SecInfo{
+    padding-top: 150px;
+    margin-left: 10%;
+}
+#recursos{
+     display: flex;
+    align-items: center; 
+    gap: 5px;
+}
+body.dark-mode #recursos svg path{
+    fill: white;
+    stroke: white;
+  }
+
+a{
+    text-decoration: none;
+    color: black;
+}
+#quadras{
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+.quadra {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.quadra img {
+    max-width: 100%;
+    height: auto;
+}
+#quadra-item{
+    margin-top: 10px;
+    width: 375px;
+    height: 285px;
+    border: 1px solid black;
+    border-radius: 15px;
+    background-color: white;
+    transition: 0.6s;
+}
+body.dark-mode #quadra-item{
+    border: 1px solid white;
+    background-color: #262626;
+}
+#quadra-item img{
+    width: 375px;
+    height: 150px;
+    border-radius: 15px 15px 0px 0px;
+}
+#quadra-item h1 {
+    font-size: 25.5px;  /* 34px - 25% */
+    font-weight: 600;   /* font-weight não é alterado */
+    margin-left: 3.75%; /* 5% - 25% */
+}
+#quadra-item h2 {
+    font-size: 22.5px;  /* 30px - 25% */
+    font-weight: 300;   /* font-weight não é alterado */
+    margin-top: -3.75%; /* -5% + 25% (redução da magnitude) */
+    margin-left: 3.75%; /* 5% - 25% */
+}
+p{
+    color: black;
+}
+body.dark-mode p{
+    color: white;
+}
+a{
+    color: black;
+}
+body.dark-mode a{
+    color: white;
+}
+#grid-quadras{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: left;
+    gap: 20px;
+}
+
+@media (max-width:600px) {
+    #Quad {
+        width: 300px;
+        height: 300px;
+    }
+    #Perfil img{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
+    #Quad h1{
+        font-size: 30px;
+       margin-top: -2%;
+    }
+    #Quad h2{
+        font-size: 15px;
+        font-weight: 300;
+        margin-top: -10%;
+    }
+    #Quad h3{
+        font-size: 10px;
+        font-weight: 200;
+        margin-top: -1%;
+    }
+}
+
