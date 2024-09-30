@@ -58,3 +58,50 @@ section img{
 #client-container{
   line-height: 0.0;
 }
+.container-reserva {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+.container-reserva h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+.date-time {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.date-time input {
+  width: 48%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.reserve-button {
+  background-color: #f0f0f0;
+  border: none;
+  color: black;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.price-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}

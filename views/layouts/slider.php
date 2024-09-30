@@ -16,7 +16,6 @@
 <?php 
 
 ?>
-
     <div class="filter-overlay">
         <div class="filter-container">
             <span class="close-btn">&times;</span>
