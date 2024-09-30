@@ -18,8 +18,14 @@
 // No topo do seu arquivo PHP
 require_once '../../models/User.php'; // Ajuste o caminho conforme necessário
 
+$esporte = isset($_GET['esporte']) && $_GET['esporte'] !== 'todos' ? $_GET['esporte'] : null;
+$valor_min = isset($_GET['valor_min']) ? floatval($_GET['valor_min']) : null;
+$valor_max = isset($_GET['valor_max']) ? floatval($_GET['valor_max']) : null;
+
+// Para depuração
+error_log("Filtros aplicados - Esporte: " . ($esporte ?? 'todos') . ", Valor Min: " . ($valor_min ?? 'não definido') . ", Valor Max: " . ($valor_max ?? 'não definido'));
 // Chamada da função
-$quadras = User::getAllQuadras();
+$quadras = User::getAllQuadras($esporte, $valor_min, $valor_max);
 
 // Verificação de erros
 if ($quadras === false) {

@@ -13,6 +13,10 @@
 </svg>
 </button>
 
+<?php 
+
+?>
+
     <div class="filter-overlay">
         <div class="filter-container">
             <span class="close-btn">&times;</span>
@@ -40,106 +44,106 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButton = document.getElementById('filter-button');
-            const filterOverlay = document.querySelector('.filter-overlay');
-            const sportOptions = document.querySelectorAll('.sport-option');
-            const minPriceInput = document.getElementById('min-price');
-            const maxPriceInput = document.getElementById('max-price');
-            const filterBtn = document.getElementById('filter-btn');
-            const priceSlider = document.getElementById('price-slider');
-            const closeBtn = document.querySelector('.close-btn');
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButton = document.getElementById('filter-button');
+    const filterOverlay = document.querySelector('.filter-overlay');
+    const sportOptions = document.querySelectorAll('.sport-option');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    const filterBtn = document.getElementById('filter-btn');
+    const priceSlider = document.getElementById('price-slider');
+    const closeBtn = document.querySelector('.close-btn');
 
-            // Open filter pop-up
-            filterButton.addEventListener('click', function() {
-                filterOverlay.style.display = 'block';
-            });
+    // Open filter pop-up
+    filterButton.addEventListener('click', function() {
+        filterOverlay.style.display = 'block';
+    });
 
-            // Close filter pop-up
-            closeBtn.addEventListener('click', function() {
-                filterOverlay.style.display = 'none';
-            });
+    // Close filter pop-up
+    closeBtn.addEventListener('click', function() {
+        filterOverlay.style.display = 'none';
+    });
 
-            // Close filter pop-up when clicking outside
-            filterOverlay.addEventListener('click', function(e) {
-                if (e.target === filterOverlay) {
-                    filterOverlay.style.display = 'none';
-                }
-            });
+    // Close filter pop-up when clicking outside
+    filterOverlay.addEventListener('click', function(e) {
+        if (e.target === filterOverlay) {
+            filterOverlay.style.display = 'none';
+        }
+    });
 
-            // Initialize noUiSlider
-            noUiSlider.create(priceSlider, {
-                start: [0, 300],
-                connect: true,
-                range: {
-                    'min': 0,
-                    'max': 300
-                },
-                step: 10
-            });
+    // Initialize noUiSlider
+    noUiSlider.create(priceSlider, {
+        start: [0, 300],
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 300
+        },
+        step: 10
+    });
 
-            // Update input fields when slider changes
-            priceSlider.noUiSlider.on('update', function (values, handle) {
-                const value = Math.round(values[handle]);
-                if (handle === 0) {
-                    minPriceInput.value = value;
-                } else {
-                    maxPriceInput.value = value;
-                }
-            });
+    // Update input fields when slider changes
+    priceSlider.noUiSlider.on('update', function (values, handle) {
+        const value = Math.round(values[handle]);
+        if (handle === 0) {
+            minPriceInput.value = value;
+        } else {
+            maxPriceInput.value = value;
+        }
+    });
 
-            // Update slider when input fields change
-            minPriceInput.addEventListener('change', function() {
-                priceSlider.noUiSlider.set([this.value, null]);
-            });
+    // Update slider when input fields change
+    minPriceInput.addEventListener('change', function() {
+        priceSlider.noUiSlider.set([this.value, null]);
+    });
 
-            maxPriceInput.addEventListener('change', function() {
-                priceSlider.noUiSlider.set([null, this.value]);
-            });
+    maxPriceInput.addEventListener('change', function() {
+        priceSlider.noUiSlider.set([null, this.value]);
+    });
 
-            // Sport selection
-            sportOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    sportOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
-
-            // Filter button
-            filterBtn.addEventListener('click', function() {
-                const selectedSport = document.querySelector('.sport-option.selected');
-                const esporte = selectedSport ? selectedSport.dataset.sport : '';
-                const minPrice = parseInt(minPriceInput.value);
-                const maxPrice = parseInt(maxPriceInput.value);
-
-                const queryParams = new URLSearchParams();
-                if (esporte) {
-                    queryParams.append('esporte', esporte);
-                }
-                queryParams.append('valor_min', minPrice);
-                queryParams.append('valor_max', maxPrice);
-
-                // Update URL with query parameters and reload the page
-                window.location.search = queryParams.toString();
-            });
-
-            // Set initial values based on URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const esporteParam = urlParams.get('esporte');
-            const valorMinParam = urlParams.get('valor_min');
-            const valorMaxParam = urlParams.get('valor_max');
-
-            if (esporteParam) {
-                const sportOption = document.querySelector(`.sport-option[data-sport="${esporteParam}"]`);
-                if (sportOption) {
-                    sportOption.classList.add('selected');
-                }
-            }
-
-            if (valorMinParam && valorMaxParam) {
-                priceSlider.noUiSlider.set([valorMinParam, valorMaxParam]);
-            }
+    // Sport selection
+    sportOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            sportOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
         });
+    });
+
+    // Filter button
+    filterBtn.addEventListener('click', function() {
+        const selectedSport = document.querySelector('.sport-option.selected');
+        const esporte = selectedSport ? selectedSport.dataset.sport : '';
+        const minPrice = parseInt(minPriceInput.value);
+        const maxPrice = parseInt(maxPriceInput.value);
+
+        const queryParams = new URLSearchParams();
+        if (esporte && esporte !== 'todos') {
+            queryParams.append('esporte', esporte);
+        }
+        queryParams.append('valor_min', minPrice);
+        queryParams.append('valor_max', maxPrice);
+
+        // Update URL with query parameters and reload the page
+        window.location.search = queryParams.toString();
+    });
+
+    // Set initial values based on URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const esporteParam = urlParams.get('esporte');
+    const valorMinParam = urlParams.get('valor_min');
+    const valorMaxParam = urlParams.get('valor_max');
+
+    if (esporteParam) {
+        const sportOption = document.querySelector(`.sport-option[data-sport="${esporteParam}"]`);
+        if (sportOption) {
+            sportOption.classList.add('selected');
+        }
+    }
+
+    if (valorMinParam && valorMaxParam) {
+        priceSlider.noUiSlider.set([valorMinParam, valorMaxParam]);
+    }
+});
     </script>
 </body>
 </html>

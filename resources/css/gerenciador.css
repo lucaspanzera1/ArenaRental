@@ -46,6 +46,8 @@ a{
 #quadras{
     display: grid;
     grid-template-columns: auto auto auto;
+    justify-content: left;
+    gap: 20px;
 }
 .quadra {
     border: 1px solid #ddd;

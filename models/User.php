@@ -11,29 +11,35 @@ class User
                     LEFT JOIN proprietario p ON q.proprietario_id = p.id
                     WHERE 1=1";
             
+            $params = [];
+    
             if ($esporte && $esporte !== 'todos') {
                 $sql .= " AND q.esporte = :esporte";
+                $params[':esporte'] = $esporte;
             }
     
-            if ($valor_min !== null && $valor_max !== null) {
-                $sql .= " AND q.valor BETWEEN :valor_min AND :valor_max";
+            if ($valor_min !== null) {
+                $sql .= " AND q.valor >= :valor_min";
+                $params[':valor_min'] = $valor_min;
+            }
+    
+            if ($valor_max !== null) {
+                $sql .= " AND q.valor <= :valor_max";
+                $params[':valor_max'] = $valor_max;
             }
     
             $sql .= " ORDER BY RAND()";
             $statement = $pdo->prepare($sql);
     
-            if ($esporte && $esporte !== 'todos') {
-                $statement->bindValue(':esporte', $esporte);
-            }
-    
-            if ($valor_min !== null && $valor_max !== null) {
-                $statement->bindValue(':valor_min', $valor_min, PDO::PARAM_STR);
-                $statement->bindValue(':valor_max', $valor_max, PDO::PARAM_STR);
+            foreach ($params as $key => $value) {
+                $statement->bindValue($key, $value, is_numeric($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
             }
     
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             
+            error_log("SQL Query: " . $sql);
+            error_log("Params: " . print_r($params, true));
             error_log("Número de quadras retornadas: " . count($result));
             
             return $result;
