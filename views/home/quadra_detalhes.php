@@ -71,8 +71,11 @@ if (!$quadra) {
     <h2>Verificar horário</h2>
     <div class="date-time">
         <input type="date" id="data_reserva" name="data_reserva" min="<?= date('Y-m-d') ?>">
-        <select id="horario_disponivel" name="horario_disponivel">
-            <option value="">Selecione um horário</option>
+        <select id="horario_inicio" name="horario_inicio">
+            <option value="">Horário de início</option>
+        </select>
+        <select id="horario_fim" name="horario_fim">
+            <option value="">Horário de fim</option>
         </select>
     </div>
     <button class="reserve-button" id="btn_reservar" type="submit">Reservar</button>
@@ -91,7 +94,8 @@ if (!$quadra) {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const dataReserva = document.getElementById('data_reserva');
-    const horarioDisponivel = document.getElementById('horario_disponivel');
+    const horarioInicio = document.getElementById('horario_inicio');
+    const horarioFim = document.getElementById('horario_fim');
     const btnReservar = document.getElementById('btn_reservar');
     const duracaoSpan = document.getElementById('duracao');
     const totalPagarSpan = document.getElementById('total_pagar');
@@ -101,22 +105,59 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`../../controllers/AuthController.php?action=getHorariosDisponiveis&quadra_id=<?= $id_quadra ?>&data=${this.value}`)
             .then(response => response.json())
             .then(data => {
-                horarioDisponivel.innerHTML = '<option value="">Selecione um horário</option>';
-                data.forEach(horario => {
-                    const option = document.createElement('option');
-                    option.value = `${horario.horario_inicio}-${horario.horario_fim}`;
-                    option.textContent = `${horario.horario_inicio} - ${horario.horario_fim}`;
-                    horarioDisponivel.appendChild(option);
-                });
+                preencherHorarios(data);
             })
             .catch(error => console.error('Erro ao buscar horários:', error));
     });
 
-    horarioDisponivel.addEventListener('change', function() {
+    function preencherHorarios(data) {
+        horarioInicio.innerHTML = '<option value="">Horário de início</option>';
+        horarioFim.innerHTML = '<option value="">Horário de fim</option>';
+
+        data.forEach(periodo => {
+            let inicio = new Date(`2000-01-01T${periodo.horario_inicio}`);
+            let fim = new Date(`2000-01-01T${periodo.horario_fim}`);
+
+            while (inicio < fim) {
+                let horaFormatada = inicio.toTimeString().slice(0, 5);
+                let optionInicio = document.createElement('option');
+                optionInicio.value = horaFormatada;
+                optionInicio.textContent = horaFormatada;
+                horarioInicio.appendChild(optionInicio);
+
+                inicio.setMinutes(inicio.getMinutes() + 30);
+            }
+        });
+    }
+
+    horarioInicio.addEventListener('change', function() {
+        horarioFim.innerHTML = '<option value="">Horário de fim</option>';
         if (this.value) {
-            const [inicio, fim] = this.value.split('-');
-            const duracao = calcularDuracao(inicio, fim);
-            duracaoSpan.textContent = duracao;
+            let inicio = new Date(`2000-01-01T${this.value}`);
+            let options = horarioInicio.querySelectorAll('option');
+            let encontrouInicio = false;
+
+            options.forEach(option => {
+                if (encontrouInicio && option.value) {
+                    let optionFim = document.createElement('option');
+                    optionFim.value = option.value;
+                    optionFim.textContent = option.value;
+                    horarioFim.appendChild(optionFim);
+                }
+                if (option.value === this.value) {
+                    encontrouInicio = true;
+                }
+            });
+        }
+        atualizarCalculo();
+    });
+
+    horarioFim.addEventListener('change', atualizarCalculo);
+
+    function atualizarCalculo() {
+        if (horarioInicio.value && horarioFim.value) {
+            const duracao = calcularDuracao(horarioInicio.value, horarioFim.value);
+            duracaoSpan.textContent = duracao.toFixed(2);
             totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
             btnReservar.disabled = false;
         } else {
@@ -124,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
             totalPagarSpan.textContent = '0';
             btnReservar.disabled = true;
         }
-    });
+    }
 
     function calcularDuracao(inicio, fim) {
         const [horaInicio, minInicio] = inicio.split(':').map(Number);
@@ -133,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     btnReservar.addEventListener('click', function(event) {
-        if (!dataReserva.value || !horarioDisponivel.value) {
-            alert('Por favor, selecione uma data e um horário válido.');
+        if (!dataReserva.value || !horarioInicio.value || !horarioFim.value) {
+            alert('Por favor, selecione uma data e horários válidos.');
             event.preventDefault();
         }
     });
