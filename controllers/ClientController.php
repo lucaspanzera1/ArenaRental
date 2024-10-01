@@ -58,18 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $recursos = isset($_POST['recursos']) ? $_POST['recursos'] : [];
         $client->registerOwnerResources($recursos);
     }
-    if ($action === 'reservarQuadra' && $client) {
-        $idQuadra = $_POST['id_quadra'];
-        $dataReserva = $_POST['data_reserva'];
-        $horaInicio = $_POST['hora_inicio'];
-        $horaFim = $_POST['hora_fim'];
-
-        $resultado = Client::verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim);
-
-        header('Content-Type: application/json');
-        echo json_encode($resultado);
-        exit();
-    }
 } else {
     // Handle GET requests or invalid actions
     if ($action === 'logoff' && $client) {

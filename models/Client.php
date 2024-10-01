@@ -353,63 +353,6 @@ public function updateClient($name, $email)
         }
         exit();
     }
-    public static function verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim) {
-        try {
-            $pdo = Conexao::getInstance();
-            
-            // Verificar disponibilidade
-            $sql = "SELECT * FROM horarios_disponiveis WHERE quadra_id = :quadra_id AND data = :data 
-                    AND ((hora_inicio <= :hora_inicio AND hora_fim > :hora_inicio) 
-                    OR (hora_inicio < :hora_fim AND hora_fim >= :hora_fim))";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-            $stmt->bindParam(':data', $dataReserva);
-            $stmt->bindParam(':hora_inicio', $horaInicio);
-            $stmt->bindParam(':hora_fim', $horaFim);
-            $stmt->execute();
-            
-            if ($stmt->rowCount() > 0) {
-                return ['status' => false, 'mensagem' => 'Horário não disponível'];
-            }
-            
-            // Buscar valor por hora da quadra
-            $sqlValor = "SELECT valor FROM quadra WHERE id = :id";
-            $stmtValor = $pdo->prepare($sqlValor);
-            $stmtValor->bindParam(':id', $idQuadra, PDO::PARAM_INT);
-            $stmtValor->execute();
-            $valorHora = $stmtValor->fetchColumn();
-            
-            // Calcular duração e valor total
-            $duracao = (strtotime($horaFim) - strtotime($horaInicio)) / 3600; // em horas
-            $valorTotal = $duracao * $valorHora;
-            
-            // Inserir reserva
-            $sqlReserva = "INSERT INTO reservas (quadra_id, data_reserva, hora_inicio, hora_fim, valor_total) 
-                           VALUES (:quadra_id, :data_reserva, :hora_inicio, :hora_fim, :valor_total)";
-            $stmtReserva = $pdo->prepare($sqlReserva);
-            $stmtReserva->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-            $stmtReserva->bindParam(':data_reserva', $dataReserva);
-            $stmtReserva->bindParam(':hora_inicio', $horaInicio);
-            $stmtReserva->bindParam(':hora_fim', $horaFim);
-            $stmtReserva->bindParam(':valor_total', $valorTotal);
-            $stmtReserva->execute();
-            
-            // Atualizar horários disponíveis
-            $sqlAtualizar = "INSERT INTO horarios_disponiveis (quadra_id, data, hora_inicio, hora_fim, status) 
-                             VALUES (:quadra_id, :data, :hora_inicio, :hora_fim, 'ocupado')";
-            $stmtAtualizar = $pdo->prepare($sqlAtualizar);
-            $stmtAtualizar->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-            $stmtAtualizar->bindParam(':data', $dataReserva);
-            $stmtAtualizar->bindParam(':hora_inicio', $horaInicio);
-            $stmtAtualizar->bindParam(':hora_fim', $horaFim);
-            $stmtAtualizar->execute();
-            
-            return ['status' => true, 'mensagem' => 'Reserva realizada com sucesso', 'valor_total' => $valorTotal];
-        } catch (PDOException $e) {
-            error_log("Erro ao verificar e reservar quadra: " . $e->getMessage());
-            return ['status' => false, 'mensagem' => 'Erro ao processar a reserva'];
-        }
-    }
 }
 ?>
 

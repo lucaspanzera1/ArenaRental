@@ -129,54 +129,88 @@ function verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim
 <form action="../../controllers/ClientController.php?action=reservarQuadra">
 <div class="container-reserva">
     <h2>Verificar horário</h2>
-    <form id="reserva-form" method="POST">
-        <div class="date-time">
-            <input type="date" name="data_reserva" required>
-            <input type="time" name="hora_inicio" required>
-            <input type="time" name="hora_fim" required>
-        </div>
-        <button type="submit" class="reserve-button">Reservar</button>
-    </form>
+    <div class="date-time">
+        <input type="date" id="data_reserva" min="<?= date('Y-m-d') ?>">
+        <select id="hora_inicio">
+            <option value="">Hora início</option>
+            <?php
+            for ($i = 6; $i <= 22; $i++) {
+                printf("<option value='%02d:00'>%02d:00</option>", $i, $i);
+            }
+            ?>
+        </select>
+        <select id="hora_fim">
+            <option value="">Hora fim</option>
+            <?php
+            for ($i = 7; $i <= 23; $i++) {
+                printf("<option value='%02d:00'>%02d:00</option>", $i, $i);
+            }
+            ?>
+        </select>
+    </div>
+    <button class="reserve-button" id="btn_reservar">Reservar</button>
     <div class="price-info">
-        <span>Valor por hora:</span>
-        <span>R$<?php echo number_format($quadra['valor'], 2, ',', '.'); ?></span>
+        <span>Duração: <span id="duracao">0</span> hora(s)</span>
+        <span>R$<span id="preco_hora"><?= htmlspecialchars($quadra['valor']) ?></span>/hora</span>
     </div>
-    <div class="total" id="total-container" style="display: none;">
-        <span>Total a pagar:</span>
-        <span id="valor-total"></span>
+    <div class="total">
+        <span>Total a pagar</span>
+        <span>R$<span id="total_pagar">0</span></span>
     </div>
-</form>
 </div>
-</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('reserva-form');
-    const horaInicio = form.querySelector('input[name="hora_inicio"]');
-    const horaFim = form.querySelector('input[name="hora_fim"]');
-    const valorHora = <?php echo $quadra['valor']; ?>;
-    const totalContainer = document.getElementById('total-container');
-    const valorTotalSpan = document.getElementById('valor-total');
+    const dataReserva = document.getElementById('data_reserva');
+    const horaInicio = document.getElementById('hora_inicio');
+    const horaFim = document.getElementById('hora_fim');
+    const btnReservar = document.getElementById('btn_reservar');
+    const duracaoSpan = document.getElementById('duracao');
+    const totalPagarSpan = document.getElementById('total_pagar');
+    const precoHora = parseFloat(document.getElementById('preco_hora').textContent);
 
-    function calcularValorTotal() {
+    function calcularDuracaoEPreco() {
         if (horaInicio.value && horaFim.value) {
             const inicio = new Date(`2000-01-01T${horaInicio.value}`);
             const fim = new Date(`2000-01-01T${horaFim.value}`);
-            const duracao = (fim - inicio) / (1000 * 60 * 60); // duração em horas
-            const valorTotal = duracao * valorHora;
+            const duracao = (fim - inicio) / (1000 * 60 * 60);
             
-            if (valorTotal > 0) {
-                valorTotalSpan.textContent = `R$ ${valorTotal.toFixed(2)}`;
-                totalContainer.style.display = 'flex';
+            if (duracao > 0) {
+                duracaoSpan.textContent = duracao;
+                totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
+                btnReservar.disabled = false;
             } else {
-                totalContainer.style.display = 'none';
+                duracaoSpan.textContent = '0';
+                totalPagarSpan.textContent = '0';
+                btnReservar.disabled = true;
             }
-        } else {
-            totalContainer.style.display = 'none';
         }
     }
 
-    horaInicio.addEventListener('change', calcularValorTotal);
-    horaFim.addEventListener('change', calcularValorTotal);
+    dataReserva.addEventListener('change', calcularDuracaoEPreco);
+    horaInicio.addEventListener('change', calcularDuracaoEPreco);
+    horaFim.addEventListener('change', calcularDuracaoEPreco);
+
+    btnReservar.addEventListener('click', function() {
+        if (!dataReserva.value || !horaInicio.value || !horaFim.value) {
+            alert('Por favor, selecione uma data e horários válidos.');
+            return;
+        }
+
+        // Aqui você pode adicionar a lógica para enviar a reserva para o servidor
+        const dadosReserva = {
+            data: dataReserva.value,
+            hora_inicio: horaInicio.value,
+            hora_fim: horaFim.value,
+            duracao: parseFloat(duracaoSpan.textContent),
+            total: parseFloat(totalPagarSpan.textContent),
+            id_quadra: <?= $id_quadra ?>
+        };
+
+        console.log('Dados da reserva:', dadosReserva);
+        // Implemente aqui a chamada AJAX para enviar os dados ao servidor
+        // e atualizar o status de horarios_disponiveis
+    });
 });
 </script>
 </body>
