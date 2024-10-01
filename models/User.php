@@ -337,5 +337,24 @@ class User
             $this->showErrorAndRedirect("Erro ao completar o registro. Tente novamente.", "../views/auth/registrar.user.php");
         }
     }
+    public static function getHorariosDisponiveis($quadra_id, $data) {
+        try {
+            $pdo = Conexao::getInstance();
+            $sql = "SELECT dia_da_semana, horario_inicio, horario_fim 
+                    FROM horarios_disponiveis 
+                    WHERE quadra_id = ? AND data = ? AND status = 'disponível'
+                    ORDER BY horario_inicio";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(1, $quadra_id, PDO::PARAM_INT);
+            $stmt->bindParam(2, $data, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar horários disponíveis: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

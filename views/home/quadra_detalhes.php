@@ -17,66 +17,6 @@ if (!$quadra) {
 }
 
 ?>
-<?php
-function verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim) {
-    try {
-        $pdo = Conexao::getInstance();
-        
-        // Verificar disponibilidade
-        $sql = "SELECT * FROM horarios_disponiveis WHERE quadra_id = :quadra_id AND data = :data 
-                AND ((hora_inicio <= :hora_inicio AND hora_fim > :hora_inicio) 
-                OR (hora_inicio < :hora_fim AND hora_fim >= :hora_fim))";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-        $stmt->bindParam(':data', $dataReserva);
-        $stmt->bindParam(':hora_inicio', $horaInicio);
-        $stmt->bindParam(':hora_fim', $horaFim);
-        $stmt->execute();
-        
-        if ($stmt->rowCount() > 0) {
-            return ['status' => false, 'mensagem' => 'Horário não disponível'];
-        }
-        
-        // Buscar valor por hora da quadra
-        $sqlValor = "SELECT valor_hora FROM quadra WHERE id = :id";
-        $stmtValor = $pdo->prepare($sqlValor);
-        $stmtValor->bindParam(':id', $idQuadra, PDO::PARAM_INT);
-        $stmtValor->execute();
-        $valorHora = $stmtValor->fetchColumn();
-        
-        // Calcular duração e valor total
-        $duracao = (strtotime($horaFim) - strtotime($horaInicio)) / 3600; // em horas
-        $valorTotal = $duracao * $valorHora;
-        
-        // Inserir reserva
-        $sqlReserva = "INSERT INTO reservas (quadra_id, data_reserva, hora_inicio, hora_fim, valor_total) 
-                       VALUES (:quadra_id, :data_reserva, :hora_inicio, :hora_fim, :valor_total)";
-        $stmtReserva = $pdo->prepare($sqlReserva);
-        $stmtReserva->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-        $stmtReserva->bindParam(':data_reserva', $dataReserva);
-        $stmtReserva->bindParam(':hora_inicio', $horaInicio);
-        $stmtReserva->bindParam(':hora_fim', $horaFim);
-        $stmtReserva->bindParam(':valor_total', $valorTotal);
-        $stmtReserva->execute();
-        
-        // Atualizar horários disponíveis
-        $sqlAtualizar = "INSERT INTO horarios_disponiveis (quadra_id, data, hora_inicio, hora_fim, status) 
-                         VALUES (:quadra_id, :data, :hora_inicio, :hora_fim, 'ocupado')";
-        $stmtAtualizar = $pdo->prepare($sqlAtualizar);
-        $stmtAtualizar->bindParam(':quadra_id', $idQuadra, PDO::PARAM_INT);
-        $stmtAtualizar->bindParam(':data', $dataReserva);
-        $stmtAtualizar->bindParam(':hora_inicio', $horaInicio);
-        $stmtAtualizar->bindParam(':hora_fim', $horaFim);
-        $stmtAtualizar->execute();
-        
-        return ['status' => true, 'mensagem' => 'Reserva realizada com sucesso', 'valor_total' => $valorTotal];
-    } catch (PDOException $e) {
-        error_log("Erro ao verificar e reservar quadra: " . $e->getMessage());
-        return ['status' => false, 'mensagem' => 'Erro ao processar a reserva'];
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -126,29 +66,16 @@ function verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim
         </div>
     </a>
 </div>
-<form action="../../controllers/ClientController.php?action=reservarQuadra">
+<form action="../../controllers/ClientController.php?action=reservarQuadra" method="POST">
 <div class="container-reserva">
     <h2>Verificar horário</h2>
     <div class="date-time">
-        <input type="date" id="data_reserva" min="<?= date('Y-m-d') ?>">
-        <select id="hora_inicio">
-            <option value="">Hora início</option>
-            <?php
-            for ($i = 6; $i <= 22; $i++) {
-                printf("<option value='%02d:00'>%02d:00</option>", $i, $i);
-            }
-            ?>
-        </select>
-        <select id="hora_fim">
-            <option value="">Hora fim</option>
-            <?php
-            for ($i = 7; $i <= 23; $i++) {
-                printf("<option value='%02d:00'>%02d:00</option>", $i, $i);
-            }
-            ?>
+        <input type="date" id="data_reserva" name="data_reserva" min="<?= date('Y-m-d') ?>">
+        <select id="horario_disponivel" name="horario_disponivel">
+            <option value="">Selecione um horário</option>
         </select>
     </div>
-    <button class="reserve-button" id="btn_reservar">Reservar</button>
+    <button class="reserve-button" id="btn_reservar" type="submit">Reservar</button>
     <div class="price-info">
         <span>Duração: <span id="duracao">0</span> hora(s)</span>
         <span>R$<span id="preco_hora"><?= htmlspecialchars($quadra['valor']) ?></span>/hora</span>
@@ -157,59 +84,59 @@ function verificarEReservarQuadra($idQuadra, $dataReserva, $horaInicio, $horaFim
         <span>Total a pagar</span>
         <span>R$<span id="total_pagar">0</span></span>
     </div>
+    <input type="hidden" name="id_quadra" value="<?= $id_quadra ?>">
 </div>
+</form>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const dataReserva = document.getElementById('data_reserva');
-    const horaInicio = document.getElementById('hora_inicio');
-    const horaFim = document.getElementById('hora_fim');
+    const horarioDisponivel = document.getElementById('horario_disponivel');
     const btnReservar = document.getElementById('btn_reservar');
     const duracaoSpan = document.getElementById('duracao');
     const totalPagarSpan = document.getElementById('total_pagar');
     const precoHora = parseFloat(document.getElementById('preco_hora').textContent);
 
-    function calcularDuracaoEPreco() {
-        if (horaInicio.value && horaFim.value) {
-            const inicio = new Date(`2000-01-01T${horaInicio.value}`);
-            const fim = new Date(`2000-01-01T${horaFim.value}`);
-            const duracao = (fim - inicio) / (1000 * 60 * 60);
-            
-            if (duracao > 0) {
-                duracaoSpan.textContent = duracao;
-                totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
-                btnReservar.disabled = false;
-            } else {
-                duracaoSpan.textContent = '0';
-                totalPagarSpan.textContent = '0';
-                btnReservar.disabled = true;
-            }
+    dataReserva.addEventListener('change', function() {
+        fetch(`../../controllers/AuthController.php?action=getHorariosDisponiveis&quadra_id=<?= $id_quadra ?>&data=${this.value}`)
+            .then(response => response.json())
+            .then(data => {
+                horarioDisponivel.innerHTML = '<option value="">Selecione um horário</option>';
+                data.forEach(horario => {
+                    const option = document.createElement('option');
+                    option.value = `${horario.horario_inicio}-${horario.horario_fim}`;
+                    option.textContent = `${horario.horario_inicio} - ${horario.horario_fim}`;
+                    horarioDisponivel.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Erro ao buscar horários:', error));
+    });
+
+    horarioDisponivel.addEventListener('change', function() {
+        if (this.value) {
+            const [inicio, fim] = this.value.split('-');
+            const duracao = calcularDuracao(inicio, fim);
+            duracaoSpan.textContent = duracao;
+            totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
+            btnReservar.disabled = false;
+        } else {
+            duracaoSpan.textContent = '0';
+            totalPagarSpan.textContent = '0';
+            btnReservar.disabled = true;
         }
+    });
+
+    function calcularDuracao(inicio, fim) {
+        const [horaInicio, minInicio] = inicio.split(':').map(Number);
+        const [horaFim, minFim] = fim.split(':').map(Number);
+        return ((horaFim * 60 + minFim) - (horaInicio * 60 + minInicio)) / 60;
     }
 
-    dataReserva.addEventListener('change', calcularDuracaoEPreco);
-    horaInicio.addEventListener('change', calcularDuracaoEPreco);
-    horaFim.addEventListener('change', calcularDuracaoEPreco);
-
-    btnReservar.addEventListener('click', function() {
-        if (!dataReserva.value || !horaInicio.value || !horaFim.value) {
-            alert('Por favor, selecione uma data e horários válidos.');
-            return;
+    btnReservar.addEventListener('click', function(event) {
+        if (!dataReserva.value || !horarioDisponivel.value) {
+            alert('Por favor, selecione uma data e um horário válido.');
+            event.preventDefault();
         }
-
-        // Aqui você pode adicionar a lógica para enviar a reserva para o servidor
-        const dadosReserva = {
-            data: dataReserva.value,
-            hora_inicio: horaInicio.value,
-            hora_fim: horaFim.value,
-            duracao: parseFloat(duracaoSpan.textContent),
-            total: parseFloat(totalPagarSpan.textContent),
-            id_quadra: <?= $id_quadra ?>
-        };
-
-        console.log('Dados da reserva:', dadosReserva);
-        // Implemente aqui a chamada AJAX para enviar os dados ao servidor
-        // e atualizar o status de horarios_disponiveis
     });
 });
 </script>
