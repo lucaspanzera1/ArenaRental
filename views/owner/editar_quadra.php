@@ -109,8 +109,9 @@
     </div>
 
     <div id="ImgQuadra">
-      <form method="POST" action="../../controllers/ClientController.php?action=FotoPerfil"
+      <form method="POST" action="../../controllers/OwnerController.php?action=UpdateFotoQuadra"
         enctype="multipart/form-data">
+        <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
         <input type="hidden" name="origem" value="editar_perfil">
         <input type="hidden" name="redirect_to" value="alterar">
         <label class="picture" for="picture__input" tabIndex="0">

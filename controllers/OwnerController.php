@@ -120,9 +120,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             echo "<script type=\"text/javascript\">
             alert(\"Erro ao atualizar a quadra. Por favor, tente novamente.\");
-            window.location.href = '../views/owner/editar.quadra.php?id=" . $quadraId . "';
+            window.location.href = '../views/owner/editar_quadra.php?id=" . $quadraId . "';
             </script>";
         }
         exit();
+    }
+    if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
+        $clientData = $_SESSION['client'];
+        $quadraId = $_POST['quadra_id'];
+        $owner = Owner::getOwnerById($clientData['id']);
+
+        if ($owner) {
+            $origem = isset($_POST['origem']) ? $_POST['origem'] : null;
+            $owner->uploadFotoPerfilOwner($quadraId, $origem);
+
+            echo "<script type=\"text/javascript\">
+            alert(\"Imagem da quadra enviada com sucesso!\");
+             window.location.href = '../views/owner/gerenciador.php';
+            </script>";
+            exit();
+        }
     }
 }
