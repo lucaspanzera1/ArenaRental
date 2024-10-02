@@ -211,7 +211,8 @@ public function salvarHorarios($quadraId, $horarios) {
             $horaIntervaloInicio = DateTime::createFromFormat('H:i', $dados['intervalo_inicio']);
             $horaIntervaloFim = DateTime::createFromFormat('H:i', $dados['intervalo_fim']);
             
-            $stmtIntervalo = $db->prepare("UPDATE horarios_disponiveis SET status = 'indisponível' WHERE quadra_id = ? AND data = ? AND horario_inicio >= ? AND horario_fim <= ?");
+            // Atualizar o status para 'intervalo' ao invés de 'indisponível'
+            $stmtIntervalo = $db->prepare("UPDATE horarios_disponiveis SET status = 'intervalo' WHERE quadra_id = ? AND data = ? AND horario_inicio >= ? AND horario_fim <= ?");
             $stmtIntervalo->execute([
                 $quadraId,
                 $data->format('Y-m-d'),
