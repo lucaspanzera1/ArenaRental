@@ -5,6 +5,7 @@ use arenarental;
 select * from cliente;
 select * from proprietario;
 select * from horarios_disponiveis;
+select * from reservas;
 
 
 -- Tabela Cliente
@@ -50,7 +51,7 @@ CREATE TABLE horarios_disponiveis (
     dia_da_semana VARCHAR(100) NOT NULL,
     horario_inicio TIME,
     horario_fim TIME,
-    status ENUM('disponível', 'reservado') DEFAULT 'disponível',
+	status ENUM('disponível', 'reservado', 'intervalo') DEFAULT 'disponível',
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)
 );
 CREATE TABLE reservas (

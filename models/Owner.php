@@ -243,7 +243,6 @@ private function validarHorarios($inicio, $fim, $intervaloInicio, $intervaloFim)
             return false;
         }
     }
-    
     return true;
 }
 
