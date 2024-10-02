@@ -1,58 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de quadras. | © 2024 Arena Rental, Inc.</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel='shorcut icon' href="../../resources/images/favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../resources/css/gerenciador.css?v=<?= time() ?>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de quadras. | © 2024 Arena Rental, Inc.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link rel='shorcut icon' href="../../resources/images/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../resources/css/gerenciador.css?v=<?= time() ?>">
 </head>
+
 <body>
 
-<?php include '../layouts/header.php'; ?>
-<?php include '../layouts/verification.php'; ?>
-<?php 
+  <?php include '../layouts/header.php'; ?>
+  <?php include '../layouts/verification.php'; ?>
+  <?php 
          if ($owner){ ?>
-<section id="SecInfo">
-<div id="Info">
-<h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?></h1>
-<h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?></h2>
- </div>
+  <section id="SecInfo">
+    <div id="Info">
+      <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?></h1>
+      <h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?>
+      </h2>
+    </div>
 
-<?php $recursos = $owner->getRecursos(); ?>
-<p id="recursos"></p>
+    <?php $recursos = $owner->getRecursos(); ?>
+    <p id="recursos"></p>
 
-<a href="form.quadra1.php">Adicionar nova quadra.</a>
+    <a href="form.quadra1.php">Adicionar nova quadra.</a>
 
-<section id="quadras">
-<?php
+    <section id="quadras">
+      <?php
 $quadras = $owner->getQuadras();
 if (!empty($quadras)) {
     foreach ($quadras as $quadra) { ?>
-        <div id="quadra-item">
-            <?php echo "<a href='quadra_detalhes.php?id=" . $quadra['id'] . "' class='quadra-link'>"; ?>
-            <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-            <label for=""></label>
-            <h1><?php echo htmlspecialchars($quadra['nome']); ?> </h1>
-            <h2><?php echo htmlspecialchars($quadra['esporte']) . ", " . ($quadra['coberta'] ? 'coberta' : 'descoberta'); ?></h2>
-            <h2><?php echo "<b>R$" . number_format($quadra['valor'], 2, ',', '.') . "</b>/". htmlspecialchars($quadra['tipo_aluguel']) ?></h2>
-    </div>
-    <?php }
+      <div id="quadra-item">
+        <?php echo "<a href='editar_quadra.php?id=" . $quadra['id'] . "' class='quadra-link'>"; ?>
+        <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>" <label for=""></label>
+        <h1><?php echo htmlspecialchars($quadra['nome']); ?> </h1>
+        <h2><?php echo htmlspecialchars($quadra['esporte']) . ", " . ($quadra['coberta'] ? 'coberta' : 'descoberta'); ?>
+        </h2>
+        <h2>
+          <?php echo "<b>R$" . number_format($quadra['valor'], 2, ',', '.') . "</b>/". htmlspecialchars($quadra['tipo_aluguel']) ?>
+        </h2>
+      </div>
+      <?php }
 } else { ?>
-    <p>Não há quadras cadastradas.</p>
-<?php } ?>
-</section>
+      <p>Não há quadras cadastradas.</p>
+      <?php } ?>
+    </section>
 
 
 
 
 
 
-<script>
+    <script>
     // Recebendo os recursos do PHP via JSON
     const recursos = <?php echo json_encode($recursos); ?>;
 
@@ -71,58 +75,59 @@ if (!empty($quadras)) {
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.4603 6.7238C5.11503 5.55594 6.31206 4.80999 7.64646 4.80999C8.99979 4.80999 10.237 5.57322 10.882 6.7238H14.2549C14.8999 5.57325 16.1372 4.80999 17.4905 4.80999C18.8626 4.80999 20.1399 5.58996 20.7754 6.7238H24.1484C24.803 5.55594 26.0001 4.80999 27.3346 4.80999C29.3177 4.80999 31.026 6.48579 31.026 8.6793C31.026 10.8728 29.3177 12.5486 27.3346 12.5486C26.0001 12.5486 24.803 11.8027 24.1484 10.6348H20.7754C20.1399 11.7686 18.8626 12.5486 17.4905 12.5486C16.1372 12.5486 14.8999 11.7854 14.2549 10.6348H10.882C10.237 11.7854 8.99979 12.5486 7.64646 12.5486C6.31206 12.5486 5.11503 11.8027 4.4603 10.6348C4.14071 10.0648 3.95495 9.39881 3.95495 8.6793C3.95495 7.95979 4.14071 7.29383 4.4603 6.7238ZM7.64646 0.940674C4.81666 0.940674 2.37786 2.52908 1.0874 4.83083C0.449729 5.96818 0.0876465 7.28452 0.0876465 8.6793C0.0876465 10.0741 0.449729 11.3904 1.0874 12.5278C1.76399 13.7346 2.75621 14.7453 3.95495 15.4338V42.5275L7.05758 45.4378H27.9234L31.026 42.5275V37.6992C34.2297 37.6992 36.827 35.1005 36.827 31.8952V24.1566C36.827 20.9512 34.2297 18.3526 31.026 18.3526V15.4363C33.3485 14.1026 34.8933 11.5525 34.8933 8.6793C34.8933 4.46193 31.5649 0.940674 27.3346 0.940674C25.4615 0.940674 23.7599 1.63648 22.4491 2.77437C21.0984 1.62761 19.3465 0.940674 17.4905 0.940674C15.6259 0.940674 13.8993 1.63202 12.5685 2.77442C11.2377 1.63202 9.51104 0.940674 7.64646 0.940674ZM27.1587 16.4159C25.3553 16.3738 23.7189 15.6864 22.4491 14.5842C21.0984 15.731 19.3465 16.4179 17.4905 16.4179C15.6259 16.4179 13.8993 15.7266 12.5685 14.5842C11.2796 15.6906 9.61943 16.3739 7.82224 16.4159V40.8514L8.58691 41.5685H26.394L27.1587 40.8514V16.4159ZM32.9597 24.1566V31.8952C32.9597 32.9636 32.0939 33.8298 31.026 33.8298V22.2219C32.0939 22.2219 32.9597 23.0881 32.9597 24.1566ZM11.6895 35.7645V20.2872H15.5568V35.7645H11.6895ZM19.4241 20.2872V35.7645H23.2914V20.2872H19.4241Z" fill="black"/>
 </svg>
 `;
-const svgVest = `
+    const svgVest = `
 <svg width="38" height="44" viewBox="0 0 38 44" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M26.943 4.76012C26.0366 8.28327 22.84 10.8865 19.0359 10.8865C15.2317 10.8865 12.0351 8.28327 11.1288 4.76012H8.8305V7.17356C8.8305 10.1356 7.17968 12.7119 4.74835 14.0317V39.4765H33.3234V14.0317C30.8921 12.7119 29.2412 10.1356 29.2412 7.17356V4.76012H26.943ZM6.44924 0.675842C5.50987 0.675842 4.74835 1.43776 4.74835 2.37762V7.17356C4.74835 9.22417 3.08685 10.8865 1.03731 10.8865C0.832342 10.8865 0.666199 11.0528 0.666199 11.2578V39.4765C0.666199 41.7322 2.49384 43.5607 4.74835 43.5607H33.3234C35.578 43.5607 37.4055 41.7322 37.4055 39.4765V11.2578C37.4055 11.0528 37.2394 10.8865 37.0345 10.8865C34.9848 10.8865 33.3234 9.22417 33.3234 7.17356V2.37762C33.3234 1.43776 32.5619 0.675842 31.6226 0.675842H24.1386C23.575 0.675842 23.118 1.133 23.118 1.69691V2.71798C23.118 4.97366 21.2904 6.80226 19.0359 6.80226C16.7813 6.80226 14.9537 4.97366 14.9537 2.71798V1.69691C14.9537 1.133 14.4968 0.675842 13.9332 0.675842H6.44924Z" fill="black"/>
 </svg>
 `;
-const svgTv = `
+    const svgTv = `
 <svg width="52" height="43" viewBox="0 0 52 43" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M46.7996 0.881363H4.71632C2.14457 0.881363 0.0404053 2.98662 0.0404053 5.55971V33.6298C0.0404053 36.2029 2.14457 38.3082 4.71632 38.3082H16.4061V42.9865H35.1098V38.3082H46.7996C49.3713 38.3082 51.4521 36.2029 51.4521 33.6298L51.4755 5.55971C51.4755 2.98662 49.3713 0.881363 46.7996 0.881363ZM46.7996 33.6298H4.71632V5.55971H46.7996V33.6298Z" fill="black"/>
 </svg>
 `;
-const svgChuuras = `
+    const svgChuuras = `
 <svg width="45" height="43" viewBox="0 0 45 43" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M43.2195 6.44273C42.9245 5.85155 42.4861 5.28113 41.5708 5.41803C40.8274 5.52916 40.1627 5.73619 38.9939 5.01897C35.546 2.09452 29.3859 0.146179 22.3577 0.146179C15.3266 0.146179 9.16424 2.09598 5.71787 5.02181C4.55188 5.7355 3.88791 5.52916 3.146 5.41803C2.23068 5.28122 1.79239 5.85155 1.49721 6.44273C1.08751 7.26324 -0.580568 10.1725 0.947156 11.3958C2.13251 12.3453 2.71124 12.94 2.99557 13.2912C4.21606 21.6408 11.1403 30.2314 22.3577 30.2314C33.5765 30.2314 40.5008 21.6409 41.7211 13.2912C42.0055 12.94 42.5842 12.3453 43.7696 11.3958C45.2973 10.1725 43.6292 7.26324 43.2195 6.44273ZM6.472 10.4169C6.472 7.27462 10.1226 4.56451 15.4289 3.26249L6.68538 11.6624C6.55656 11.2553 6.472 10.8419 6.472 10.4169ZM8.03055 13.8557C7.9683 13.7913 7.91387 13.7232 7.85437 13.6572L19.3553 2.61109C19.5015 2.59679 19.6411 2.57379 19.7893 2.56164C20.6674 2.48212 21.5662 2.4449 22.4801 2.4449C23.066 2.4449 23.6396 2.46851 24.209 2.50297L10.4671 15.6889C9.49309 15.137 8.66654 14.5265 8.03055 13.8557ZM16.4546 17.8085C15.1139 17.5405 13.8662 17.1779 12.7353 16.7493C12.7088 16.7393 12.6852 16.7278 12.6594 16.7171L27.1599 2.78813C27.1921 2.79244 27.2259 2.79528 27.2574 2.80028C28.6417 3.01816 29.9395 3.33064 31.1364 3.71462C31.1506 3.71893 31.1643 3.7247 31.1785 3.7297L16.5041 17.8171C16.4883 17.8142 16.4711 17.812 16.4546 17.8085ZM24.0959 18.3524C23.5674 18.3818 23.0237 18.3961 22.4802 18.3961C21.3952 18.3961 20.3329 18.3402 19.3074 18.2341L33.4726 4.63335C34.6342 5.17292 35.6349 5.80563 36.4284 6.5151C36.4899 6.56817 36.5451 6.62408 36.6046 6.67853L24.4748 18.323C24.3473 18.3301 24.2241 18.3467 24.0959 18.3524ZM28.2134 17.8586L37.9933 8.4699C38.3106 9.09407 38.4868 9.74685 38.4868 10.4169C38.4868 13.82 34.2246 16.7128 28.2134 17.8586Z" fill="black"/>
 <path d="M32.8423 28.5645C31.7135 29.2546 30.4894 29.8342 29.176 30.2842L30.675 34.0363H14.0409L15.5793 30.1839C14.2328 29.8456 12.9738 29.3684 11.7998 28.783L7.99897 40.0471C7.65298 40.9901 8.08128 42.0177 8.95726 42.3401C9.83392 42.6633 10.8251 42.1587 11.1725 41.2165L12.8807 36.9406H31.8352L33.5434 41.2165C33.8909 42.1587 34.8821 42.6632 35.7586 42.3401C36.6346 42.0177 37.0629 40.9901 36.717 40.0471L32.8423 28.5645Z" fill="black"/>
 </svg>
 `;
-const svgFestas = `
+    const svgFestas = `
 <svg id="fest" width="41" height="42" viewBox="0 0 41 42" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M6.57626 26.5715L15.2615 35.3055M36.5228 2.27076C32.9654 2.23796 31.3182 3.88314 30.7781 5.54577C30.3024 7.00983 30.737 10.0084 29.6015 12.2295C28.5156 14.3532 25.6417 15.5521 22.3784 15.6531M38.7538 11.1979L38.7761 11.1981M36.5237 29.8294L36.546 29.8296M9.76244 3.02835L9.78474 3.02857M36.5237 19.0056C33.1786 19.0056 30.9485 20.1213 28.93 22.2084M16.9828 10.2553C18.6829 7.84967 19.7979 5.61825 18.7011 2.08687M2.0368 39.8808L9.92142 16.213L25.6908 31.9916L2.0368 39.8808Z" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
 
     if (recursos.includes('bar')) {
-        icones.push(svgBar);
+      icones.push(svgBar);
     }
     if (recursos.includes('bebedouro')) {
-        icones.push(svgBebedouro);
+      icones.push(svgBebedouro);
     }
     if (recursos.includes('vestiario')) {
-        icones.push(svgVest);  // Coloque o SVG correto aqui
+      icones.push(svgVest); // Coloque o SVG correto aqui
     }
     if (recursos.includes('tv')) {
-        icones.push(svgTv);  // Coloque o SVG correto aqui
+      icones.push(svgTv); // Coloque o SVG correto aqui
     }
     if (recursos.includes('churrasqueira')) {
-        icones.push(svgChuuras);  // Coloque o SVG correto aqui
+      icones.push(svgChuuras); // Coloque o SVG correto aqui
     }
     if (recursos.includes('festas')) {
-        icones.push(svgFestas);  // Coloque o SVG correto aqui
+      icones.push(svgFestas); // Coloque o SVG correto aqui
     }
 
     // Exibir os ícones na página
     if (icones.length > 0) {
-        document.getElementById("recursos").innerHTML = icones.join(' ');
+      document.getElementById("recursos").innerHTML = icones.join(' ');
     } else {
-        document.getElementById("recursos").innerHTML = "Nenhum recurso disponível";
+      document.getElementById("recursos").innerHTML = "Nenhum recurso disponível";
     }
-</script>
-</section>
+    </script>
+  </section>
 
 
-<?php } ?>
-<script src="../java/dark.js"></script>
+  <?php } ?>
+  <script src="../java/dark.js"></script>
 </body>
+
 </html>

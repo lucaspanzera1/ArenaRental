@@ -1,4 +1,153 @@
+body{
+  font-family: "Inter", sans-serif;
+  transition: background-image 0.3s ease, color 0.3s ease;
+  background-image: url(../../resources/images/fundo.gerenciador.png);
+  background-attachment: fixed;
+}
+body.dark-mode {
+  background-color: #262626;
+  color: #ffffff;
+  background-image: url(../../resources/images/fundo.gerenciador.dark.png);
+}
+header{
+  background-color: #FFFFFF;
+}
 section{
-  padding-top: 100px;
-  padding-left: 15%;  
+  padding-top: 150px;
+  margin-left: 130px;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-content: center;
+  height: 80vh;
+}
+#form-container{
+  display: grid;
+  gap: 5px;
+}
+#nome{
+  border-radius: 15px 15px 0px 0px;
+}
+#valor{
+  border-radius: 0px 0px 15px 15px;
+}
+.form-group{
+  width: 600px;
+  height: 75px;
+  border: solid 1px black;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-content: center;
+  justify-content: left;
+  padding-left: 1%;
+}
+label{
+  font-size: 40px;
+  font-weight: 600;
+}
+input{
+  font-size: 40px;
+  font-weight: 200;
+  border: none;
+  margin-left: 2%
+}
+select{
+  font-size: 40px;
+  font-weight: 200;
+  border: none;
+  margin-left: 2%
+}
+#ImgQuadra {
+  position: absolute;
+  margin-left: 40%;
+  top: 15%;
+}
+#picture__input {
+  display: none;
+}
+#ImgQuadra .picture {
+  width: 850px;
+  height: 650px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  cursor: pointer;
+  font-family: sans-serif;
+  transition: color 300ms ease-in-out, background 300ms ease-in-out;
+  transition: 0.6s;
+  outline: none;
+  overflow: hidden;
+}
+
+#ImgQuadra .picture:hover {
+  color: white;
+  background-color: black;
+  width: 870px;
+  height: 670px;
+}
+
+#ImgQuadra .picture:active {
+  color: turquoise;
+  background: #eee;
+}
+
+#ImgQuadra .picture:focus {
+  color: #777;
+  background: #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.picture img{
+  width: 870px;
+  height: 670px;
+}
+#ImgQuadra input[type=submit]{
+  position: relative;
+  font-size: 24px;
+      font-weight: 100;
+      width: 220px;
+      height: 50px;
+      border: solid 1px black;
+      border-radius: 10px;
+      transition: 0.6s;
+      margin-left: 30%;
+      cursor: pointer;
+      margin-top: 3%;
+}
+#ImgQuadra input[type=submit]:hover{
+  background-color: black;
+  color: white;
+}
+#ImgQuadra input::placeholder{
+  color: black;
+}
+section button{
+  margin-top: 10px;
+  width: 380px;
+  height: 75px;
+  border-radius: 20px;
+  font-size: 32px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  color: white;
+  transition: 0.6s;
+  border-style: none;
+  border: 1px solid black;
+  background-color: black;
+}
+button:hover{
+  background-color: #d6d6d6;
+  color: black;
+  font-weight: 600;
+}
+body.dark-mode section button{
+  background-color: #262626;
+  color: white;
+  border-style: none;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
+}
+body.dark-mode section button:hover{
+  background-color: black;
+  font-weight: 600;
 }

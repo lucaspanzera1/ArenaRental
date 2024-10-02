@@ -2,7 +2,8 @@
 require_once 'Client.php';
 require_once 'Conexao.php';
 
-class Owner extends Client {
+class Owner extends Client
+{
     private $id;
     private $nomeEspaco;
     private $localizacao;
@@ -10,7 +11,8 @@ class Owner extends Client {
     private $descricao;
     private $recursos;
 
-    public function __construct($id, $name, $email, $type, $registrationDate, $nomeEspaco, $localizacao, $cep, $descricao, $recursos) {
+    public function __construct($id, $name, $email, $type, $registrationDate, $nomeEspaco, $localizacao, $cep, $descricao, $recursos)
+    {
         parent::__construct($id, $name, $email, $type, $registrationDate);
         $this->id = $id;
         $this->nomeEspaco = $nomeEspaco;
@@ -20,28 +22,34 @@ class Owner extends Client {
         $this->recursos = $recursos;
     }
     // Getters para acessar os atributos
-    public function getNomeEspaco() {
+    public function getNomeEspaco()
+    {
         return $this->nomeEspaco;
     }
 
-    public function getLocalizacao() {
+    public function getLocalizacao()
+    {
         return $this->localizacao;
     }
 
-    public function getCep() {
+    public function getCep()
+    {
         return $this->cep;
     }
 
-    public function getDescricao() {
+    public function getDescricao()
+    {
         return $this->descricao;
     }
 
-    public function getRecursos() { // Novo getter para 'recursos'
+    public function getRecursos()
+    { // Novo getter para 'recursos'
         return $this->recursos;
     }
-    public static function getOwnerById($ownerId) {
+    public static function getOwnerById($ownerId)
+    {
         $pdo = Conexao::getInstance();
-    
+
         // Consulta que faz JOIN entre cliente e proprietario
         $stmt = $pdo->prepare("
             SELECT p.id, c.nome, c.email, c.data_registro, 
@@ -52,9 +60,9 @@ class Owner extends Client {
         ");
         $stmt->bindParam(':id', $ownerId, PDO::PARAM_INT);
         $stmt->execute();
-    
+
         $ownerData = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($ownerData) {
             return new self(
                 $ownerData['id'], // Certifique-se de que o 'id' agora será retornado corretamente
@@ -71,7 +79,8 @@ class Owner extends Client {
         }
         return null;
     }
-    public static function registerQuadra($ownerId, $nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor) {
+    public static function registerQuadra($ownerId, $nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor)
+    {
         $pdo = Conexao::getInstance();
 
         try {
@@ -95,16 +104,17 @@ class Owner extends Client {
             return false;
         }
     }
-    
-    
-    public function getQuadras() {
+
+
+    public function getQuadras()
+    {
         $pdo = Conexao::getInstance();
         $stmt = $pdo->prepare("
             SELECT id, nome, esporte, coberta, tipo_aluguel, valor, imagem_quadra
             FROM quadra
             WHERE proprietario_id = :proprietario_id
         ");
-        
+
         $id = $this->getId(); // Armazena o ID em uma variável
         $stmt->bindParam(':proprietario_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -112,138 +122,143 @@ class Owner extends Client {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function uploadFotoPerfilOwner($quadraId, $origem = null)
-{
-    // Configurações de upload
-    $_UP['pasta'] = '../upload/quadra_img/';
-    $_UP['tamanho'] = 1024 * 1024 * 100; // 100MB
-    $_UP['extensoes'] = array('png', 'jpg', 'jpeg', 'gif');
+    {
+        // Configurações de upload
+        $_UP['pasta'] = '../upload/quadra_img/';
+        $_UP['tamanho'] = 1024 * 1024 * 100; // 100MB
+        $_UP['extensoes'] = array('png', 'jpg', 'jpeg', 'gif');
 
-    if ($_FILES['arquivo']['error'] != 0) {
-        die("Não foi possível fazer o upload, erro: " . $_FILES['arquivo']['error']);
-    }
-
-    if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
-        $this->exibirAlerta("Arquivo muito grande.", $origem);
-        return;
-    }
-
-    $extensao = strtolower(pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION));
-    if (!in_array($extensao, $_UP['extensoes'])) {
-        $this->exibirAlerta("Extensão não permitida.", $origem);
-        return;
-    }
-
-    $nome_final = uniqid() . '.' . $extensao;
-
-    if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
-        $pdo = Conexao::getInstance();
-
-        // Atualiza a coluna imagem_quadra na tabela quadra usando o ID da quadra
-        $stmt = $pdo->prepare("UPDATE quadra SET imagem_quadra = :imagem_quadra WHERE id = :quadra_id");
-        $imagem_quadra = $_UP['pasta'] . $nome_final;
-        $stmt->bindParam(':imagem_quadra', $imagem_quadra);
-        $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
-        $stmt->execute();
-    } else {
-        $this->exibirAlerta("Não foi possível atualizar a imagem de perfil.", $origem);
-    }
-}   
-public function salvarHorarios($quadraId, $horarios) {
-    $db = Conexao::getInstance();
-    
-    // Preparar a declaração SQL para inserir horários
-    $stmt = $db->prepare("INSERT INTO horarios_disponiveis (quadra_id, data, dia_da_semana, horario_inicio, horario_fim, status) VALUES (?, ?, ?, ?, ?, 'disponível')");
-    
-    // Obter a data atual
-    $dataAtual = new DateTime();
-    
-    // Array para mapear números do dia da semana para nomes em português
-    $diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-    
-    foreach ($horarios as $dia => $dados) {
-        // Validar os horários
-        if (!$this->validarHorarios($dados['inicio'], $dados['fim'], $dados['intervalo_inicio'], $dados['intervalo_fim'])) {
-            throw new Exception("Horários inválidos para o dia: " . ucfirst($dia));
+        if ($_FILES['arquivo']['error'] != 0) {
+            die("Não foi possível fazer o upload, erro: " . $_FILES['arquivo']['error']);
         }
-        
-        // Converter o dia da semana para um número (0 = Domingo, 1 = Segunda, etc.)
-        $diaNumerico = array_search($dia, ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado']);
-        
-        // Encontrar a próxima data para este dia da semana
-        $data = clone $dataAtual;
-        while ($data->format('w') != $diaNumerico) {
-            $data->modify('+1 day');
+
+        if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
+            $this->exibirAlerta("Arquivo muito grande.", $origem);
+            return;
         }
-        
-        // Obter o nome do dia da semana em português
-        $diaDaSemana = $diasSemana[$diaNumerico];
-        
-        // Criar objetos DateTime para o início e fim do período
-        $horaInicio = DateTime::createFromFormat('H:i', $dados['inicio']);
-        $horaFim = DateTime::createFromFormat('H:i', $dados['fim']);
-        
-        // Calcular e inserir os intervalos de 1 hora
-        $intervaloAtual = clone $horaInicio;
-        while ($intervaloAtual < $horaFim) {
-            $proximoIntervalo = clone $intervaloAtual;
-            $proximoIntervalo->modify('+1 hour');
-            
-            // Se o próximo intervalo ultrapassar o horário de fim, ajustar para o horário de fim
-            if ($proximoIntervalo > $horaFim) {
-                $proximoIntervalo = clone $horaFim;
+
+        $extensao = strtolower(pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION));
+        if (!in_array($extensao, $_UP['extensoes'])) {
+            $this->exibirAlerta("Extensão não permitida.", $origem);
+            return;
+        }
+
+        $nome_final = uniqid() . '.' . $extensao;
+
+        if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
+            $pdo = Conexao::getInstance();
+
+            // Atualiza a coluna imagem_quadra na tabela quadra usando o ID da quadra
+            $stmt = $pdo->prepare("UPDATE quadra SET imagem_quadra = :imagem_quadra WHERE id = :quadra_id");
+            $imagem_quadra = $_UP['pasta'] . $nome_final;
+            $stmt->bindParam(':imagem_quadra', $imagem_quadra);
+            $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            $this->exibirAlerta("Não foi possível atualizar a imagem de perfil.", $origem);
+        }
+    }
+    public function salvarHorarios($quadraId, $horarios)
+    {
+        $db = Conexao::getInstance();
+
+        // Preparar a declaração SQL para inserir horários
+        $stmt = $db->prepare("INSERT INTO horarios_disponiveis (quadra_id, data, dia_da_semana, horario_inicio, horario_fim, status) VALUES (?, ?, ?, ?, ?, 'disponível')");
+
+        // Obter a data atual
+        $dataAtual = new DateTime();
+
+        // Array para mapear números do dia da semana para nomes em português
+        $diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+
+        foreach ($horarios as $dia => $dados) {
+            // Validar os horários
+            if (!$this->validarHorarios($dados['inicio'], $dados['fim'], $dados['intervalo_inicio'], $dados['intervalo_fim'])) {
+                throw new Exception("Horários inválidos para o dia: " . ucfirst($dia));
             }
-            
-            // Inserir o intervalo de 1 hora
-            $stmt->execute([
-                $quadraId,
-                $data->format('Y-m-d'),
-                $diaDaSemana,
-                $intervaloAtual->format('H:i'),
-                $proximoIntervalo->format('H:i')
-            ]);
-            
-            // Mover para o próximo intervalo
-            $intervaloAtual = $proximoIntervalo;
-        }
-        
-        // Tratar o intervalo de indisponibilidade, se existir
-        if ($dados['intervalo_inicio'] !== '' && $dados['intervalo_fim'] !== '') {
-            $horaIntervaloInicio = DateTime::createFromFormat('H:i', $dados['intervalo_inicio']);
-            $horaIntervaloFim = DateTime::createFromFormat('H:i', $dados['intervalo_fim']);
-            
-            // Atualizar o status para 'intervalo' ao invés de 'indisponível'
-            $stmtIntervalo = $db->prepare("UPDATE horarios_disponiveis SET status = 'intervalo' WHERE quadra_id = ? AND data = ? AND horario_inicio >= ? AND horario_fim <= ?");
-            $stmtIntervalo->execute([
-                $quadraId,
-                $data->format('Y-m-d'),
-                $horaIntervaloInicio->format('H:i'),
-                $horaIntervaloFim->format('H:i')
-            ]);
-        }
-    }
-    
-    return true;
-}
 
-private function validarHorarios($inicio, $fim, $intervaloInicio, $intervaloFim) {
-    $horaInicio = DateTime::createFromFormat('H:i', $inicio);
-    $horaFim = DateTime::createFromFormat('H:i', $fim);
-    
-    if ($horaFim <= $horaInicio) {
-        return false;
+            // Converter o dia da semana para um número (0 = Domingo, 1 = Segunda, etc.)
+            $diaNumerico = array_search($dia, ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado']);
+
+            // Encontrar a próxima data para este dia da semana
+            $data = clone $dataAtual;
+            while ($data->format('w') != $diaNumerico) {
+                $data->modify('+1 day');
+            }
+
+            // Obter o nome do dia da semana em português
+            $diaDaSemana = $diasSemana[$diaNumerico];
+
+            // Criar objetos DateTime para o início e fim do período
+            $horaInicio = DateTime::createFromFormat('H:i', $dados['inicio']);
+            $horaFim = DateTime::createFromFormat('H:i', $dados['fim']);
+
+            // Calcular e inserir os intervalos de 1 hora
+            $intervaloAtual = clone $horaInicio;
+            while ($intervaloAtual < $horaFim) {
+                $proximoIntervalo = clone $intervaloAtual;
+                $proximoIntervalo->modify('+1 hour');
+
+                // Se o próximo intervalo ultrapassar o horário de fim, ajustar para o horário de fim
+                if ($proximoIntervalo > $horaFim) {
+                    $proximoIntervalo = clone $horaFim;
+                }
+
+                // Inserir o intervalo de 1 hora
+                $stmt->execute([
+                    $quadraId,
+                    $data->format('Y-m-d'),
+                    $diaDaSemana,
+                    $intervaloAtual->format('H:i'),
+                    $proximoIntervalo->format('H:i')
+                ]);
+
+                // Mover para o próximo intervalo
+                $intervaloAtual = $proximoIntervalo;
+            }
+
+            // Tratar o intervalo de indisponibilidade, se existir
+            if ($dados['intervalo_inicio'] !== '' && $dados['intervalo_fim'] !== '') {
+                $horaIntervaloInicio = DateTime::createFromFormat('H:i', $dados['intervalo_inicio']);
+                $horaIntervaloFim = DateTime::createFromFormat('H:i', $dados['intervalo_fim']);
+
+                // Atualizar o status para 'intervalo' ao invés de 'indisponível'
+                $stmtIntervalo = $db->prepare("UPDATE horarios_disponiveis SET status = 'intervalo' WHERE quadra_id = ? AND data = ? AND horario_inicio >= ? AND horario_fim <= ?");
+                $stmtIntervalo->execute([
+                    $quadraId,
+                    $data->format('Y-m-d'),
+                    $horaIntervaloInicio->format('H:i'),
+                    $horaIntervaloFim->format('H:i')
+                ]);
+            }
+        }
+
+        return true;
     }
-    
-    if ($intervaloInicio !== '' && $intervaloFim !== '') {
-        $horaIntervaloInicio = DateTime::createFromFormat('H:i', $intervaloInicio);
-        $horaIntervaloFim = DateTime::createFromFormat('H:i', $intervaloFim);
-        
-        if ($horaIntervaloFim <= $horaIntervaloInicio ||
-            $horaIntervaloInicio < $horaInicio ||
-            $horaIntervaloFim > $horaFim) {
+
+    private function validarHorarios($inicio, $fim, $intervaloInicio, $intervaloFim)
+    {
+        $horaInicio = DateTime::createFromFormat('H:i', $inicio);
+        $horaFim = DateTime::createFromFormat('H:i', $fim);
+
+        if ($horaFim <= $horaInicio) {
             return false;
         }
+
+        if ($intervaloInicio !== '' && $intervaloFim !== '') {
+            $horaIntervaloInicio = DateTime::createFromFormat('H:i', $intervaloInicio);
+            $horaIntervaloFim = DateTime::createFromFormat('H:i', $intervaloFim);
+
+            if (
+                $horaIntervaloFim <= $horaIntervaloInicio ||
+                $horaIntervaloInicio < $horaInicio ||
+                $horaIntervaloFim > $horaFim
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
-    return true;
-}
 
 }
