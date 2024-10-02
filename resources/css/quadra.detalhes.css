@@ -20,7 +20,7 @@ section{
   align-content: center;
   height: 80vh;
 }
-#form-container{
+form{
   display: grid;
   gap: 5px;
 }

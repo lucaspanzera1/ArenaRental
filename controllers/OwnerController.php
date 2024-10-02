@@ -100,4 +100,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
     }
+    if ($action === 'updateQuadra' && isset($_SESSION['client'])) {
+        $clientData = $_SESSION['client'];
+        $quadraId = $_POST['quadra_id']; // Assumindo que o ID da quadra está no formulário
+        $nome = $_POST['nome'];
+        $esporte = $_POST['esporte'];
+        $quadrac = $_POST['quadrac'] === 'coberta' ? 1 : 0;
+        $rentalType = $_POST['rental-type'];
+        $price = $_POST['priceInput'];
+    
+        // Atualizar a quadra
+        $sucesso = Owner::updateQuadra($quadraId, $nome, $esporte, $quadrac, $rentalType, $price);
+    
+        if ($sucesso) {
+            echo "<script type=\"text/javascript\">
+            alert(\"Quadra atualizada com sucesso!\");
+            window.location.href = '../views/owner/gerenciador.php';
+            </script>";
+        } else {
+            echo "<script type=\"text/javascript\">
+            alert(\"Erro ao atualizar a quadra. Por favor, tente novamente.\");
+            window.location.href = '../views/owner/editar.quadra.php?id=" . $quadraId . "';
+            </script>";
+        }
+        exit();
+    }
 }

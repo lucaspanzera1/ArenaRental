@@ -260,5 +260,30 @@ class Owner extends Client
 
         return true;
     }
+    public static function updateQuadra($quadraId, $nomeQuadra, $esporte, $coberta, $tipoAluguel, $valor)
+{
+    $pdo = Conexao::getInstance();
 
+    try {
+        $stmt = $pdo->prepare("
+            UPDATE quadra 
+            SET nome = :nome, esporte = :esporte, coberta = :coberta, tipo_aluguel = :tipo_aluguel, valor = :valor
+            WHERE id = :quadra_id
+        ");
+
+        $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
+        $stmt->bindParam(':nome', $nomeQuadra, PDO::PARAM_STR);
+        $stmt->bindParam(':esporte', $esporte, PDO::PARAM_STR);
+        $stmt->bindParam(':coberta', $coberta, PDO::PARAM_BOOL);
+        $stmt->bindParam(':tipo_aluguel', $tipoAluguel, PDO::PARAM_STR);
+        $stmt->bindParam(':valor', $valor, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        error_log("Erro ao atualizar quadra: " . $e->getMessage());
+        return false;
+    }
+}
 }

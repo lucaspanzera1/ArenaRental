@@ -44,47 +44,68 @@
 
   <section>
     <div id="form-container">
-      <div class="form-group" id="nome">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required value="<?php echo htmlspecialchars($quadra['nome']); ?>">
-      </div>
+      <form action="../../controllers/OwnerController.php?action=updateQuadra" method="POST">
+        <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
+        <div class="form-group" id="nome">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" required value="<?php echo htmlspecialchars($quadra['nome']); ?>">
+        </div>
 
-      <div class="form-group">
-        <label for="esporte">Esporte:</label>
-        <select id="esporte" name="esporte" required>
-          <option value="" disabled selected><?php echo htmlspecialchars($quadra['esporte']); ?></option>
-          <option value="Futebol">Futebol</option>
-          <option value="Futsal">Futsal</option>
-          <option value="Futvôlei">Futvôlei</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="esporte">Esporte:</label>
+          <select id="esporte" name="esporte">
+            <option value=""><?php echo htmlspecialchars($quadra['esporte']); ?></option>
+            <?php if ($quadra['esporte'] != 'Futebol'): ?>
+            <option value="Futebol">Futebol</option>
+            <?php endif; ?>
+            <?php if ($quadra['esporte'] != 'Futsal'): ?>
+            <option value="Futsal">Futsal</option>
+            <?php endif; ?>
+            <?php if ($quadra['esporte'] != 'Futvôlei'): ?>
+            <option value="Futvôlei">Futvôlei</option>
+            <?php endif; ?>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="quadrac">Quadra:</label>
-        <select id="quadrac" name="quadrac" required>
-          <option value="" disabled selected>
-            <?php echo ($quadra['coberta'] ? 'Coberta' : 'Descoberta') . "</p>"; ?></option>
-          <option value="coberta">Quadra coberta</option>
-          <option value="descoberta">Quadra descoberta</option>
-        </select>
-      </div>
+        <!-- Campo Quadra (Coberta ou Descoberta) -->
+        <div class="form-group">
+          <label for="quadrac">Quadra:</label>
+          <select id="quadrac" name="quadrac">
+            <option value="">
+              <?php echo ($quadra['coberta'] ? 'Coberta' : 'Descoberta'); ?>
+            </option>
+            <?php if ($quadra['coberta'] != 1): /* Se não for coberta */ ?>
+            <option value="1">Coberta</option>
+            <?php endif; ?>
+            <?php if ($quadra['coberta'] != 0): /* Se não for descoberta */ ?>
+            <option value="0">Descoberta</option>
+            <?php endif; ?>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="aluguel">Aluguel por:</label>
-        <select id="aluguel" name="aluguel" required>
-          <option value="" disabled selected>
-            <?php echo htmlspecialchars($quadra['tipo_aluguel']); ?></option>
-          <option value="day-use">Day use</option>
-          <option value="hora">Por hora</option>
-        </select>
-      </div>
+        <!-- Campo Aluguel -->
+        <div class="form-group">
+          <label for="aluguel">Aluguel por:</label>
+          <select id="aluguel" name="aluguel">
+            <option value="">
+              <?php echo htmlspecialchars($quadra['tipo_aluguel']); ?>
+            </option>
+            <?php if ($quadra['tipo_aluguel'] != 'day-use'): ?>
+            <option id="day-use" name="rental-type" value="day use">Day use</option>
+            <?php endif; ?>
+            <?php if ($quadra['tipo_aluguel'] != 'hora'): ?>
+            <option id="por-hora" name="rental-type" value="por hora">Por hora</option>
+            <?php endif; ?>
+          </select>
+        </div>
 
-      <div class="form-group" id="valor">
-        <label for="valor">Valor:</label>
-        <input type="text" id="valor" name="valor" required
-          value="<?php echo number_format($quadra['valor'], 2, ',', '.'); ?>">
-      </div>
-      <button type="submit">Atualizar</button>
+        <div class="form-group" id="valor">
+          <label for="priceInput">Valor:</label>
+          <input type="text" id="priceInput" name="priceInput" required
+            value="<?php echo number_format($quadra['valor'], 2, ',', '.'); ?>">
+        </div>
+        <button type="submit">Atualizar</button>
+      </form>
     </div>
 
     <div id="ImgQuadra">
