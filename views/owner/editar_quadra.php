@@ -54,7 +54,7 @@
         <div class="form-group">
           <label for="esporte">Esporte:</label>
           <select id="esporte" name="esporte">
-            <option value=""><?php echo htmlspecialchars($quadra['esporte']); ?></option>
+            <option value="<?php echo htmlspecialchars($quadra['esporte']); ?>"><?php echo htmlspecialchars($quadra['esporte']); ?></option>
             <?php if ($quadra['esporte'] != 'Futebol'): ?>
             <option value="Futebol">Futebol</option>
             <?php endif; ?>
@@ -86,8 +86,8 @@
         <!-- Campo Aluguel -->
         <div class="form-group">
           <label for="aluguel">Aluguel por:</label>
-          <select id="aluguel" name="aluguel">
-            <option value="">
+          <select id="aluguel" name="rental-type">
+            <option value="<?php echo htmlspecialchars($quadra['tipo_aluguel']); ?>">
               <?php echo htmlspecialchars($quadra['tipo_aluguel']); ?>
             </option>
             <?php if ($quadra['tipo_aluguel'] != 'day-use'): ?>

@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Processar o segundo passo do registro (username e senha)
         $user->registerAdditionalInfo($_POST);
     }
+    
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'getHorariosDisponiveis') {
     // Processar solicitação de horários disponíveis
     $quadra_id = isset($_GET['quadra_id']) ? intval($_GET['quadra_id']) : 0;
