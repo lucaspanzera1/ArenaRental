@@ -12,11 +12,14 @@ header{
 body.dark-mode #QuadCinza2{
     background-color: white;
 }
-section{
+#menu-container{
     padding-top: 250px;
+}
+section{
     padding-bottom: 100px;
     margin-left: 230px;
 }
+
 section h1{
     font-size: 45px;
 }

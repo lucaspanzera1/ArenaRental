@@ -14,7 +14,8 @@
 
 <body>
 
-  <?php include '../layouts/header.php'; ?>
+  <?php include '../layouts/header.quadra.php'; ?>
+
   <?php include '../layouts/verification.php'; ?>
   <?php
         // Conexão com o banco de dados
