@@ -108,146 +108,128 @@ if (!$quadra) {
           </form>
         </div>
         <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            const dataReserva = document.getElementById('data_reserva');
-            const horarioInicio = document.getElementById('horario_inicio');
-            const horarioFim = document.getElementById('horario_fim');
-            const btnReservar = document.getElementById('btn_reservar');
-            const duracaoSpan = document.getElementById('duracao');
-            const totalPagarSpan = document.getElementById('total_pagar');
-            const precoHora = parseFloat(document.getElementById('preco_hora').textContent);
+document.addEventListener('DOMContentLoaded', function () {
+  const dataReserva = document.getElementById('data_reserva');
+  const horarioInicio = document.getElementById('horario_inicio');
+  const horarioFim = document.getElementById('horario_fim');
+  const btnReservar = document.getElementById('btn_reservar');
+  const duracaoSpan = document.getElementById('duracao');
+  const totalPagarSpan = document.getElementById('total_pagar');
+  const precoHora = parseFloat(document.getElementById('preco_hora').textContent);
 
-            dataReserva.addEventListener('change', function () {
-              const dataSelecionada = this.value;
+  let horarioIntervaloInicio = null;
+  let horarioIntervaloFim = null;
+  const fimDoExpediente = '22:00'; // Ajuste conforme necessário
 
-              fetch(
-                `../../controllers/AuthController.php?action=getHorariosDisponiveis&quadra_id=<?= $id_quadra ?>&data=${dataSelecionada}`
-              )
-                .then(response => response.json())
-                .then(data => {
-                  if (data.length === 0) {
-                    alert('Nenhum horário disponível para essa data.');
-                    return;
-                  }
-                  preencherHorarios(data);
-                })
-                .catch(error => console.error('Erro ao buscar horários:', error));
-            });
+  dataReserva.addEventListener('change', function () {
+    const dataSelecionada = this.value;
 
-            function preencherHorarios(data) {
-              horarioInicio.innerHTML = '<option value="">Início</option>';
-              horarioFim.innerHTML = '<option value="">Fim</option>';
+    fetch(`../../controllers/AuthController.php?action=getHorariosDisponiveis&quadra_id=<?= $id_quadra ?>&data=${dataSelecionada}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          alert('Nenhum horário disponível para essa data.');
+          return;
+        }
+        identificarIntervalo(data);
+        preencherHorarios(data);
+      })
+      .catch(error => console.error('Erro ao buscar horários:', error));
+  });
 
-              let horarioIntervaloInicio = null;
-              let horarioIntervaloFim = null;
-              let fimDoExpediente = '22:00'; // Ajuste o fim do expediente conforme necessário
+  function identificarIntervalo(data) {
+    horarioIntervaloInicio = null;
+    horarioIntervaloFim = null;
+    data.forEach(periodo => {
+      if (periodo.tipo === 'intervalo') {
+        horarioIntervaloInicio = periodo.horario_inicio;
+        horarioIntervaloFim = periodo.horario_fim;
+      }
+    });
+    console.log("Intervalo identificado:", horarioIntervaloInicio, horarioIntervaloFim);
+  }
 
-              // Identificando o intervalo no dia
-              data.forEach(periodo => {
-                if (periodo.status === 'intervalo') {
-                  horarioIntervaloInicio = new Date(`2000-01-01T${periodo.horario_inicio}`);
-                  horarioIntervaloFim = new Date(`2000-01-01T${periodo.horario_fim}`);
-                }
-              });
+  function preencherHorarios(data) {
+    horarioInicio.innerHTML = '<option value="">Início</option>';
+    horarioFim.innerHTML = '<option value="">Fim</option>';
 
-              // Preencher horários de início
-              data.forEach(periodo => {
-                let inicio = new Date(`2000-01-01T${periodo.horario_inicio}`);
-                let fim = new Date(`2000-01-01T${periodo.horario_fim}`);
+    data.forEach(periodo => {
+      if (periodo.tipo === 'disponível') {
+        let inicio = new Date(`2000-01-01T${periodo.horario_inicio}`);
+        let fim = new Date(`2000-01-01T${periodo.horario_fim}`);
 
-                while (inicio < fim) {
-                  let horaFormatada = inicio.toTimeString().slice(0, 5);
+        while (inicio < fim) {
+          let horaFormatada = inicio.toTimeString().slice(0, 5);
+          let optionInicio = document.createElement('option');
+          optionInicio.value = horaFormatada;
+          optionInicio.textContent = horaFormatada;
+          horarioInicio.appendChild(optionInicio);
 
-                  // Se o horário estiver dentro do intervalo, pula para o próximo
-                  if (horarioIntervaloInicio && inicio >= horarioIntervaloInicio && inicio <
-                    horarioIntervaloFim) {
-                    inicio.setMinutes(inicio.getMinutes() + 30);
-                    continue;
-                  }
+          inicio.setMinutes(inicio.getMinutes() + 30);
+        }
+      }
+    });
 
-                  let optionInicio = document.createElement('option');
-                  optionInicio.value = horaFormatada;
-                  optionInicio.textContent = horaFormatada;
-                  horarioInicio.appendChild(optionInicio);
+    btnReservar.disabled = true;
+  }
 
-                  inicio.setMinutes(inicio.getMinutes() + 30);
-                }
-              });
+  horarioInicio.addEventListener('change', function () {
+    horarioFim.innerHTML = '<option value="">Fim</option>';
 
-              // Adicionar o fim do expediente (por exemplo, 22:00) como opção de término
-              let optionFimExpediente = document.createElement('option');
-              optionFimExpediente.value = fimDoExpediente;
-              optionFimExpediente.textContent = fimDoExpediente;
-              horarioFim.appendChild(optionFimExpediente);
+    if (this.value) {
+      let inicioSelecionado = new Date(`2000-01-01T${this.value}`);
+      let limiteFim = new Date(`2000-01-01T${fimDoExpediente}`);
 
-              btnReservar.disabled = true;
-            }
+      // Se há um intervalo e o início selecionado é antes do intervalo,
+      // o limite de fim é o início do intervalo
+      if (horarioIntervaloInicio && inicioSelecionado < new Date(`2000-01-01T${horarioIntervaloInicio}`)) {
+        limiteFim = new Date(`2000-01-01T${horarioIntervaloInicio}`);
+      }
 
-            horarioInicio.addEventListener('change', function () {
-              horarioFim.innerHTML = '<option value="">Fim</option>';
+      let atual = new Date(inicioSelecionado.getTime() + 30 * 60000); // 30 minutos após o início
 
-              if (this.value) {
-                let inicioSelecionado = new Date(`2000-01-01T${this.value}`);
-                let options = horarioInicio.querySelectorAll('option');
-                let encontrouInicio = false;
+      while (atual <= limiteFim) {
+        let horaFormatada = atual.toTimeString().slice(0, 5);
+        let optionFim = document.createElement('option');
+        optionFim.value = horaFormatada;
+        optionFim.textContent = horaFormatada;
+        horarioFim.appendChild(optionFim);
 
-                options.forEach(option => {
-                  let optionHora = new Date(`2000-01-01T${option.value}`);
-                  if (encontrouInicio && option.value) {
-                    if (optionHora > inicioSelecionado) {
-                      let optionFim = document.createElement('option');
-                      optionFim.value = option.value;
-                      optionFim.textContent = option.value;
-                      horarioFim.appendChild(optionFim);
-                    }
-                  }
-                  if (option.value === this.value) {
-                    encontrouInicio = true;
-                  }
-                });
+        atual.setMinutes(atual.getMinutes() + 30);
+      }
+    }
 
-                // Adicionar fim do expediente como uma opção de término se estiver disponível
-                let fimDoExpediente = '22:00'; // Aqui o fim do expediente
-                if (inicioSelecionado.getHours() < 21 || (inicioSelecionado.getHours() === 21 && inicioSelecionado
-                  .getMinutes() <= 30)) {
-                  let optionFimExpediente = document.createElement('option');
-                  optionFimExpediente.value = fimDoExpediente;
-                  optionFimExpediente.textContent = fimDoExpediente;
-                  horarioFim.appendChild(optionFimExpediente);
-                }
-              }
+    atualizarCalculo();
+  });
 
-              atualizarCalculo();
-            });
+  horarioFim.addEventListener('change', atualizarCalculo);
 
-            horarioFim.addEventListener('change', atualizarCalculo);
+  function atualizarCalculo() {
+    if (horarioInicio.value && horarioFim.value) {
+      const duracao = calcularDuracao(horarioInicio.value, horarioFim.value);
+      duracaoSpan.textContent = duracao.toFixed(2);
+      totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
+      btnReservar.disabled = false;
+    } else {
+      duracaoSpan.textContent = '0';
+      totalPagarSpan.textContent = '0';
+      btnReservar.disabled = true;
+    }
+  }
 
-            function atualizarCalculo() {
-              if (horarioInicio.value && horarioFim.value) {
-                const duracao = calcularDuracao(horarioInicio.value, horarioFim.value);
-                duracaoSpan.textContent = duracao.toFixed(2);
-                totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
-                btnReservar.disabled = false;
-              } else {
-                duracaoSpan.textContent = '0';
-                totalPagarSpan.textContent = '0';
-                btnReservar.disabled = true;
-              }
-            }
+  function calcularDuracao(inicio, fim) {
+    const [horaInicio, minInicio] = inicio.split(':').map(Number);
+    const [horaFim, minFim] = fim.split(':').map(Number);
+    return ((horaFim * 60 + minFim) - (horaInicio * 60 + minInicio)) / 60;
+  }
 
-            function calcularDuracao(inicio, fim) {
-              const [horaInicio, minInicio] = inicio.split(':').map(Number);
-              const [horaFim, minFim] = fim.split(':').map(Number);
-              return ((horaFim * 60 + minFim) - (horaInicio * 60 + minInicio)) / 60;
-            }
-
-            btnReservar.addEventListener('click', function (event) {
-              if (!dataReserva.value || !horarioInicio.value || !horarioFim.value) {
-                alert('Por favor, selecione uma data e horários válidos.');
-                event.preventDefault();
-              }
-            });
-          });
+  btnReservar.addEventListener('click', function (event) {
+    if (!dataReserva.value || !horarioInicio.value || !horarioFim.value) {
+      alert('Por favor, selecione uma data e horários válidos.');
+      event.preventDefault();
+    }
+  });
+});
         </script>
 </body>
 

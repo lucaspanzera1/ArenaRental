@@ -340,19 +340,47 @@ class User
     public static function getHorariosDisponiveis($quadra_id, $data) {
         try {
             $pdo = Conexao::getInstance();
-            $sql = "SELECT dia_da_semana, horario_inicio, horario_fim 
-                    FROM horarios_disponiveis 
-                    WHERE quadra_id = ? AND data = ? AND status = 'disponível'
+            $sql = "SELECT 
+                        hd.dia_da_semana, 
+                        hd.horario_inicio, 
+                        hd.horario_fim,
+                        CASE 
+                            WHEN hd.status = 'disponível' THEN 'disponível'
+                            ELSE 'intervalo'
+                        END AS tipo
+                    FROM horarios_disponiveis hd
+                    WHERE hd.quadra_id = ? AND hd.data = ?
+                    UNION ALL
+                    SELECT 
+                        hd1.dia_da_semana,
+                        hd1.horario_fim AS horario_inicio,
+                        hd2.horario_inicio AS horario_fim,
+                        'intervalo' AS tipo
+                    FROM horarios_disponiveis hd1
+                    JOIN horarios_disponiveis hd2 ON hd1.quadra_id = hd2.quadra_id 
+                        AND hd1.data = hd2.data
+                        AND hd1.horario_fim < hd2.horario_inicio
+                    WHERE hd1.quadra_id = ? AND hd1.data = ?
+                        AND NOT EXISTS (
+                            SELECT 1 
+                            FROM horarios_disponiveis hd3
+                            WHERE hd3.quadra_id = hd1.quadra_id
+                                AND hd3.data = hd1.data
+                                AND hd3.horario_inicio > hd1.horario_fim
+                                AND hd3.horario_inicio < hd2.horario_inicio
+                        )
                     ORDER BY horario_inicio";
             
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(1, $quadra_id, PDO::PARAM_INT);
             $stmt->bindParam(2, $data, PDO::PARAM_STR);
+            $stmt->bindParam(3, $quadra_id, PDO::PARAM_INT);
+            $stmt->bindParam(4, $data, PDO::PARAM_STR);
             $stmt->execute();
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Erro ao buscar horários disponíveis: " . $e->getMessage());
+            error_log("Erro ao buscar horários disponíveis e intervalos: " . $e->getMessage());
             return false;
         }
     }
