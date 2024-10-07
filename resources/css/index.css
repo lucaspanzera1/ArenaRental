@@ -20,18 +20,18 @@ header{
 .quadra-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0px 30px;
     justify-content: center;
-    max-width: 1650px;
     line-height: 0.4;
+    
+    gap: 0px 20px;
 }
 .quadra-item {
-    width: 250px;
+    width: 278px;
     margin-bottom: 30px;
 }
 .quadra-item img {
-    width: 250px;
-    height: 250px;
+    width: 278px;
+    height: 265px;
     border-radius: 18px;
     object-fit: cover;
 }
@@ -52,4 +52,13 @@ header{
     grid-template-columns: auto auto;
     gap: 0 10px;
     justify-content: center;
+}
+@media (max-width: 480px){
+    .quadra-item {
+        width: 342px;
+    }
+    .quadra-item img {
+        width: 342px;
+        height: 325px;
+    }
 }

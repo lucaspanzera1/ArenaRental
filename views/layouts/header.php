@@ -55,7 +55,7 @@ if (isset($_SESSION['client'])) {
                 <a href="../client/form.owner1.php"><button>Anuncie!</button></a>
                 <?php endif; ?>
             <form method="POST">
-                <button type="submit" name="logoff" class="logoff-btn">Logoff</button>
+                <a><button type="submit" name="logoff" class="logoff-btn">Logoff</button></a>
             </form>
             <button id="toggleButton">Tema</button>
         </div>

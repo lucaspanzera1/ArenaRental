@@ -55,9 +55,8 @@ if ($quadras === false) {
                             <div class="quadra-image">Sem imagem disponível</div>
                         <?php endif; ?>
                         <h2><?php echo htmlspecialchars($quadra['nome_proprietario']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h2>
-                        <p><?php echo htmlspecialchars($quadra['esporte']); ?></p>
+                        <p><?php echo htmlspecialchars($quadra['esporte']); ?>, <?php echo $quadra['coberta'] ? 'coberta' : 'descoberta'; ?></p>
                         <p><b>R$<?php echo number_format($quadra['valor'], 2, ',', '.'); ?></b>/<?php echo $quadra['tipo_aluguel'] == 'por hora' ? 'por hora' : 'dia'; ?></p>
-                        <p><?php echo $quadra['coberta'] ? 'Coberta' : 'Descoberta'; ?></p>
                     </a>
                 </div>
             <?php endforeach; ?>

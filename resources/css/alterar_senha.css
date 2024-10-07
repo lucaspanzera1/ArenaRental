@@ -1,14 +1,12 @@
 body{
     font-family: "Inter", sans-serif;
     transition: background-image 0.3s ease, color 0.3s ease;
-    background-image: url(../../resources/images/fundo.senha.png);
     background-attachment: fixed;
     background-position: 50%;
   }
   body.dark-mode {
     background-color: #262626;
     color: #ffffff;
-    background-image: url(../../resources/images/fundo.senha.dark.png);
   }
 #QuadCinza2{
     width: 95%;

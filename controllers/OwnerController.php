@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $owner->salvarHorarios($quadraId, $horarios);
                 echo "<script type=\"text/javascript\">
                 alert(\"Horários registrados com sucesso!\");
-                window.location.href = '../views/owner/quadra_detalhes.php?id=" . $quadraId . "';
+                window.location.href = '../views/owner/editar_quadra.php?id=" . $quadraId . "';
                 </script>";
                 exit();
             } catch (Exception $e) {

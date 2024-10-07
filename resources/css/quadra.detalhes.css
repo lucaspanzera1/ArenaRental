@@ -1,13 +1,11 @@
 body{
   font-family: "Inter", sans-serif;
   transition: background-image 0.3s ease, color 0.3s ease;
-  background-image: url(../../resources/images/fundo.gerenciador.png);
   background-attachment: fixed;
 }
 body.dark-mode {
   background-color: #262626;
   color: #ffffff;
-  background-image: url(../../resources/images/fundo.gerenciador.dark.png);
 }
 header{
   background-color: #FFFFFF;

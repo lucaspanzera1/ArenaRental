@@ -64,8 +64,8 @@ if (!$quadra) {
 
       <h2><?php echo htmlspecialchars($quadra['esporte']); ?> , <?php echo htmlspecialchars($quadra['localizacao']); ?>
         - <?php echo htmlspecialchars($quadra['cep']); ?></h2>
-      <h3><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>,
-        <?php echo htmlspecialchars($quadra['descricao_proprietario']); ?>
+      <h3><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, com
+      <?php echo htmlspecialchars($quadra['recursos']); ?>
       </h3>
       <div>
         <div id="grid-reserva">

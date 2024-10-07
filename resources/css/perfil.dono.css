@@ -1,12 +1,10 @@
 body{
     font-family: "Inter", sans-serif;
-    background-image: url(../../resources/images/fundo.perfil.png);
     background-position: bottom;
     background-attachment: fixed;
     transition: background-image 0.3s ease, color 0.3s ease;
 }
 body.dark-mode {
-    background-image: url(../../resources/images/fundo.perfil.dark.png);
     background-color: #262626;
     color: white;
 }

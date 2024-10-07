@@ -2,12 +2,10 @@ body{
     font-family: "Inter", sans-serif;
     background-color: #fff;
     transition: background-color 0.3s ease, color 0.3s ease;
-    background-image: url(../../resources/images/fundo.registra1.png);
     background-attachment: fixed;
     background-position: 100%;
 }
 body.dark-mode {
-    background-image: url(../../resources/images/fundo.registra.dark.png);
     background-attachment: fixed;
     background-color: #262626;
     color: #ffffff;

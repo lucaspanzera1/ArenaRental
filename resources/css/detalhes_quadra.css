@@ -109,3 +109,7 @@ section img{
   display: grid;
   grid-template-columns: auto auto;
 }
+a{
+  text-decoration: none;
+  color: black;
+}

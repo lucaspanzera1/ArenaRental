@@ -12,7 +12,7 @@
     border-radius: 4px 0 0 4px;
 }
 .search-button {
-    padding: 10px 15px;
+    padding: 11px 15px;
     font-size: 16px;
     background-color: #f8f8f8;
     border: 1px solid black;
@@ -39,4 +39,13 @@ body.dark-mode .search-button{
 }
 body.dark-mode svg{
   color: white;
+}
+@media (max-width: 480px){
+  .search-input {
+    width: 200px;
+    padding: 11px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 4px 0 0 4px;
+}
 }

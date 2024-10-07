@@ -1,32 +1,26 @@
 body{
     font-family: "Inter", sans-serif;
     transition: background-image 0.3s ease, color 0.3s ease;
-    background-image: url(../../resources/images/fundo.conta.png);
     background-attachment: fixed;
 }
 body.dark-mode {
     background-color: #262626;
     color: #ffffff;
-    background-image: url(../../resources/images/fundo.conta.dark.png);
 }
 header{
     background-color: #FFFFFF;
 }
 #Info h1{
     font-size: 45px;
-    color: #0000FF;
-    transition: color 0.3s ease;
-}
-body.dark-mode #Info h1{
-    color: #9c079c;
 }
 #Info h2{
   
     font-size: 30px;
 }
 #Info{
-    padding-top: 150px;
+    padding-top: 8%;
     margin-left: 10%;
+    line-height: 0.8;
 }
 section{
     display: grid;
@@ -137,4 +131,10 @@ a{
     color: black;
 }
 
-
+@media (max-height: 800px){
+    #Info{
+        padding-top: 8%;
+        margin-left: 10%;
+        line-height: 0.8;
+    }
+}
