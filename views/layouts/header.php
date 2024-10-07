@@ -40,7 +40,7 @@ if (isset($_SESSION['client'])) {
 <header>
     <div>
         <h2 id="imgH2"></h2>
-        <h1><a href="../home/index.php">ArenaRental©</a></h1>
+        <h1></h1>
     </div>
 
     <?php if (isset($_SESSION['client'])): ?>

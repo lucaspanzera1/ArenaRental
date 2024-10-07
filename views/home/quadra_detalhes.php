@@ -63,10 +63,9 @@ if (!$quadra) {
 
       <h2><?php echo htmlspecialchars($quadra['esporte']); ?> , <?php echo htmlspecialchars($quadra['localizacao']); ?>
         - <?php echo htmlspecialchars($quadra['cep']); ?></h2>
-      <h3><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, com
-      <div id="recursos">
-        <!-- Os ícones SVG serão inseridos aqui pelo JavaScript -->
-    </div>
+      <h3 id="info-quadra"><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, com <p id="recursos-texto"></p>     </h3>
+
+      <div id="recursos"></div>
     <?php
     // Defina a variável $recursos com os dados da quadra
     $recursos = json_decode(htmlspecialchars_decode($quadra['recursos']), true);
@@ -111,21 +110,22 @@ if (!$quadra) {
 </svg>
 `;
 
-    // Mapeamento de recursos para SVGs
-    const recursoParaSVG = {
-        'bar': svgBar,
-        'bebedouro': svgBebedouro,
-        'vestiario': svgVest,
-        'tv': svgTv,
-        'churrasqueira': svgChuuras,
-        'festas': svgFestas
+const recursoInfo = {
+        'bar': { svg: svgBar, nome: 'Bar' },
+        'bebedouro': { svg: svgBebedouro, nome: 'Bebedouro' },
+        'vestiario': { svg: svgVest, nome: 'Vestiário' },
+        'tv': { svg: svgTv, nome: 'TV' },
+        'churrasqueira': { svg: svgChuuras, nome: 'Churrasqueira' },
+        'festas': { svg: svgFestas, nome: 'Área de Festas' }
     };
 
-    // Gerar os ícones baseados nos recursos disponíveis
-    recursos.forEach(recurso => {
-        if (recursoParaSVG.hasOwnProperty(recurso)) {
-            icones.push(recursoParaSVG[recurso]);
+    // Gerar os ícones e nomes legíveis baseados nos recursos disponíveis
+    const recursosLegíveis = recursos.map(recurso => {
+        if (recursoInfo.hasOwnProperty(recurso)) {
+            icones.push(recursoInfo[recurso].svg);
+            return recursoInfo[recurso].nome;
         }
+        return recurso; // caso o recurso não esteja mapeado
     });
 
     // Exibir os ícones na página
@@ -134,9 +134,15 @@ if (!$quadra) {
     } else {
         document.getElementById("recursos").innerHTML = "Nenhum recurso disponível";
     }
+
+    // Exibir a lista de recursos em texto
+    if (recursosLegíveis.length > 0) {
+        document.getElementById("recursos-texto").innerHTML = recursosLegíveis.join(', ');
+    } else {
+        document.getElementById("recursos-texto").innerHTML = "Nenhum recurso disponível";
+    }
     </script>
 
-      </h3>
       <div>
         <div id="grid-reserva">
           <div id="dono-container">

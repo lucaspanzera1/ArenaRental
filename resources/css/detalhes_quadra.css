@@ -23,6 +23,11 @@ section img{
   justify-content: left;
   gap: 10px;
 }
+#info-quadra{
+  display: grid;
+  grid-template-columns: auto 50%;
+  justify-content: left;
+}
 #mini-images-container{
   display: grid;
 }
