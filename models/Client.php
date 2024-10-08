@@ -365,6 +365,64 @@ public function updateClient($name, $email)
         }
         exit();
     }
+    public function reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim)
+    {
+        $pdo = Conexao::getInstance();
+    
+        try {
+            $pdo->beginTransaction();
+    
+            // Check if the court is available for the requested time
+            $stmt = $pdo->prepare("SELECT * FROM horarios_disponiveis 
+                                   WHERE quadra_id = :quadra_id 
+                                   AND data = :data 
+                                   AND horario_inicio <= :horario_inicio 
+                                   AND horario_fim >= :horario_fim 
+                                   AND status = 'disponível'");
+            $stmt->execute([
+                ':quadra_id' => $quadraId,
+                ':data' => $dataReserva,
+                ':horario_inicio' => $horarioInicio,
+                ':horario_fim' => $horarioFim
+            ]);
+    
+            if ($stmt->rowCount() == 0) {
+                throw new Exception("O horário selecionado não está disponível.");
+            }
+    
+            // Insert the reservation
+            $stmt = $pdo->prepare("INSERT INTO reservas (cliente_id, quadra_id, data, horario_inicio, horario_fim) 
+                                   VALUES (:cliente_id, :quadra_id, :data, :horario_inicio, :horario_fim)");
+            $stmt->execute([
+                ':cliente_id' => $this->id,
+                ':quadra_id' => $quadraId,
+                ':data' => $dataReserva,
+                ':horario_inicio' => $horarioInicio,
+                ':horario_fim' => $horarioFim
+            ]);
+    
+            // Update the horarios_disponiveis table
+            $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                   SET status = 'reservado' 
+                                   WHERE quadra_id = :quadra_id 
+                                   AND data = :data 
+                                   AND horario_inicio <= :horario_inicio 
+                                   AND horario_fim >= :horario_fim");
+            $stmt->execute([
+                ':quadra_id' => $quadraId,
+                ':data' => $dataReserva,
+                ':horario_inicio' => $horarioInicio,
+                ':horario_fim' => $horarioFim
+            ]);
+    
+            $pdo->commit();
+            return "Reserva realizada com sucesso!";
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            return "Erro ao realizar a reserva: " . $e->getMessage();
+        }
+    }
+
 }
 ?>
 

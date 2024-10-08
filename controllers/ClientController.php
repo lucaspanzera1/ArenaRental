@@ -58,6 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $recursos = isset($_POST['recursos']) ? $_POST['recursos'] : [];
         $client->registerOwnerResources($recursos);
     }
+    if ($action === 'reservarQuadra' && $client) {
+        $quadraId = $_POST['id_quadra'];
+        $dataReserva = $_POST['data_reserva'];
+        $horarioInicio = $_POST['horario_inicio'];
+        $horarioFim = $_POST['horario_fim'];
+
+        $result = $client->reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim);
+        
+        echo "<script type='text/javascript'>alert('$result'); window.location.href='../views/client/quadras.php';</script>";
+        exit();
+    }
 } else {
     // Handle GET requests or invalid actions
     if ($action === 'logoff' && $client) {
