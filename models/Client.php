@@ -91,43 +91,55 @@ class Client extends User
     public function deleteAccount()
     {
         $pdo = Conexao::getInstance();
-
+    
         try {
             $pdo->beginTransaction();
-
-            // Deleta as imagens associadas ao usuário
-            $sql_imagens = "DELETE FROM imagem WHERE id_user = :id_user";
-            $stmt_imagens = $pdo->prepare($sql_imagens);
-            $stmt_imagens->bindParam(':id_user', $this->id, PDO::PARAM_INT);
-            $stmt_imagens->execute();
-
-            // Deleta a conta do usuário
-            $sql = "DELETE FROM cliente WHERE id = :id_user";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':id_user', $this->id, PDO::PARAM_INT);
+    
+            // Delete reservas
+            $stmt = $pdo->prepare("DELETE FROM reservas WHERE cliente_id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
             $stmt->execute();
-
+    
+            // Delete horarios_disponiveis for quadras owned by this user
+            $stmt = $pdo->prepare("DELETE hd FROM horarios_disponiveis hd
+                                   INNER JOIN quadra q ON hd.quadra_id = q.id
+                                   WHERE q.proprietario_id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Delete quadras
+            $stmt = $pdo->prepare("DELETE FROM quadra WHERE proprietario_id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Delete proprietario
+            $stmt = $pdo->prepare("DELETE FROM proprietario WHERE id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Finally, delete cliente
+            $stmt = $pdo->prepare("DELETE FROM cliente WHERE id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+    
             $pdo->commit();
-
-            // Removendo informações da sessão
-            $this->logoff();
-
-            echo "
-                <script type=\"text/javascript\">
-                    alert(\"Conta deletada com sucesso!\");
-                </script>
-            ";
-
-            header("refresh: 1; url=../../views/html/index.php");
+    
+            // Destroy the session
+            session_unset();
+            session_destroy();
+    
+            echo "<script>
+                alert('Sua conta foi deletada com sucesso.');
+                window.location.href = '../../index.php';
+            </script>";
             exit();
-
         } catch (Exception $e) {
             $pdo->rollBack();
-            echo "
-                <script type=\"text/javascript\">
-                    alert(\"Erro ao deletar conta.\");
-                </script>
-            ";
+            echo "<script>
+                alert('Erro ao deletar a conta: " . $e->getMessage() . "');
+                window.location.href = '../../views/client/conta.php';
+            </script>";
+            exit();
         }
     }
 
