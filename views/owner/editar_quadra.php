@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciador de quadras. | © 2024 Arena Rental, Inc.</title>
+  <title>Editar informações da quadra. | © 2024 Arena Rental, Inc.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
             echo "<p>ID da quadra não fornecido.</p>";
         }
         ?>
-
+  <?php echo "<a href='reservas.php?id=" . $quadra['id'] . "' class='quadra-link'>"; ?>
   <section>
     <div id="form-container">
       <form action="../../controllers/OwnerController.php?action=updateQuadra" method="POST">
@@ -122,6 +122,7 @@
         <input name="arquivo" type="file" name="picture__input" id="picture__input">
 
         <button type="submit" id="foto">Atualizar foto</button>
+
 
         <script>
         // Passando a string PHP como valor JavaScript
