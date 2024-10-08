@@ -372,13 +372,16 @@ public function updateClient($name, $email)
         try {
             $pdo->beginTransaction();
     
-            // Check if the court is available for the requested time
+            // Check if there's any overlap with existing reservations
             $stmt = $pdo->prepare("SELECT * FROM horarios_disponiveis 
                                    WHERE quadra_id = :quadra_id 
                                    AND data = :data 
-                                   AND horario_inicio <= :horario_inicio 
-                                   AND horario_fim >= :horario_fim 
-                                   AND status = 'disponível'");
+                                   AND (
+                                       (horario_inicio < :horario_fim AND horario_fim > :horario_inicio)
+                                       OR
+                                       (horario_inicio >= :horario_inicio AND horario_inicio < :horario_fim)
+                                   )
+                                   AND status != 'disponível'");
             $stmt->execute([
                 ':quadra_id' => $quadraId,
                 ':data' => $dataReserva,
@@ -386,8 +389,8 @@ public function updateClient($name, $email)
                 ':horario_fim' => $horarioFim
             ]);
     
-            if ($stmt->rowCount() == 0) {
-                throw new Exception("O horário selecionado não está disponível.");
+            if ($stmt->rowCount() > 0) {
+                throw new Exception("O horário selecionado não está totalmente disponível.");
             }
     
             // Insert the reservation
@@ -406,8 +409,13 @@ public function updateClient($name, $email)
                                    SET status = 'reservado' 
                                    WHERE quadra_id = :quadra_id 
                                    AND data = :data 
-                                   AND horario_inicio <= :horario_inicio 
-                                   AND horario_fim >= :horario_fim");
+                                   AND (
+                                       (horario_inicio >= :horario_inicio AND horario_inicio < :horario_fim)
+                                       OR
+                                       (horario_fim > :horario_inicio AND horario_fim <= :horario_fim)
+                                       OR
+                                       (horario_inicio <= :horario_inicio AND horario_fim >= :horario_fim)
+                                   )");
             $stmt->execute([
                 ':quadra_id' => $quadraId,
                 ':data' => $dataReserva,
@@ -422,7 +430,7 @@ public function updateClient($name, $email)
             return "Erro ao realizar a reserva: " . $e->getMessage();
         }
     }
-
+    
 }
 ?>
 

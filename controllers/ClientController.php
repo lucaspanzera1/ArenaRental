@@ -58,7 +58,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $recursos = isset($_POST['recursos']) ? $_POST['recursos'] : [];
         $client->registerOwnerResources($recursos);
     }
-    if ($action === 'reservarQuadra' && $client) {
+    if ($action === 'reservarQuadra') {
+        if (!$client) {
+            echo "<script type='text/javascript'>
+                alert('Você precisa estar logado para fazer uma reserva.');
+                window.location.href='../views/auth/login.php';
+            </script>";
+            exit();
+        }
+
         $quadraId = $_POST['id_quadra'];
         $dataReserva = $_POST['data_reserva'];
         $horarioInicio = $_POST['horario_inicio'];
