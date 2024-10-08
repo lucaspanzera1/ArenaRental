@@ -42,7 +42,7 @@
             echo "<p>ID da quadra não fornecido.</p>";
         }
         ?>
-  <?php echo "<a href='reservas.php?id=" . $quadra['id'] . "' class='quadra-link'>"; ?>
+  0
   <section>
     <div id="form-container">
       <form action="../../controllers/OwnerController.php?action=updateQuadra" method="POST">

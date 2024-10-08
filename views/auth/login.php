@@ -18,17 +18,20 @@
 
 
   <section>
-    <div id="Quad">
-      <h1>Faça Login!</h1>
-      <div id="QuadCinza2"></div>
-      <h2>Bem vindo a ArenaRental!</h2>
+    <div>
+      <div id="imgMockup"></div>
+    </div>
+  <div>
+  <div id="Quad">
+    <div id="arenatext"></div>
       <form action="../../controllers/AuthController.php?action=login" method="post">
         <input type="text" id="cpf" placeholder="CPF" oninput="mascararCPF()" maxlength="14" name="cpf" required>
         <input type="password" id="senha" placeholder="Senha" name="password" required>
-        <div id="QuadCinza2"></div>
         <button id="Continuar">Continuar</button>
+        <p>Ainda não tem cadastro? <a href="registrar.php">Registre-se</a> </p>
       </form>
     </div>
+  </div>
   </section>
   <script src="../../resources/js/cpf.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

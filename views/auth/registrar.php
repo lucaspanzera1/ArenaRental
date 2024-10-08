@@ -18,27 +18,15 @@ $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'cliente'; // Padrão é 'cliente
 
  <section>
  <div id="Quad"> 
-
-<h1>Cadastre-se <?php echo htmlspecialchars($tipo); ?></h1>
-<div id="QuadCinza2"></div>
-
 <form action="../../controllers/AuthController.php?action=registerInfo" method="post">
-
 <input type="text" id="nome"  placeholder="Nome" name="nome" required></br>
+<input type="text" id="cpf"  placeholder="CPF" oninput="mascararCPF()" maxlength="14"  name="cpf"  required>
 <div id="lab"><label>Nome & CPF idêntico ao documento oficial.</label></div>
-
 <input type="email" id="email"  placeholder="Email" name="email"required></br>
 <input type="text" id="telefone" name="telefone" placeholder="Telefone" maxlength="15"></br>
-
 <div id="lab"><label>Iremos alertar sobre disponibilidade,promoções e novidades!</label></div>
-
 <input type="date" id="nascimento"   name="nascimento" required></br>
-<input type="text" id="cpf"  placeholder="CPF" oninput="mascararCPF()" maxlength="14"  name="cpf"  required>
-
-
-
 <button id="Continuar" > Concordar e continuar </button>
-
 <div id="txt-form">
 <div id="txt4">Clicando em Concordar e continuar, o cliente concorda com os</div>
 <div id="txt5"><a>Termos de Serviço</a> & <a>Política de Privacidade</a> da <a>ArenaRental©</a></div>
@@ -47,6 +35,8 @@ $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'cliente'; // Padrão é 'cliente
 <input type="hidden" name="tipo" value="<?php echo htmlspecialchars($tipo); ?>">
 </form>
 </div>
+
+<div id="mockup"></div>
  </section>
 
 
