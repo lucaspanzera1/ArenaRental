@@ -39,7 +39,7 @@ if (isset($_SESSION['client'])) {
 
 <header>
     <div>
-        <h2 id="imgH2"></h2>
+        <a href="../home/index.php"><h2 id="imgH2"></h2></a>
         <h1></h1>
     </div>
 
@@ -75,25 +75,3 @@ if (isset($_SESSION['client'])) {
     <?php endif; ?>
 </header>
 <script src="../../resources/js/dark.js"></script>
-
-<script>
-document.querySelector('.dropdown').addEventListener('click', function() {
-    const dropdownChild = document.querySelector('.dropdown-child');
-
-    // Alternar entre block e none
-    if (dropdownChild.style.display === 'block') {
-        dropdownChild.style.display = 'none';
-    } else {
-        dropdownChild.style.display = 'block';
-    }
-});
-
-// Seleciona o elemento h2 pelo ID
-const imgH2 = document.getElementById('imgH2');
-
-// Adiciona um evento de clique ao elemento
-imgH2.addEventListener('click', function() {
-    // Volta uma página no histórico
-    window.history.back();
-});
-</script>

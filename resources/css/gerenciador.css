@@ -27,11 +27,10 @@ header{
     align-items: center; 
     gap: 5px;
 }
-body.dark-mode #recursos svg path{
-    fill: white;
-    stroke: white;
-  }
-
+svg path{
+    fill: #FFA500;
+    stroke: #FFA500;
+}
 a{
     text-decoration: none;
     color: black;

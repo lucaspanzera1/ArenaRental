@@ -31,3 +31,6 @@ a{
 body.dark-mode a{
     color: white;
 }
+@media (max-width: 480px){
+    
+}

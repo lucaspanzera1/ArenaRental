@@ -65,7 +65,7 @@ body.dark-mode .filter-container{
   cursor: pointer;
 }
 .sport-option.selected {
-  background-color: black;
+  background-color: #FFA500;
   color: white;
 }
 .price-range {
@@ -82,7 +82,7 @@ body.dark-mode .filter-container{
 #filter-btn {
   width: 100%;
   padding: 10px;
-  background-color: black;
+  background-color: #FFA500;
   color: white;
   border: none;
   border-radius: 3px;
