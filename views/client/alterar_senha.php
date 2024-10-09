@@ -34,7 +34,7 @@
       <div>Confirmar nova senha:</div>
       <input type="password" name="confirma_senha" id="confirma_senha" required>
       <br>
-      <button type="submit">Atualizar senha</button>
+      <button id="Continuar" type="submit">Atualizar senha</button>
     </form>
   </div>
 

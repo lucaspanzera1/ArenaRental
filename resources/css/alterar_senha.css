@@ -43,31 +43,6 @@ input[type=password]{
 body.dark-mode input[type=password]{
     border:  1px solid white;
 }
-input[type=submit]{
-    font-size: 24px;
-    font-weight: 100;
-    width: 220px;
-    height: 50px;
-    border: solid 1px black;
-    border-radius: 10px;
-    transition: 0.6s;
-    margin-top: 2%;
-}
-input[type=submit]{
-    font-size: 24px;
-    font-weight: 100;
-    width: 220px;
-    height: 50px;
-    border: solid 1px black;
-    border-radius: 10px;
-    transition: 0.6s;
-    margin-top: 2%;
-}
-input[type=submit]:hover{
-    background-color: black;
-    color: white;
-    cursor: pointer;
-}    
 div div{
     font-size: 28px;
     font-weight: 200;
@@ -76,7 +51,7 @@ div div{
 #SenhaS{
     margin-left: 230px;
 }
-form button{
+#Continuar{
     margin-top: 10px;
     width: 380px;
     height: 75px;
@@ -88,21 +63,12 @@ form button{
     color: white;
     transition: 0.6s;
     border-style: none;
-    border: 1px solid black;
-    background-color: black;
+    border: 1px solid #FEA500;
+    background-color: transparent;
+    color: #FEA500;
   }
-  button:hover{
-    background-color: #d6d6d6;
-    color: black;
-    font-weight: 600;
-  }
-  body.dark-mode form button{
-    background-color: #262626;
+  #Continuar:hover{
+    background-color: #FEA500;
     color: white;
-    border-style: none;
-    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
-  }
-  body.dark-mode form button:hover{
-    background-color: black;
     font-weight: 600;
   }
