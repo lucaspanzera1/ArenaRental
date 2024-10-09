@@ -1,16 +1,14 @@
 body{
   font-family: "Inter", sans-serif;
-  background-color: #fff;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  background-image: url(../../resources/images/fundo.registra.png);
+  background-image: url(../../resources/images/background.user.png);
   background-attachment: fixed;
   background-position: 100%;
+  transition: background-image 0.3s ease, color 0.3s ease;
 }
 body.dark-mode {
-  background-image: url(../../resources/images/fundo.registra.dark.png);
   background-attachment: fixed;
   background-color: #262626;
-  color: #ffffff;
+  color: white;
 }
 section{
   height: 89vh;
@@ -93,31 +91,26 @@ nav{
   }
 
   #Continuar{
-    margin-top: 5%;
-    border: none;
-    font-weight: 350;
-    font-size: 32px;
-    font-weight: bolde;
-    width: 85%;
-    height: 74px;
+    margin-top: 10px;
+    width: 380px;
+    height: 75px;
     border-radius: 20px;
+    font-size: 32px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
     cursor: pointer;
-    transition: 0.6s;
-}
-body.dark-mode #Continuar{
-    background-color: #262626;
     color: white;
+    transition: 0.6s;
     border-style: none;
-    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
-}
- #Continuar:hover{
-    background-color: #d6d6d6;
+    border: 1px solid #FEA500;
+    background-color: transparent;
+    color: #FEA500;
+  }
+  #Continuar:hover{
+    background-color: #FEA500;
+    color: white;
     font-weight: 600;
-}
-body.dark-mode #Continuar:hover{
-    background-color: black;
-    font-weight: 600;
-}
+  }
 input::placeholder{
     color: black;
 }

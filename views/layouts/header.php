@@ -75,3 +75,4 @@ if (isset($_SESSION['client'])) {
     <?php endif; ?>
 </header>
 <script src="../../resources/js/dark.js"></script>
+

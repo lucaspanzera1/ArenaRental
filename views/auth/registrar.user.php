@@ -18,11 +18,8 @@ $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'cliente'; // Padrão é 'cliente
     <?php include '../layouts/verification.php'; ?>
  <section>
  <div id="Quad"> 
-
-<h1>Conta</h1>
-<div id="QuadCinza2"></div>
-
 <form action="../../controllers/AuthController.php?action=registerUser" method="post" onsubmit="return validateForm()">
+<div id="arenatext"></div>
     <input type="text" id="nomeuser" placeholder="Nome de Usuário" name="nomeuser" required><br>
     <input type="password" id="senha" placeholder="Senha" name="senha" required><br>
     <input type="password" id="confirmarsenha" placeholder="Confirmar senha" name="confirmarsenha" required><br>
