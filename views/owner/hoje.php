@@ -35,13 +35,14 @@
 
 
 <section>
-    <div id="Info">
-        <?php if (isset($mensagem)): ?>
-            <div class="alert alert-success"><?php echo $mensagem; ?></div>
-        <?php endif; ?>
-        <?php if (isset($erro)): ?>
-            <div class="alert alert-danger"><?php echo $erro; ?></div>
-        <?php endif; ?>
+<div id="Info">
+    <?php if (isset($mensagem)): ?>
+        <div class="alert alert-success"><?php echo $mensagem; ?></div>
+    <?php endif; ?>
+    
+    <?php if (isset($erro)): ?>
+        <div class="alert alert-danger"><?php echo $erro; ?></div>
+    <?php endif; ?>
 
         <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
         <h2>Reservas para hoje.</h2>

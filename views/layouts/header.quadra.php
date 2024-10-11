@@ -5,6 +5,17 @@ require_once '../../models/User.php';
 
 session_start(); // Iniciar sessão
 
+if (isset($_SESSION['mensagem'])):
+    $mensagem = $_SESSION['mensagem'];
+    unset($_SESSION['mensagem']); // Remove a mensagem para evitar repetição ao recarregar a página
+endif;
+
+// Verifica se há um erro armazenado na sessão (se necessário)
+if (isset($_SESSION['erro'])):
+    $erro = $_SESSION['erro'];
+    unset($_SESSION['erro']); // Remove o erro para evitar repetição ao recarregar a página
+endif;
+
 // Verifique se há dados de cliente na sessão
 if (isset($_SESSION['client'])) {
     // Crie uma instância da classe Client com os dados da sessão
@@ -38,67 +49,6 @@ if (isset($_SESSION['client'])) {
 
 <?php
 include_once '../../config/conexao.php';  
-
-// Processar a reserva quando o formulário for enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
-    $quadra_id = $_POST['quadra_id'];
-    $data = $_POST['data'];
-    $horario_inicio = $_POST['horario_inicio'];
-    $horario_fim = $_POST['horario_fim'];
-    
-    try {
-        $pdo = Conexao::getInstance();
-        $pdo->beginTransaction();
-
-        // Primeiro, verificar se já existe um cliente "por fora" no sistema
-        $stmt = $pdo->prepare("SELECT id FROM cliente WHERE nome = 'Cliente por fora' LIMIT 1");
-        $stmt->execute();
-        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$cliente) {
-            // Se não existe, criar o cliente "por fora"
-            $stmt = $pdo->prepare("INSERT INTO cliente (cpf, nome, email, senha, tipo, username, imagem_perfil) 
-                                  VALUES ('00000000000', 'Cliente por fora', 'cliente@porfora.com', 
-                                         '', 'cliente', 'clienteporfora', 'default.jpg')");
-            $stmt->execute();
-            $cliente_id = $pdo->lastInsertId();
-        } else {
-            $cliente_id = $cliente['id'];
-        }
-
-        // Inserir na tabela reservas
-        $stmt = $pdo->prepare("INSERT INTO reservas (cliente_id, quadra_id, data, horario_inicio, horario_fim, status) 
-                              VALUES (:cliente_id, :quadra_id, :data, :horario_inicio, :horario_fim, 'confirmada')");
-        $stmt->execute([
-            ':cliente_id' => $cliente_id,
-            ':quadra_id' => $quadra_id,
-            ':data' => $data,
-            ':horario_inicio' => $horario_inicio,
-            ':horario_fim' => $horario_fim
-        ]);
-
-        // Atualizar status na tabela horarios_disponiveis
-        $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
-                              SET status = 'reservado' 
-                              WHERE quadra_id = :quadra_id 
-                              AND data = :data 
-                              AND horario_inicio = :horario_inicio 
-                              AND horario_fim = :horario_fim");
-        $stmt->execute([
-            ':quadra_id' => $quadra_id,
-            ':data' => $data,
-            ':horario_inicio' => $horario_inicio,
-            ':horario_fim' => $horario_fim
-        ]);
-
-        $pdo->commit();
-        $mensagem = "Reserva realizada com sucesso!";
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        $erro = "Erro ao realizar a reserva: " . $e->getMessage();
-    }
-}
-
 // Resto do seu código existente para buscar quadra e horários
 if (isset($_GET['id'])) {
     $quadra_id = $_GET['id'];

@@ -124,22 +124,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         exit();
     }
-    if ($action === 'reservar') {
-        $quadra_id = $_POST['quadra_id'];
-        $data = $_POST['data'];
-        $horario_inicio = $_POST['horario_inicio'];
-        $horario_fim = $_POST['horario_fim'];
-
-        // Chama a função reservarQuadra na classe Owner
-        $mensagem = Owner::reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim);
-
-        // Exibe uma mensagem de sucesso ou erro para o usuário
-        echo "<script type='text/javascript'>
-                alert('$mensagem');
-                window.location.href = '../views/owner/gerenciador.php';
-              </script>";
-        exit();
-    }
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if ($action === 'reservar') {
+            $quadra_id = $_POST['quadra_id'];
+            $data = $_POST['data'];
+            $horario_inicio = $_POST['horario_inicio'];
+            $horario_fim = $_POST['horario_fim'];
+    
+            // Chama a função reservarQuadra na classe Owner
+            $mensagem = Owner::reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim);
+    
+            // Armazena a mensagem de sucesso ou erro na sessão
+            $_SESSION['mensagem'] = $mensagem;
+    
+            // Redireciona para a página onde a mensagem será exibida
+            header("Location: ../views/owner/hoje.php?id=" . $quadra_id);
+            exit();
+        }
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
         $clientData = $_SESSION['client'];
         $quadraId = $_POST['quadra_id'];
@@ -156,4 +157,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
     }
+}
+
 }
