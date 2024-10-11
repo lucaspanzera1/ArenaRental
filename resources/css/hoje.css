@@ -1,6 +1,7 @@
 #Info{
-    padding-top: 150px;
     margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 150px;
     line-height: 1.0;
 }
 #Info h1{
@@ -14,4 +15,52 @@
 #Info h3{
     font-size: 32px;
     font-weight: 200;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+form {
+    display: inline-block;
+}
+
+.btn-reservar {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-reservar:hover {
+    background-color: #45a049;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+
+.alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
 }

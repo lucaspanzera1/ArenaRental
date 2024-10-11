@@ -94,8 +94,6 @@
         <input name="arquivo" type="file" name="picture__input" id="picture__input">
 
         <button type="submit" id="foto">Atualizar foto</button>
-        <?php echo "<a href='hoje.php?id=" . $quadra['id'] . "' class='quadra-link'>Hoje</a>"; ?>
-
 
         <script>
         var nomeImagem = "<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>";

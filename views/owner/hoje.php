@@ -46,7 +46,7 @@
         <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
         <h2>Reservas para hoje.</h2>
         <h3><span id="dataHoje"></span></h3>
-        <p>ID da Quadra: <?php echo htmlspecialchars($quadra['id']); ?></p>
+        
 
         <?php if (isset($horarios) && !empty($horarios)): ?>
             <table>
@@ -83,12 +83,8 @@
                                         <input type="hidden" name="horario_fim" value="<?php echo $horario['horario_fim']; ?>">
                                         
                                         <select name="cliente_id" required>
-                                            <option value="">Selecione o cliente</option>
-                                            <?php foreach ($clientes as $cliente): ?>
-                                                <option value="<?php echo $cliente['id']; ?>">
-                                                    <?php echo htmlspecialchars($cliente['nome']) . ' (@' . htmlspecialchars($cliente['username']) . ')'; ?>
-                                                </option>
-                                            <?php endforeach; ?>
+                                            <option value=""></option>
+                                            <option value="">Cliente por fora</option>
                                         </select>
                                         
                                         <button type="submit" name="reservar">Reservar</button>
