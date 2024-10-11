@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($action === 'FotoPerfil' && $client) {
         $origem = isset($_POST['origem']) ? $_POST['origem'] : null;
         $client->uploadFotoPerfil($origem);
+        exit();
     }
     
     if ($action === 'update' && $client) {

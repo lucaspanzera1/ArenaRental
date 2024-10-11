@@ -145,6 +145,11 @@ class Client extends User
 
     public function uploadFotoPerfil($origem = null)
     {
+        // Inicia a sessão (caso não tenha sido iniciada anteriormente)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
         // Configurações de upload
         $_UP['pasta'] = '../upload/user_pfp/';
         $_UP['tamanho'] = 1024 * 1024 * 100; // 100MB
@@ -152,19 +157,23 @@ class Client extends User
     
         // Verifica se houve algum erro no upload
         if ($_FILES['arquivo']['error'] != 0) {
-            die("Não foi possível fazer o upload, erro: " . $_FILES['arquivo']['error']);
+            $_SESSION['mensagem'] = "Não foi possível fazer o upload, erro: " . $_FILES['arquivo']['error'];
+            $this->redirecionar($origem);
+            return;
         }
     
         // Verifica o tamanho do arquivo
         if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
-            $this->exibirAlerta("Arquivo muito grande.", $origem);
+            $_SESSION['mensagem'] = "Arquivo muito grande.";
+            $this->redirecionar($origem);
             return;
         }
     
         // Verifica a extensão do arquivo
         $extensao = strtolower(pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION));
         if (!in_array($extensao, $_UP['extensoes'])) {
-            $this->exibirAlerta("Extensão não permitida.", $origem);
+            $_SESSION['mensagem'] = "Extensão não permitida.";
+            $this->redirecionar($origem);
             return;
         }
     
@@ -174,7 +183,7 @@ class Client extends User
         // Tenta mover o arquivo para a pasta de upload
         if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
             $pdo = Conexao::getInstance();
-            
+    
             // Atualiza a coluna imagem_perfil na tabela cliente
             $stmt = $pdo->prepare("UPDATE cliente SET imagem_perfil = :imagem_perfil WHERE id = :id_user");
             $imagem_perfil = $_UP['pasta'] . $nome_final;
@@ -182,29 +191,29 @@ class Client extends User
             $stmt->bindParam(':id_user', $this->id, PDO::PARAM_INT);
             $stmt->execute();
     
-            $this->exibirAlerta("Imagem de perfil atualizada!", null);
-    
-            if ($origem === 'editar_perfil') {
-                header("refresh: 0.4; url=../views/client/conta.php");
-            } elseif ($this->type === 'Dono') {
-                header("refresh: 0.4; url=../views/owner/form.quadra1.php");
-            } else {
-                header("refresh: 0.4; url=../index.php");
-            }
-            exit();
+            // Mensagem de sucesso
+            $_SESSION['mensagem'] = "Imagem de perfil atualizada!";
         } else {
-            $this->exibirAlerta("Não foi possível atualizar a imagem de perfil.", $origem);
+            // Mensagem de erro
+            $_SESSION['mensagem'] = "Não foi possível atualizar a imagem de perfil.";
         }
+    
+        // Redireciona o usuário com base no valor de $origem
+        $this->redirecionar($origem);
+        exit();
     }
 
-private function exibirAlerta($mensagem, $origem = null)
-{
-    echo "<script type=\"text/javascript\">
-        alert(\"$mensagem\");
-        " . ($origem ? "window.location.href = '../views/client/$origem.php';" : "") . "
-    </script>";
-}
-
+    private function redirecionar($origem)
+    {
+        if ($origem === 'editar_perfil') {
+            header("refresh: 0.4; url=../views/client/editar_perfil.php");
+        } elseif ($this->type === 'Dono') {
+            header("refresh: 0.4; url=../views/owner/form.quadra1.php");
+        } else {
+            header("refresh: 0.4; url=../index.php");
+        }
+        exit();
+    }
 
 public function updateClient($name, $email)
 {
