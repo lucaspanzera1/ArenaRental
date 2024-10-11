@@ -1,0 +1,17 @@
+#Info{
+    padding-top: 150px;
+    margin-left: 10%;
+    line-height: 1.0;
+}
+#Info h1{
+    font-size: 62px;
+}
+#Info h2{
+    font-size: 45px;
+    font-weight: 400;
+    margin-top: -2%;
+}
+#Info h3{
+    font-size: 32px;
+    font-weight: 200;
+}

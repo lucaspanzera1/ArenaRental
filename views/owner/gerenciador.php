@@ -20,7 +20,7 @@
          if ($owner){ ?>
   <section id="SecInfo">
     <div id="Info">
-      <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?></h1>
+      <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> </h1>
       <h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?>
       </h2>
     </div>

@@ -39,15 +39,14 @@ if (isset($_SESSION['client'])) {
 
 <header>
     <div>
-        <h2 id="imgH2"></h2>
-        <h1><a href="../home/index.php">ArenaRental©</a></h1>
+        <a href="../home/index.php"><h2 id="imgH2"></h2></a>
     </div>
 
-    <div>
-        <a href="">Espaço</a>
-        <a href="">Hoje</a>
+    <nav class="center-nav">
+        <a href="editar_quadra.php">Espaço</a>
+        <a href="Hoje">Hoje</a>
         <a href="">Calendário</a>
-    </div>
+    </nav>
 
     <?php if (isset($_SESSION['client'])): ?>
         <div class="dropdown">
@@ -55,13 +54,16 @@ if (isset($_SESSION['client'])) {
         <img src="<?php echo htmlspecialchars($client->getProfilePicture()); ?>" alt="AAAA">
     </div>
         <div class="dropdown-child">
-            <button id="Name"> <?php echo "" . htmlspecialchars($client->getName()); ?></button>
+            <button id="Name">
+                 <?php  $nomeCompleto = htmlspecialchars($client->getName());
+                $primeiroNome = explode(' ', $nomeCompleto)[0];
+                echo $primeiroNome; ?></button>
             <a href="../client/conta.php"><button>Conta</button></a>
             <?php if ($client->getType() === 'cliente'): ?>
                 <a href="../client/form.owner1.php"><button>Anuncie!</button></a>
                 <?php endif; ?>
             <form method="POST">
-                <button type="submit" name="logoff" class="logoff-btn">Logoff</button>
+                <a><button type="submit" name="logoff" class="logoff-btn">Logoff</button></a>
             </form>
             <button id="toggleButton">Tema</button>
         </div>
@@ -82,24 +84,3 @@ if (isset($_SESSION['client'])) {
 </header>
 <script src="../../resources/js/dark.js"></script>
 
-<script>
-document.querySelector('.dropdown').addEventListener('click', function() {
-    const dropdownChild = document.querySelector('.dropdown-child');
-
-    // Alternar entre block e none
-    if (dropdownChild.style.display === 'block') {
-        dropdownChild.style.display = 'none';
-    } else {
-        dropdownChild.style.display = 'block';
-    }
-});
-
-// Seleciona o elemento h2 pelo ID
-const imgH2 = document.getElementById('imgH2');
-
-// Adiciona um evento de clique ao elemento
-imgH2.addEventListener('click', function() {
-    // Volta uma página no histórico
-    window.history.back();
-});
-</script>

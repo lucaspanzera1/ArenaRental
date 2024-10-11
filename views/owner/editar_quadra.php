@@ -14,18 +14,15 @@
 
 <body>
 
-  <?php include '../layouts/header.php'; ?>
+<?php include '../layouts/header.quadra.php'; ?>
 
   <?php include '../layouts/verification.php'; ?>
   <?php
-        // Conexão com o banco de dados
-        include_once '../../config/conexao.php';  // ajuste conforme sua estrutura
-        
-        // Verifica se o ID foi passado pela URL
+        include_once '../../config/conexao.php';  
+
         if (isset($_GET['id'])) {
             $quadra_id = $_GET['id'];
 
-            // Consulta para buscar os detalhes da quadra com o ID passado
             $query = "SELECT * FROM quadra WHERE id = :id";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':id', $quadra_id, PDO::PARAM_INT);
@@ -42,11 +39,10 @@
             echo "<p>ID da quadra não fornecido.</p>";
         }
         ?>
-  0
   <section>
     <div id="form-container">
       <form action="../../controllers/OwnerController.php?action=updateQuadra" method="POST">
-        <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
+      <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
         <div class="form-group" id="nome">
           <label for="nome">Nome:</label>
           <input type="text" id="nome" name="nome" required value="<?php echo htmlspecialchars($quadra['nome']); ?>">
@@ -68,7 +64,6 @@
           </select>
         </div>
 
-        <!-- Campo Quadra (Coberta ou Descoberta) -->
         <div class="form-group">
           <label for="quadrac">Quadra:</label>
           <select id="quadrac" name="quadrac">
@@ -84,7 +79,6 @@
           </select>
         </div>
 
-        <!-- Campo Aluguel -->
         <div class="form-group">
           <label for="aluguel">Aluguel por:</label>
           <select id="aluguel" name="rental-type">
@@ -122,10 +116,10 @@
         <input name="arquivo" type="file" name="picture__input" id="picture__input">
 
         <button type="submit" id="foto">Atualizar foto</button>
+        <?php echo "<a href='hoje.php?id=" . $quadra['id'] . "' class='quadra-link'>Hoje</a>"; ?>
 
 
         <script>
-        // Passando a string PHP como valor JavaScript
         var nomeImagem = "<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>";
         </script>
         <script>
@@ -133,10 +127,8 @@
         const pictureImage = document.querySelector(".picture__image");
         const pictureImageTxt = "aaaa";
 
-        // Caminho inicial da imagem usando a variável nomeImagem definida pelo PHP
         const caminhoInicial = `../${nomeImagem}`;
 
-        // Função para carregar a imagem ao iniciar a página
         function carregarImagemInicial() {
           const img = document.createElement("img");
           img.src = caminhoInicial;
@@ -146,7 +138,6 @@
           pictureImage.appendChild(img);
         }
 
-        // Chama a função para carregar a imagem ao iniciar a página
         carregarImagemInicial();
 
         inputFile.addEventListener("change", function(e) {
@@ -169,13 +160,13 @@
 
             reader.readAsDataURL(file);
           } else {
-            // Se não houver arquivo selecionado, mostra o texto padrão
             pictureImage.innerHTML = pictureImageTxt;
           }
         });
         </script>
     </div>
     </form>
+    
   </section>
 </body>
 

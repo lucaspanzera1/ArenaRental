@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservas para hoje. | © 2024 Arena Rental, Inc.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link rel='shorcut icon' href="../../resources/images/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../resources/css/hoje.css?v=<?= time() ?>">
+  <script>
+    function obterDataHoje() {
+      const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+      const dataAtual = new Date();
+      const diaSemana = diasSemana[dataAtual.getDay()];
+      const dia = String(dataAtual.getDate()).padStart(2, '0');
+      const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+      const ano = dataAtual.getFullYear();
+      
+      return `${diaSemana}, ${dia}/${mes}/${ano}`;
+    }
+
+    window.onload = function() {
+      document.getElementById('dataHoje').textContent = obterDataHoje();
+    }
+  </script>
+</head>
+
+<body>
+
+<?php include '../layouts/header.quadra.php'; ?>
+
+  <?php include '../layouts/verification.php'; ?>
+  <?php
+        include_once '../../config/conexao.php';  
+
+        if (isset($_GET['id'])) {
+            $quadra_id = $_GET['id'];
+
+            $query = "SELECT * FROM quadra WHERE id = :id";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':id', $quadra_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $quadra = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            
+            if ($quadra) {
+               
+            } else {
+                echo "<p>Quadra não encontrada.</p>";
+            }
+        } else {
+            echo "<p>ID da quadra não fornecido.</p>";
+        }
+        ?>
+  <section>
+  <div id="Info">
+      <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
+      <h2>Reservas para hoje.</h2>
+      <h3><span id="dataHoje"></span></h3>
+    </div>
+  </section>
+</body>
+
+</html>
