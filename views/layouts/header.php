@@ -78,4 +78,21 @@ if (isset($_SESSION['client'])) {
     <?php endif; ?>
 </header>
 <script src="../../resources/js/dark.js"></script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainMenuBtn = document.querySelector('.mainmenubtn');
+            const dropdownChild = document.querySelector('.dropdown-child');
+
+            mainMenuBtn.addEventListener('click', function() {
+                dropdownChild.classList.toggle('active');
+            });
+
+            // Fechar o dropdown quando clicar fora dele
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown')) {
+                    dropdownChild.classList.remove('active');
+                }
+            });
+        });
+    </script>
 

@@ -289,4 +289,58 @@ class Owner extends Client
         return false;
     }
 }
+public static function getHorariosDisponiveis($quadraId, $data)
+{
+    $pdo = Conexao::getInstance();
+
+    $stmt = $pdo->prepare("
+        SELECT 
+            hd.horario_inicio, 
+            hd.horario_fim, 
+            hd.status,
+            r.id AS reserva_id,
+            c.nome AS nome_cliente,
+            c.username AS username_cliente
+        FROM 
+            horarios_disponiveis hd
+        LEFT JOIN 
+            reservas r ON hd.quadra_id = r.quadra_id 
+            AND hd.data = r.data 
+            AND hd.horario_inicio = r.horario_inicio
+            AND hd.horario_fim = r.horario_fim
+        LEFT JOIN 
+            cliente c ON r.cliente_id = c.id
+        WHERE 
+            hd.quadra_id = :quadra_id AND hd.data = :data
+        ORDER BY 
+            hd.horario_inicio
+    ");
+
+    $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
+    $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public static function updateHorarioStatus($quadraId, $data, $horarioInicio, $horarioFim, $novoStatus)
+{
+    $pdo = Conexao::getInstance();
+
+    $stmt = $pdo->prepare("
+        UPDATE horarios_disponiveis
+        SET status = :novo_status
+        WHERE quadra_id = :quadra_id 
+          AND data = :data 
+          AND horario_inicio = :horario_inicio 
+          AND horario_fim = :horario_fim
+    ");
+
+    $stmt->bindParam(':novo_status', $novoStatus, PDO::PARAM_STR);
+    $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
+    $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+    $stmt->bindParam(':horario_inicio', $horarioInicio, PDO::PARAM_STR);
+    $stmt->bindParam(':horario_fim', $horarioFim, PDO::PARAM_STR);
+
+    return $stmt->execute();
+}
 }
