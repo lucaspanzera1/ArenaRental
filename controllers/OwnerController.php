@@ -1,6 +1,5 @@
 <?php
 include '../models/Conexao.php';
-include '../models/Quadra.php';
 include '../models/Owner.php';
 
 session_start();
@@ -123,6 +122,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             window.location.href = '../views/owner/editar_quadra.php?id=" . $quadraId . "';
             </script>";
         }
+        exit();
+    }
+    if ($action === 'reservar') {
+        $quadra_id = $_POST['quadra_id'];
+        $data = $_POST['data'];
+        $horario_inicio = $_POST['horario_inicio'];
+        $horario_fim = $_POST['horario_fim'];
+
+        // Chama a função reservarQuadra na classe Owner
+        $mensagem = Owner::reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim);
+
+        // Exibe uma mensagem de sucesso ou erro para o usuário
+        echo "<script type='text/javascript'>
+                alert('$mensagem');
+                window.location.href = '../views/owner/gerenciador.php';
+              </script>";
         exit();
     }
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
