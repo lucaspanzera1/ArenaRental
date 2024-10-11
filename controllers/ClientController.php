@@ -72,9 +72,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $horarioInicio = $_POST['horario_inicio'];
         $horarioFim = $_POST['horario_fim'];
 
-        $result = $client->reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim);
+        $mensagem = $client->reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim);
+
+        $_SESSION['mensagem'] = $mensagem;
+    
         
-        echo "<script type='text/javascript'>alert('$result'); window.location.href='../views/client/quadras.php';</script>";
+        header("Location: ../views/home/quadra_detalhes.php?id=" . $quadraId);
         exit();
     }
 } else {

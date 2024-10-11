@@ -37,6 +37,7 @@ if (!$quadra) {
   <?php include '../layouts/header.php'; ?>
 
   <section>
+  <?php include '../layouts/mensagem.php'; ?>
     <h1><?php echo htmlspecialchars($quadra['nome_espaco']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
     <div class="container">
 

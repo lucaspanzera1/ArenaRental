@@ -450,7 +450,6 @@ public function updateClient($name, $email)
             ]);
     
             $pdo->commit();
-            
             return "Reserva realizada com sucesso!";
         } catch (Exception $e) {
             $pdo->rollBack();
