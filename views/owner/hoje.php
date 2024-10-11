@@ -31,72 +31,79 @@
 <body>
 
 <?php include '../layouts/header.quadra.php'; ?>
+<?php include '../layouts/verification.php'; ?>
 
-  <?php include '../layouts/verification.php'; ?>
-  <?php
-    include_once '../../config/conexao.php';  
 
-    if (isset($_GET['id'])) {
-        $quadra_id = $_GET['id'];
+<section>
+    <div id="Info">
+        <?php if (isset($mensagem)): ?>
+            <div class="alert alert-success"><?php echo $mensagem; ?></div>
+        <?php endif; ?>
+        <?php if (isset($erro)): ?>
+            <div class="alert alert-danger"><?php echo $erro; ?></div>
+        <?php endif; ?>
 
-        $query = "SELECT * FROM quadra WHERE id = :id";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':id', $quadra_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $quadra = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($quadra) {
-            // Buscar horários disponíveis para hoje
-            $dataHoje = date('Y-m-d');
-            $horarios = Owner::getHorariosDisponiveis($quadra_id, $dataHoje);
-        } else {
-            echo "<p>Quadra não encontrada.</p>";
-        }
-    } else {
-        echo "<p>ID da quadra não fornecido.</p>";
-    }
-    ?>
- <section>
-        <div id="Info">
-            <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
-            <h2>Reservas para hoje.</h2>
-            <h3><span id="dataHoje"></span></h3>
-            <p>ID da Quadra: <?php echo htmlspecialchars($quadra['id']); ?></p>
+        <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
+        <h2>Reservas para hoje.</h2>
+        <h3><span id="dataHoje"></span></h3>
+        <p>ID da Quadra: <?php echo htmlspecialchars($quadra['id']); ?></p>
 
-            <?php if (isset($horarios) && !empty($horarios)): ?>
-                <table>
-                    <thead>
+        <?php if (isset($horarios) && !empty($horarios)): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Horário Início</th>
+                        <th>Horário Fim</th>
+                        <th>Status</th>
+                        <th>Cliente</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($horarios as $horario): ?>
                         <tr>
-                            <th>Horário Início</th>
-                            <th>Horário Fim</th>
-                            <th>Status</th>
-                            <th>Cliente</th>
+                            <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
+                            <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
+                            <td><?php echo htmlspecialchars($horario['status']); ?></td>
+                            <td>
+                                <?php 
+                                if ($horario['status'] == 'reservado' && !empty($horario['nome_cliente'])) {
+                                    echo '@' . htmlspecialchars($horario['username_cliente']);
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php if ($horario['status'] == 'disponível'): ?>
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
+                                        <input type="hidden" name="data" value="<?php echo $dataHoje; ?>">
+                                        <input type="hidden" name="horario_inicio" value="<?php echo $horario['horario_inicio']; ?>">
+                                        <input type="hidden" name="horario_fim" value="<?php echo $horario['horario_fim']; ?>">
+                                        
+                                        <select name="cliente_id" required>
+                                            <option value="">Selecione o cliente</option>
+                                            <?php foreach ($clientes as $cliente): ?>
+                                                <option value="<?php echo $cliente['id']; ?>">
+                                                    <?php echo htmlspecialchars($cliente['nome']) . ' (@' . htmlspecialchars($cliente['username']) . ')'; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        
+                                        <button type="submit" name="reservar">Reservar</button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($horarios as $horario): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
-                                <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
-                                <td><?php echo htmlspecialchars($horario['status']); ?></td>
-                                <td>
-                                    <?php 
-                                    if ($horario['status'] == 'reservado' && !empty($horario['nome_cliente'])) {
-                                        echo  '@' . htmlspecialchars($horario['username_cliente']);
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p>Não há horários disponíveis para hoje.</p>
-            <?php endif; ?>
-        </div>
-    </section>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>Não há horários disponíveis para hoje.</p>
+        <?php endif; ?>
+    </div>
+</section>
 </body>
 
 </html>

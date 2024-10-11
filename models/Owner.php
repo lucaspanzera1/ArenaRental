@@ -322,25 +322,4 @@ public static function getHorariosDisponiveis($quadraId, $data)
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-public static function updateHorarioStatus($quadraId, $data, $horarioInicio, $horarioFim, $novoStatus)
-{
-    $pdo = Conexao::getInstance();
-
-    $stmt = $pdo->prepare("
-        UPDATE horarios_disponiveis
-        SET status = :novo_status
-        WHERE quadra_id = :quadra_id 
-          AND data = :data 
-          AND horario_inicio = :horario_inicio 
-          AND horario_fim = :horario_fim
-    ");
-
-    $stmt->bindParam(':novo_status', $novoStatus, PDO::PARAM_STR);
-    $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
-    $stmt->bindParam(':data', $data, PDO::PARAM_STR);
-    $stmt->bindParam(':horario_inicio', $horarioInicio, PDO::PARAM_STR);
-    $stmt->bindParam(':horario_fim', $horarioFim, PDO::PARAM_STR);
-
-    return $stmt->execute();
-}
 }

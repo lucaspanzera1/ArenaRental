@@ -17,28 +17,6 @@
 <?php include '../layouts/header.quadra.php'; ?>
 
   <?php include '../layouts/verification.php'; ?>
-  <?php
-        include_once '../../config/conexao.php';  
-
-        if (isset($_GET['id'])) {
-            $quadra_id = $_GET['id'];
-
-            $query = "SELECT * FROM quadra WHERE id = :id";
-            $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':id', $quadra_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $quadra = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            
-            if ($quadra) {
-               
-            } else {
-                echo "<p>Quadra não encontrada.</p>";
-            }
-        } else {
-            echo "<p>ID da quadra não fornecido.</p>";
-        }
-        ?>
   <section>
     <div id="form-container">
       <form action="../../controllers/OwnerController.php?action=updateQuadra" method="POST">

@@ -35,6 +35,80 @@ if (isset($_SESSION['client'])) {
     //echo "Bem-vindo!";
 }
 ?>
+
+<?php
+   include_once '../../config/conexao.php';  
+
+   // Processar a reserva quando o formulário for enviado
+   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
+       $quadra_id = $_POST['quadra_id'];
+       $data = $_POST['data'];
+       $horario_inicio = $_POST['horario_inicio'];
+       $horario_fim = $_POST['horario_fim'];
+       $cliente_id = $_POST['cliente_id']; // Você precisará definir isso baseado no cliente selecionado
+   
+       try {
+           $pdo = Conexao::getInstance();
+           $pdo->beginTransaction();
+   
+           // Inserir na tabela reservas
+           $stmt = $pdo->prepare("INSERT INTO reservas (cliente_id, quadra_id, data, horario_inicio, horario_fim, status) 
+                                 VALUES (:cliente_id, :quadra_id, :data, :horario_inicio, :horario_fim, 'confirmada')");
+           $stmt->execute([
+               ':cliente_id' => $cliente_id,
+               ':quadra_id' => $quadra_id,
+               ':data' => $data,
+               ':horario_inicio' => $horario_inicio,
+               ':horario_fim' => $horario_fim
+           ]);
+   
+           // Atualizar status na tabela horarios_disponiveis
+           $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                 SET status = 'reservado' 
+                                 WHERE quadra_id = :quadra_id 
+                                 AND data = :data 
+                                 AND horario_inicio = :horario_inicio 
+                                 AND horario_fim = :horario_fim");
+           $stmt->execute([
+               ':quadra_id' => $quadra_id,
+               ':data' => $data,
+               ':horario_inicio' => $horario_inicio,
+               ':horario_fim' => $horario_fim
+           ]);
+   
+           $pdo->commit();
+           $mensagem = "Reserva realizada com sucesso!";
+       } catch (Exception $e) {
+           $pdo->rollBack();
+           $erro = "Erro ao realizar a reserva: " . $e->getMessage();
+       }
+   }
+   
+   // Buscar clientes para o select
+   $stmt = $pdo->query("SELECT id, nome, username FROM cliente ORDER BY nome");
+   $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   
+   // Resto do seu código existente para buscar quadra e horários
+   if (isset($_GET['id'])) {
+       $quadra_id = $_GET['id'];
+
+        $query = "SELECT * FROM quadra WHERE id = :id";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':id', $quadra_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $quadra = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($quadra) {
+            // Buscar horários disponíveis para hoje
+            $dataHoje = date('Y-m-d');
+            $horarios = Owner::getHorariosDisponiveis($quadra_id, $dataHoje);
+        } else {
+            echo "<p>Quadra não encontrada.</p>";
+        }
+    } else {
+        echo "<p>ID da quadra não fornecido.</p>";
+    }
+    ?>
 <link rel="stylesheet" href="../../resources/css/header.quadra.css?v=<?= time() ?>">
 
 <header>
@@ -43,8 +117,8 @@ if (isset($_SESSION['client'])) {
     </div>
 
     <nav class="center-nav">
-        <a href="editar_quadra.php">Espaço</a>
-        <a href="Hoje">Hoje</a>
+        <?php echo "<a href='hoje.php?id=" . $quadra['id'] . "' class='quadra-link'>Espaço</a>"; ?>
+        <?php echo "<a href='hoje.php?id=" . $quadra['id'] . "' class='quadra-link'>Hoje</a>"; ?>
         <a href="">Calendário</a>
     </nav>
 
