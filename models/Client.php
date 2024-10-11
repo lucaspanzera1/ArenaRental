@@ -263,45 +263,63 @@ public function updateClient($name, $email)
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] > 0;
     }
+
     public function changePassword($currentPassword, $newPassword, $confirmPassword)
     {
+        // Inicia a sessão, se ainda não estiver iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
         $pdo = Conexao::getInstance();
-
-        // Verify if the new password matches the confirmation
+    
         if ($newPassword !== $confirmPassword) {
-            return "As senhas não coincidem.";
+            $_SESSION['mensagem'] = "As senhas não coincidem.";
+            $_SESSION['alert_type'] = "alert-danger";
+            header("Location: ../views/client/alterar_senha.php");
+            exit();
         }
-
-        // Verify if the new password is different from the current one
+    
+        // Verifica se a nova senha é igual à senha atual
         if ($currentPassword === $newPassword) {
-            return "A nova senha não pode ser igual à senha atual.";
+            $_SESSION['mensagem'] = "A nova senha não pode ser igual à senha atual.";
+            $_SESSION['alert_type'] = "alert-danger";
+            header("Location: ../views/client/alterar_senha.php");
+            exit();
         }
 
-        // Fetch the current hashed password from the database
+        // Busca a senha atual no banco de dados
         $stmt = $pdo->prepare("SELECT senha FROM cliente WHERE id = :id");
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Verify if the current password is correct
+    
+        // Verifica se a senha atual está correta
         if (!password_verify($currentPassword, $result['senha'])) {
-            return "A senha atual está incorreta.";
+            $_SESSION['mensagem'] = "A senha atual está incorreta.";
+            header("Location: ../views/client/alterar_senha.php");
+            exit();
         }
-
-        // Hash the new password
+    
+        // Hash da nova senha
         $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-
-        // Update the password in the database
+    
+        // Atualiza a senha no banco de dados
         $stmt = $pdo->prepare("UPDATE cliente SET senha = :senha WHERE id = :id");
         $stmt->bindParam(':senha', $newPasswordHash);
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-
+    
         if ($stmt->execute()) {
-            return "Senha alterada com sucesso!";
+            $_SESSION['mensagem'] = "Senha alterada com sucesso!";
         } else {
-            return "Erro ao alterar a senha. Tente novamente.";
+            $_SESSION['mensagem'] = "Erro ao alterar a senha. Tente novamente.";
         }
+    
+        // Redireciona sempre para a página de alteração de senha
+        header("Location: ../views/client/alterar_senha.php");
+        exit();
     }
+    
 
     public function registerOwner($nomeEspaco, $localizacao, $cep, $descricao)
     {
@@ -432,6 +450,7 @@ public function updateClient($name, $email)
             ]);
     
             $pdo->commit();
+            
             return "Reserva realizada com sucesso!";
         } catch (Exception $e) {
             $pdo->rollBack();

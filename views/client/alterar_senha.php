@@ -18,6 +18,7 @@
   <?php include '../layouts/verification.php'; ?>
 
   <section>
+  <?php include '../layouts/mensagem.php'; ?>
     <h1>Olá,    <?php  $nomeCompleto = htmlspecialchars($client->getName());
                 $primeiroNome = explode(' ', $nomeCompleto)[0];
                 echo $primeiroNome; ?>!</h1>
