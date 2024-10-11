@@ -18,7 +18,9 @@
 <div id="Corpo">
 <div id="Quad">
 <div id="Perfil"><img src="<?php echo htmlspecialchars($client->getProfilePicture()); ?>" alt="AAAA"></div>
-<h1><?php echo "" . htmlspecialchars($client->getName()); ?></h1>
+<h1><?php  $nomeCompleto = htmlspecialchars($client->getName());
+                $primeiroNome = explode(' ', $nomeCompleto)[0];
+                echo $primeiroNome; ?></h1>
 <h2><?php echo "" .  htmlspecialchars($_SESSION['client']['email']);  ?></h2>
 
 <h3>Entrou em <?php echo htmlspecialchars($dataFormatoBrasileiro);  ?></h3>

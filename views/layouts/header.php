@@ -49,7 +49,10 @@ if (isset($_SESSION['client'])) {
         <img src="<?php echo htmlspecialchars($client->getProfilePicture()); ?>" alt="AAAA">
     </div>
         <div class="dropdown-child">
-            <button id="Name"> <?php echo "" . htmlspecialchars($client->getName()); ?></button>
+            <button id="Name">
+                 <?php  $nomeCompleto = htmlspecialchars($client->getName());
+                $primeiroNome = explode(' ', $nomeCompleto)[0];
+                echo $primeiroNome; ?></button>
             <a href="../client/conta.php"><button>Conta</button></a>
             <?php if ($client->getType() === 'cliente'): ?>
                 <a href="../client/form.owner1.php"><button>Anuncie!</button></a>

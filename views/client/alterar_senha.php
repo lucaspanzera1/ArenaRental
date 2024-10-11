@@ -18,7 +18,9 @@
   <?php include '../layouts/verification.php'; ?>
 
   <section>
-    <h1>Olá, <?php echo "" . htmlspecialchars($client->getName()); ?>!</h1>
+    <h1>Olá,    <?php  $nomeCompleto = htmlspecialchars($client->getName());
+                $primeiroNome = explode(' ', $nomeCompleto)[0];
+                echo $primeiroNome; ?>!</h1>
     <h2>Altere sua senha aqui!</h2>
   </section>
 
