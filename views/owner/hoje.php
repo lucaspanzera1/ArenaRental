@@ -36,14 +36,7 @@
 
 <section>
 <div id="Info">
-    <?php if (isset($mensagem)): ?>
-        <div class="alert alert-success"><?php echo $mensagem; ?></div>
-    <?php endif; ?>
-    
-    <?php if (isset($erro)): ?>
-        <div class="alert alert-danger"><?php echo $erro; ?></div>
-    <?php endif; ?>
-
+<?php include '../layouts/mensagem.php'; ?>
         <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
         <h2>Reservas para hoje.</h2>
         <h3><span id="dataHoje"></span></h3>

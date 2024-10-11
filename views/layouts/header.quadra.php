@@ -117,5 +117,4 @@ if (isset($_GET['id'])) {
     </div>
     <?php endif; ?>
 </header>
-<script src="../../resources/js/dark.js"></script>
 

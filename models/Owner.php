@@ -337,7 +337,7 @@ public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horar
                 // Se não existe, criar o cliente "por fora"
                 $stmt = $pdo->prepare("INSERT INTO cliente (cpf, nome, email, senha, tipo, username, imagem_perfil) 
                                         VALUES ('00000000000', 'Cliente por fora', 'cliente@porfora.com', 
-                                                '', 'cliente', 'clienteporfora', 'default.jpg')");
+                                                '', 'cliente', 'Cliente por fora', 'default.jpg')");
                 $stmt->execute();
                 $cliente_id = $pdo->lastInsertId();
             } else {
