@@ -5,6 +5,17 @@ require_once '../../models/User.php';
 
 session_start(); // Iniciar sessão
 
+if (isset($_SESSION['mensagem'])):
+    $mensagem = $_SESSION['mensagem'];
+    unset($_SESSION['mensagem']); // Remove a mensagem para evitar repetição ao recarregar a página
+endif;
+
+// Verifica se há um erro armazenado na sessão (se necessário)
+if (isset($_SESSION['erro'])):
+    $erro = $_SESSION['erro'];
+    unset($_SESSION['erro']); // Remove o erro para evitar repetição ao recarregar a página
+endif;
+
 // Verifique se há dados de cliente na sessão
 if (isset($_SESSION['client'])) {
     // Crie uma instância da classe Client com os dados da sessão

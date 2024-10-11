@@ -212,7 +212,8 @@ public function updateClient($name, $email)
 
     // Verifica se o email já está em uso por outro usuário
     if ($this->isEmailInUse($pdo, $email, $this->id)) {
-        echo "<script>alert('O email já está em uso.'); window.location.href = '../../views/html/profile.php';</script>";
+        $_SESSION['mensagem'] = "O email já está em uso.";
+        header("Location: ../../views/html/profile.php");
         exit();
     }
 
@@ -231,18 +232,16 @@ public function updateClient($name, $email)
         // Atualiza os dados da sessão
         $this->saveToSession();
 
-        echo "<script type=\"text/javascript\">
-            alert(\"Informações alteradas com sucesso!\");
-            </script>";
-        header("refresh: 0.4; url=../index.php");
-        exit();
+        // Armazena mensagem de sucesso na sessão
+        $_SESSION['mensagem'] = "Informações alteradas com sucesso!";
     } else {
-        echo "<script type=\"text/javascript\">
-            alert(\"Erro ao alterar!\");
-            </script>";
-        header("refresh: 0.4; url=../index.php");
-        exit();
+        // Armazena mensagem de erro na sessão
+        $_SESSION['mensagem'] = "Erro ao alterar!";
     }
+
+    // Redireciona para a página desejada com a mensagem
+    header("Location: ../views/client/editar_perfil.php");
+    exit();
 }
     // Função para verificar se o email está em uso por outro usuário
     public function isEmailInUse($pdo, $email, $id)

@@ -29,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $name = $_POST['nome'];
         $email = $_POST['email'];
         $client->updateClient($name, $email);
-        header("Location: ../index.php?cod=1");
         exit();
     }
     

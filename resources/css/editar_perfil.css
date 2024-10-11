@@ -24,7 +24,8 @@ body.dark-mode #QuadCinza2{
 section{
     padding-top: 8%;
     padding-bottom: 8%;
-    margin-left: 230px;
+    margin-left: 10%;
+    margin-right: 10%;
     line-height: 0.7;
 }
 section h1{
