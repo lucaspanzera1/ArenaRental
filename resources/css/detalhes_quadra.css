@@ -137,3 +137,7 @@ svg path{
   justify-content: left;
   gap: 0px;
 }
+#map{
+  margin-top: 2%;
+  margin-bottom: 6%;
+}

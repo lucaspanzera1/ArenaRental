@@ -391,6 +391,7 @@ public function updateClient($name, $email)
         }
         exit();
     }
+    
     public function reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim)
     {
         $pdo = Conexao::getInstance();

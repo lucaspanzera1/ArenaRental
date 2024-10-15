@@ -322,6 +322,7 @@ public static function getHorariosDisponiveis($quadraId, $data)
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim)
     {
         try {

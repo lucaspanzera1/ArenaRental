@@ -65,7 +65,6 @@ if (!$quadra) {
       <h2 id="container-info"><div><?php echo htmlspecialchars($quadra['esporte']); ?> , <?php echo htmlspecialchars($quadra['localizacao']); ?> - 
       <?php echo htmlspecialchars($quadra['cep']); ?></div> <b id="recursos"></b></h2>
       <h3 id="info-quadra"><div><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, com </div><p id="recursos-texto"></p></h3>
-
     <?php
     // Defina a variável $recursos com os dados da quadra
     $recursos = json_decode(htmlspecialchars_decode($quadra['recursos']), true);
@@ -306,7 +305,64 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-        </script>
-</body>
+</script>
 
+<div id="map" style="width: 100%; height: 400px; border-radius: 12px;"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuO6-uyUy4EvyjJnMiLynUXnrOZamCvmI&callback=initMap" async defer></script>
+<script>
+function initMap() {
+    var address = "<?php echo htmlspecialchars($quadra['localizacao'] . ' - ' . $quadra['cep']); ?>";
+    var geocoder = new google.maps.Geocoder();
+    
+    // Defina o estilo do mapa aqui
+    var mapStyle = [
+        {
+            "featureType": "all",
+            "elementType": "geometry",
+            "stylers": [{"color": "#f5f5f5"}]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#c9c9c9"}]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [{"color": "#e8e8e8"}]
+        }
+    ];
+    
+    geocoder.geocode({'address': address}, function(results, status) {
+        if (status === 'OK') {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 18,
+                center: results[0].geometry.location,
+                styles: mapStyle,  // Aplica o estilo personalizado
+                zoomControl: true,
+                mapTypeControl: false,
+                scaleControl: true,
+                streetViewControl: false,
+                rotateControl: false,
+                fullscreenControl: true
+            });
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                title: "<?php echo htmlspecialchars($quadra['nome_espaco'] . ' ' . $quadra['nome']); ?>"
+            });
+        } else {
+            console.error('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+</script>
+
+</body>
 </html>
