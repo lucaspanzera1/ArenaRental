@@ -307,15 +307,14 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<div id="map" style="width: 100%; height: 400px; border-radius: 12px;"></div>
+<div id="map" style="width: 100%; height: 600px;"></div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuO6-uyUy4EvyjJnMiLynUXnrOZamCvmI&callback=initMap" async defer></script>
 <script>
 function initMap() {
-    var address = "<?php echo htmlspecialchars($quadra['localizacao'] . ' - ' . $quadra['cep']); ?>";
+    var searchQuery = "<?php echo htmlspecialchars($quadra['nome_espaco'] . ' ' . $quadra['nome'] . ', ' . $quadra['localizacao'] . ' - ' . $quadra['cep']); ?>";
     var geocoder = new google.maps.Geocoder();
-    
-    // Defina o estilo do mapa aqui
+
     var mapStyle = [
         {
             "featureType": "all",
@@ -338,13 +337,13 @@ function initMap() {
             "stylers": [{"color": "#e8e8e8"}]
         }
     ];
-    
-    geocoder.geocode({'address': address}, function(results, status) {
+
+    geocoder.geocode({'address': searchQuery}, function(results, status) {
         if (status === 'OK') {
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 18,
+                zoom: 19,
                 center: results[0].geometry.location,
-                styles: mapStyle,  // Aplica o estilo personalizado
+                styles: mapStyle,
                 zoomControl: true,
                 mapTypeControl: false,
                 scaleControl: true,
@@ -352,17 +351,25 @@ function initMap() {
                 rotateControl: false,
                 fullscreenControl: true
             });
+
             var marker = new google.maps.Marker({
                 map: map,
                 position: results[0].geometry.location,
                 title: "<?php echo htmlspecialchars($quadra['nome_espaco'] . ' ' . $quadra['nome']); ?>"
             });
+
+            // Adiciona um listener de clique no mapa para permitir ajuste manual
+            map.addListener('click', function(e) {
+                marker.setPosition(e.latLng);
+                map.panTo(e.latLng);
+            });
+
         } else {
             console.error('Geocode was not successful for the following reason: ' + status);
         }
     });
 }
 </script>
-
+<?php include '../layouts/footer.php'; ?>
 </body>
 </html>

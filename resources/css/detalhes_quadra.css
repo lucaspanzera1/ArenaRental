@@ -138,6 +138,11 @@ svg path{
   gap: 0px;
 }
 #map{
-  margin-top: 2%;
+  margin-top: 5%;
   margin-bottom: 6%;
+}
+.map-marker-label {
+  margin-top: 90px !important; 
+  font-family: "Inter", sans-serif !important;
+  font-weight: 200;
 }
