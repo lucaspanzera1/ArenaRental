@@ -133,16 +133,19 @@ svg path{
 
 #container-info{
   display: grid;
-  grid-template-columns: 60% auto;
+  grid-template-columns: 85% auto;
   justify-content: left;
   gap: 0px;
 }
 #map{
-  margin-top: 5%;
   margin-bottom: 6%;
 }
 .map-marker-label {
   margin-top: 90px !important; 
   font-family: "Inter", sans-serif !important;
   font-weight: 200;
+}
+#container-quadra{ 
+  display: grid;
+  grid-template-columns: 85% auto;
 }

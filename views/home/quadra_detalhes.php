@@ -62,8 +62,11 @@ if (!$quadra) {
         </div>
       </div>
 
-      <h2 id="container-info"><div><?php echo htmlspecialchars($quadra['esporte']); ?> , <?php echo htmlspecialchars($quadra['localizacao']); ?> - 
-      <?php echo htmlspecialchars($quadra['cep']); ?></div> <b id="recursos"></b></h2>
+      <div id="container-quadra">
+      <h2 id="container-info"><?php echo htmlspecialchars($quadra['esporte']); ?> ,</h2>
+      <b id="recursos"></b>
+      </div>
+
       <h3 id="info-quadra"><div><?php echo $quadra['coberta'] ? 'Quadra coberta' : 'Quadra descoberta'; ?>, com </div><p id="recursos-texto"></p></h3>
     <?php
     // Defina a variável $recursos com os dados da quadra
@@ -307,6 +310,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
+<div>
+  <h2>Localização</h2>
+  <h2 id="container-info"><?php echo htmlspecialchars($quadra['localizacao']); ?> - <?php echo htmlspecialchars($quadra['cep']); ?></div></h2>
+</div>
 <div id="map" style="width: 100%; height: 600px;"></div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuO6-uyUy4EvyjJnMiLynUXnrOZamCvmI&callback=initMap" async defer></script>
@@ -364,10 +372,59 @@ function initMap() {
                 map.panTo(e.latLng);
             });
 
+            // Realizar geocodificação reversa para obter informações sobre o bairro
+            geocoder.geocode({'location': results[0].geometry.location}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        var addressComponents = results[0].address_components;
+                        var bairro = '';
+                        var cidade = '';
+
+                        for (var i = 0; i < addressComponents.length; i++) {
+                            var types = addressComponents[i].types;
+                            if (types.indexOf('sublocality_level_1') > -1) {
+                                bairro = addressComponents[i].long_name;
+                            }
+                            if (types.indexOf('administrative_area_level_2') > -1) {
+                                cidade = addressComponents[i].long_name;
+                            }
+                        }
+
+                        if (cidade === 'Belo Horizonte') {
+                            var regiao = mapearRegiaoBH(bairro);
+                            var locationInfo = document.getElementById('container-info');
+                            locationInfo.innerHTML += bairro + ', região ' + regiao;
+                        }
+                    }
+                }
+            });
+
         } else {
             console.error('Geocode was not successful for the following reason: ' + status);
         }
     });
+}
+
+function mapearRegiaoBH(bairro) {
+    // Este é um mapeamento simplificado e pode não ser 100% preciso ou completo
+    var regioesBH = {
+        'Centro': ['Centro', 'Savassi', 'Barro Preto', 'Lourdes'],
+        'Noroeste': ['Caiçara', 'Padre Eustáquio', 'Coração Eucarístico'],
+        'Norte': ['Venda Nova', 'Floramar', 'Planalto'],
+        'Nordeste': ['Cidade Nova', 'União', 'Silveira'],
+        'Leste': ['Santa Efigênia', 'Santa Tereza', 'Sagrada Família'],
+        'Oeste': ['Calafate', 'Gameleira', 'Nova Suíça', 'Prado'],
+        'Barreiro': ['Barreiro', 'Milionários', 'Vale do Jatobá'],
+        'Pampulha': ['Pampulha', 'São Luiz', 'Jaraguá']
+    };
+
+    for (var regiao in regioesBH) {
+        if (regioesBH[regiao].includes(bairro)) {
+            return regiao;
+        }
+    }
+
+    return 'Região não identificada';
 }
 </script>
 <?php include '../layouts/footer.php'; ?>
