@@ -52,7 +52,7 @@ class User
         try {
             $pdo = Conexao::getInstance();
             
-            // Consulta SQL para buscar todas as informações das tabelas cliente, proprietario e quadra
+            // Consulta SQL atualizada para incluir a data de registro
             $sql = "SELECT 
                         q.*, 
                         p.nome_espaco, 
@@ -63,7 +63,8 @@ class User
                         c.nome as nome_proprietario, 
                         c.email as email_proprietario, 
                         c.telefone as telefone_proprietario, 
-                        c.imagem_perfil as imagem_proprietario
+                        c.imagem_perfil as imagem_proprietario,
+                        c.data_registro as data_registro_proprietario
                     FROM quadra q
                     LEFT JOIN proprietario p ON q.proprietario_id = p.id
                     LEFT JOIN cliente c ON p.id = c.id

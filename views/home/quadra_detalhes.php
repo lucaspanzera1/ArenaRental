@@ -155,7 +155,20 @@ const recursoInfo = {
               id="client-container">
               <div>
                 <h4>Anfitriã(o): <?php echo htmlspecialchars($quadra['nome_proprietario']); ?></h4>
-                <h5>Entrou em </h5>
+                <h5>Entrou em <?php 
+                    $data_registro = new DateTime($quadra['data_registro_proprietario']);
+                    $data_atual = new DateTime();
+                    $intervalo = $data_atual->diff($data_registro);
+                    
+                    if ($intervalo->y > 0) {
+                        echo $intervalo->y . ($intervalo->y == 1 ? ' ano' : ' anos');
+                    } elseif ($intervalo->m > 0) {
+                        echo $intervalo->m . ($intervalo->m == 1 ? ' mês' : ' meses');
+                    } else {
+                        echo $intervalo->d . ($intervalo->d == 1 ? ' dia' : ' dias');
+                    }
+                    echo " atrás";
+                ?></h5>
               </div>
             </a>
           </div>
@@ -185,7 +198,7 @@ const recursoInfo = {
             </div>
           </form>
         </div>
-        
+
         <script>
 document.addEventListener('DOMContentLoaded', function () {
   const dataReserva = document.getElementById('data_reserva');
