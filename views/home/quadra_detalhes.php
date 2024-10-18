@@ -185,6 +185,7 @@ const recursoInfo = {
             </div>
           </form>
         </div>
+        
         <script>
 document.addEventListener('DOMContentLoaded', function () {
   const dataReserva = document.getElementById('data_reserva');
