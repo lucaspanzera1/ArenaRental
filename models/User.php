@@ -58,6 +58,8 @@ class User
                         p.nome_espaco, 
                         p.localizacao, 
                         p.cep, 
+                        p.bairro,
+                        p.regiao,
                         p.descricao as descricao_proprietario, 
                         p.recursos, 
                         c.nome as nome_proprietario, 

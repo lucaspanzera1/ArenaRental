@@ -321,46 +321,47 @@ public function updateClient($name, $email)
     }
     
 
-    public function registerOwner($nomeEspaco, $localizacao, $cep, $descricao)
-    {
-        $pdo = Conexao::getInstance();
-    
-        try {
-            $pdo->beginTransaction();
-    
-            // Inserir na tabela Proprietario
-            $sql = "INSERT INTO proprietario (id, nome_espaco, localizacao, cep, descricao) 
-                    VALUES (:id, :nome_espaco, :localizacao, :cep, :descricao)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-            $stmt->bindParam(':nome_espaco', $nomeEspaco, PDO::PARAM_STR);
-            $stmt->bindParam(':localizacao', $localizacao, PDO::PARAM_STR);
-            $stmt->bindParam(':cep', $cep, PDO::PARAM_STR);
-            $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
-            $stmt->execute();
-    
-            // Atualizar o tipo do cliente para 'Dono'
-            $sqlUpdateTipo = "UPDATE cliente SET tipo = 'Dono' WHERE id = :id";
-            $stmtUpdateTipo = $pdo->prepare($sqlUpdateTipo);
-            $stmtUpdateTipo->bindParam(':id', $this->id, PDO::PARAM_INT);
-            $stmtUpdateTipo->execute();
-    
-            $pdo->commit();
-    
-            // Atualizar o tipo na sessão e redirecionar
-            $this->type = 'Dono';
-            $this->saveToSession();
-    
-            echo "<script>alert('Registro de proprietário realizado com sucesso!'); 
-                  window.location.href='../views/client/form.owner2.php';</script>";
-            exit();
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            echo "<script>alert('Erro ao registrar proprietário. Tente novamente.'); 
-                  window.location.href='../views/client/form.owner1.php';</script>";
-            exit();
-        }
+    public function registerOwner($nomeEspaco, $localizacao, $cep, $descricao, $bairro, $regiao)
+{
+    $pdo = Conexao::getInstance();
+
+    try {
+        $pdo->beginTransaction();
+
+        // Inserir na tabela Proprietario com bairro e região
+        $sql = "INSERT INTO proprietario (id, nome_espaco, localizacao, cep, bairro, regiao, descricao) 
+                VALUES (:id, :nome_espaco, :localizacao, :cep, :bairro, :regiao, :descricao)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(':nome_espaco', $nomeEspaco, PDO::PARAM_STR);
+        $stmt->bindParam(':localizacao', $localizacao, PDO::PARAM_STR);
+        $stmt->bindParam(':cep', $cep, PDO::PARAM_STR);
+        $stmt->bindParam(':bairro', $bairro, PDO::PARAM_STR);
+        $stmt->bindParam(':regiao', $regiao, PDO::PARAM_STR);
+        $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Atualizar o tipo do cliente para 'Dono'
+        $sqlUpdateTipo = "UPDATE cliente SET tipo = 'Dono' WHERE id = :id";
+        $stmtUpdateTipo = $pdo->prepare($sqlUpdateTipo);
+        $stmtUpdateTipo->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmtUpdateTipo->execute();
+
+        $pdo->commit();
+
+        $this->type = 'Dono';
+        $this->saveToSession();
+
+        echo "<script>alert('Registro de proprietário realizado com sucesso!'); 
+              window.location.href='../views/client/form.owner2.php';</script>";
+        exit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "<script>alert('Erro ao registrar proprietário. Tente novamente.'); 
+              window.location.href='../views/client/form.owner1.php';</script>";
+        exit();
     }
+}
     public function registerOwnerResources($recursos)
     {
         $pdo = Conexao::getInstance();

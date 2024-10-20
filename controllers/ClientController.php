@@ -44,14 +44,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
     
-  if ($action === 'registerOwner' && $client) {
+    if ($action === 'registerOwner' && $client) {
         $nomeEspaco = $_POST['nome'];
         $localizacao = $_POST['loc'];
         $cep = $_POST['cep'];
         $descricao = $_POST['Desc'];
-
-        $client->registerOwner($nomeEspaco, $localizacao, $cep, $descricao);
-        // The redirection is handled inside the registerOwner function
+        $bairro = $_POST['bairro'];
+        $regiao = $_POST['regiao'];
+    
+        $client->registerOwner($nomeEspaco, $localizacao, $cep, $descricao, $bairro, $regiao);
     }
 
     if ($action === 'registerOwnerResources' && $client) {

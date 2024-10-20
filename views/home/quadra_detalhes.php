@@ -136,7 +136,8 @@ document.onkeydown = function(e) {
 </script>
 
       <div id="container-quadra">
-      <h2 id="container-info"><?php echo htmlspecialchars($quadra['esporte']); ?>, </h2>
+      <h2 id="container-info"><?php echo htmlspecialchars($quadra['esporte']); ?>, bairro <?php echo htmlspecialchars($quadra['bairro']); ?>, região <?php echo htmlspecialchars($quadra['regiao']); ?></h2>
+      
       <b id="recursos"></b>
       </div>
 
@@ -400,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <div>
   <h2>Localização</h2>
-  <h2 id="container-info"><?php echo htmlspecialchars($quadra['localizacao']); ?> - <?php echo htmlspecialchars($quadra['cep']); ?></div></h2>
+  <h2 id="container-info"><?php echo htmlspecialchars($quadra['localizacao']); ?> - <?php echo htmlspecialchars($quadra['bairro']); ?>, <?php echo htmlspecialchars($quadra['cep']); ?></div></h2>
 </div>
 <div id="map" style="width: 100%; height: 600px;"></div>
 
@@ -490,28 +491,6 @@ function initMap() {
             console.error('Geocode was not successful for the following reason: ' + status);
         }
     });
-}
-
-function mapearRegiaoBH(bairro) {
-    // Este é um mapeamento simplificado e pode não ser 100% preciso ou completo
-    var regioesBH = {
-        'Centro': ['Centro', 'Savassi', 'Barro Preto', 'Lourdes'],
-        'Noroeste': ['Caiçara', 'Padre Eustáquio', 'Coração Eucarístico'],
-        'Norte': ['Venda Nova', 'Floramar', 'Planalto'],
-        'Nordeste': ['Cidade Nova', 'União', 'Silveira'],
-        'Leste': ['Santa Efigênia', 'Santa Tereza', 'Sagrada Família'],
-        'Oeste': ['Calafate', 'Gameleira', 'Nova Suíça', 'Prado'],
-        'Barreiro': ['Barreiro', 'Milionários', 'Vale do Jatobá'],
-        'Pampulha': ['Pampulha', 'São Luiz', 'Jaraguá']
-    };
-
-    for (var regiao in regioesBH) {
-        if (regioesBH[regiao].includes(bairro)) {
-            return regiao;
-        }
-    }
-
-    return 'Região não identificada';
 }
 </script>
 <?php include '../layouts/footer.php'; ?>
