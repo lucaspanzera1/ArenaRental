@@ -41,29 +41,102 @@ if (!$quadra) {
     <h1><?php echo htmlspecialchars($quadra['nome_espaco']); ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
     <div class="container">
 
-      <div id="images-container">
-        <?php if (!empty($quadra['imagem_quadra'])): ?>
-          <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-            alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large">
-        <?php endif; ?>
+    <div id="images-container" class="images-container">
+  <?php if (!empty($quadra['imagem_quadra'])): ?>
+    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
+      class="quadra-image-large" onclick="openModal(this)">
+  <?php endif; ?>
 
-        <div id="mini-images-container" class="mini-images">
-          <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-            alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large">
-          <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-            alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large">
-        </div>
+  <div  id="mini-images-container" class="mini-images">
+    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
+      class="quadra-image-large" onclick="openModal(this)">
+    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
+      class="quadra-image-large" onclick="openModal(this)">
+  </div>
 
-        <div id="mini-images-container">
-          <div id="mini1"> <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-              alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large"></div>
-          <div id="mini2"> <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
-              alt="<?php echo htmlspecialchars($quadra['nome']); ?>" class="quadra-image-large"></div>
-        </div>
-      </div>
+  <div id="mini-images-container">
+  <div id="mini1"><img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
+      class="quadra-image-large" onclick="openModal(this)">    </div>
+      <div id="mini2"><img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
+      class="quadra-image-large" onclick="openModal(this)"> </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="imageModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+  <span class="next" onclick="changeImage(1)">&#10095;</span>
+  <img class="modal-content" id="modalImage">
+</div>
+
+<script>
+let currentImageIndex = 0;
+const images = document.querySelectorAll('.quadra-image-large');
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+
+function openModal(img) {
+  modal.style.display = "block";
+  modalImg.src = img.src;
+  
+  // Encontrar o índice da imagem atual
+  for(let i = 0; i < images.length; i++) {
+    if(images[i] === img) {
+      currentImageIndex = i;
+      break;
+    }
+  }
+}
+
+function closeModal() {
+  modal.style.display = "none";
+}
+
+function changeImage(direction) {
+  currentImageIndex += direction;
+  
+  // Loop através das imagens
+  if(currentImageIndex >= images.length) { 
+    currentImageIndex = 0;
+  }
+  if(currentImageIndex < 0) {
+    currentImageIndex = images.length - 1;
+  }
+  
+  modalImg.src = images[currentImageIndex].src;
+}
+
+// Fechar modal ao clicar fora da imagem
+modal.onclick = function(e) {
+  if(e.target === modal) {
+    closeModal();
+  }
+}
+
+// Controles de teclado
+document.onkeydown = function(e) {
+  switch(e.key) {
+    case "ArrowLeft":
+      changeImage(-1);
+      break;
+    case "ArrowRight":
+      changeImage(1);
+      break;
+    case "Escape":
+      closeModal();
+      break;
+  }
+}
+</script>
 
       <div id="container-quadra">
-      <h2 id="container-info"><?php echo htmlspecialchars($quadra['esporte']); ?> ,</h2>
+      <h2 id="container-info"><?php echo htmlspecialchars($quadra['esporte']); ?>, </h2>
       <b id="recursos"></b>
       </div>
 
