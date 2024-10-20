@@ -293,71 +293,39 @@ public static function getHorariosDisponiveis($quadraId, $data)
 {
     $pdo = Conexao::getInstance();
 
-    // Consulta para obter todos os horários
     $stmt = $pdo->prepare("
         SELECT 
-            hd.horario_inicio, 
-            hd.horario_fim, 
+            MIN(hd.horario_inicio) AS horario_inicio, 
+            MAX(hd.horario_fim) AS horario_fim, 
             hd.status,
             r.id AS reserva_id,
             r.valor AS valor_reserva,
             c.nome AS nome_cliente,
-            c.username AS username_cliente
+            c.username AS username_cliente,
+            COUNT(*) AS num_horas
         FROM 
             horarios_disponiveis hd
         LEFT JOIN 
             reservas r ON hd.quadra_id = r.quadra_id 
             AND hd.data = r.data 
             AND hd.horario_inicio = r.horario_inicio
-            AND hd.horario_fim = r.horario_fim
         LEFT JOIN 
             cliente c ON r.cliente_id = c.id
         WHERE 
             hd.quadra_id = :quadra_id AND hd.data = :data
+        GROUP BY 
+            r.id, c.nome, c.username, r.valor, hd.status
         ORDER BY 
-            hd.horario_inicio
+            MIN(hd.horario_inicio)
     ");
 
     $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
     $stmt->bindParam(':data', $data, PDO::PARAM_STR);
     $stmt->execute();
 
-    $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Lógica para combinar horários contínuos
-    $result = [];
-    $reservaAtual = null;
-
-    foreach ($horarios as $horario) {
-        if ($horario['status'] == 'reservado') {
-            // Se for o mesmo cliente e os horários forem contínuos, combinamos
-            if ($reservaAtual && $horario['nome_cliente'] == $reservaAtual['nome_cliente'] && $horario['horario_inicio'] == $reservaAtual['horario_fim']) {
-                // Apenas atualizar o horário de fim da reserva atual
-                $reservaAtual['horario_fim'] = $horario['horario_fim'];
-            } else {
-                // Caso contrário, começar uma nova reserva
-                if ($reservaAtual) {
-                    $result[] = $reservaAtual; // Armazenar a reserva anterior
-                }
-                $reservaAtual = $horario; // Iniciar nova reserva
-            }
-        } else {
-            // Para horários disponíveis, apenas adicionar ao resultado
-            if ($reservaAtual) {
-                $result[] = $reservaAtual; // Armazenar a reserva anterior
-                $reservaAtual = null;
-            }
-            $result[] = $horario; // Adicionar horário disponível
-        }
-    }
-
-    // Adicionar a última reserva se houver
-    if ($reservaAtual) {
-        $result[] = $reservaAtual;
-    }
-
-    return $result;
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 

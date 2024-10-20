@@ -3,8 +3,10 @@ create database arenarental;
 use arenarental;
 
 select * from cliente;
+select * from quadra;
 select * from proprietario;
 select * from horarios_disponiveis;
+select * from horarios_disponiveis where status = "reservado";
 select * from reservas;
 
 
@@ -29,10 +31,14 @@ CREATE TABLE proprietario (
     nome_espaco VARCHAR(255) NOT NULL,
     localizacao VARCHAR(255) NOT NULL,
     cep VARCHAR(10) NOT NULL,
+    bairro VARCHAR(255) NOT NULL,
+    regiao VARCHAR(255) NOT NULL,
     descricao TEXT,
     recursos TEXT,
     FOREIGN KEY (id) REFERENCES Cliente(id)
 );
+
+
 CREATE TABLE quadra (
     id INT PRIMARY KEY AUTO_INCREMENT,
     proprietario_id INT,
@@ -61,6 +67,7 @@ CREATE TABLE reservas (
     data DATE,
     horario_inicio TIME,
     horario_fim TIME,
+    valor DECIMAL(10, 2),  -- Adiciona a coluna para armazenar o valor da reserva
     status ENUM('pendente', 'confirmada', 'cancelada') DEFAULT 'pendente',
     FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)

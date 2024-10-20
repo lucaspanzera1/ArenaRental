@@ -94,11 +94,11 @@
         function mapearRegiaoBH(bairro) {
             var regioesBH = {
                 'Centro': ['Centro', 'Savassi', 'Barro Preto', 'Lourdes'],
-                'Noroeste': ['Caiçara', 'Padre Eustáquio', 'Coração Eucarístico'],
+                'Noroeste': ['Caiçara', 'Caiçara-Adelaide', 'Padre Eustáquio', 'Coração Eucarístico'],
                 'Norte': ['Venda Nova', 'Floramar', 'Planalto'],
                 'Nordeste': ['Cidade Nova', 'União', 'Silveira'],
                 'Leste': ['Santa Efigênia', 'Santa Tereza', 'Sagrada Família'],
-                'Oeste': ['Calafate', 'Gameleira', 'Nova Suíça', 'Prado'],
+                'Oeste': ['Calafate', 'Gameleira', 'Nova Suíssa', 'Prado'],
                 'Barreiro': ['Barreiro', 'Milionários', 'Vale do Jatobá'],
                 'Pampulha': ['Pampulha', 'São Luiz', 'Jaraguá']
             };

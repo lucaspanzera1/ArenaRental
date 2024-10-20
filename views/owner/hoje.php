@@ -40,7 +40,6 @@
         <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
         <h2>Reservas para hoje.</h2>
         <h3><span id="dataHoje"></span></h3>
-        
 
         <?php if (isset($horarios) && !empty($horarios)): ?>
             <table>
@@ -50,7 +49,7 @@
                         <th>Horário Fim</th>
                         <th>Status</th>
                         <th>Cliente</th>
-                        <th>Valor</th> <!-- Nova coluna de valor -->
+                        <th>Valor</th> <!-- Coluna de valor -->
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -72,7 +71,9 @@
             <td>
                 <?php 
                 if ($horario['status'] == 'reservado' && isset($horario['valor_reserva'])) {
-                    echo 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.');
+                    // Multiplicando o valor pela quantidade de horas reservadas
+                    $valorTotal = $horario['valor_reserva'] * $horario['num_horas'];
+                    echo 'R$ ' . number_format($valorTotal, 2, ',', '.');
                 } else {
                     echo '-';
                 }
@@ -104,7 +105,6 @@
         <?php endif; ?>
     </div>
 </section>
-
 
 </body>
 </html>
