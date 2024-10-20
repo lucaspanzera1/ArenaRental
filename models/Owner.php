@@ -293,16 +293,16 @@ public static function getHorariosDisponiveis($quadraId, $data)
 {
     $pdo = Conexao::getInstance();
 
+    // Consulta para obter todos os horários
     $stmt = $pdo->prepare("
         SELECT 
-            MIN(hd.horario_inicio) AS horario_inicio, 
-            MAX(hd.horario_fim) AS horario_fim, 
+            hd.horario_inicio, 
+            hd.horario_fim, 
             hd.status,
             r.id AS reserva_id,
             r.valor AS valor_reserva,
             c.nome AS nome_cliente,
-            c.username AS username_cliente,
-            COUNT(*) AS num_horas
+            c.username AS username_cliente
         FROM 
             horarios_disponiveis hd
         LEFT JOIN 
@@ -313,17 +313,50 @@ public static function getHorariosDisponiveis($quadraId, $data)
             cliente c ON r.cliente_id = c.id
         WHERE 
             hd.quadra_id = :quadra_id AND hd.data = :data
-        GROUP BY 
-            r.id, c.nome, c.username, r.valor, hd.status
         ORDER BY 
-            MIN(hd.horario_inicio)
+            hd.horario_inicio
     ");
 
     $stmt->bindParam(':quadra_id', $quadraId, PDO::PARAM_INT);
     $stmt->bindParam(':data', $data, PDO::PARAM_STR);
     $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Lógica para combinar horários contínuos
+    $result = [];
+    $reservaAtual = null;
+
+    foreach ($horarios as $horario) {
+        if ($horario['status'] == 'reservado') {
+            // Se for o mesmo cliente e os horários forem contínuos
+            if ($reservaAtual && $horario['username_cliente'] == $reservaAtual['username_cliente'] && $horario['horario_inicio'] == $reservaAtual['horario_fim']) {
+                // Atualiza o horário de fim e o valor da reserva
+                $reservaAtual['horario_fim'] = $horario['horario_fim'];
+                $reservaAtual['valor_reserva'] += $horario['valor_reserva']; // Somar valor da reserva contínua
+            } else {
+                // Adiciona a reserva anterior ao resultado e inicia uma nova reserva
+                if ($reservaAtual) {
+                    $result[] = $reservaAtual;
+                }
+                $reservaAtual = $horario; // Iniciar nova reserva
+            }
+        } else {
+            // Para horários disponíveis, adiciona diretamente ao resultado
+            if ($reservaAtual) {
+                $result[] = $reservaAtual; // Adiciona a reserva anterior
+                $reservaAtual = null;
+            }
+            $result[] = $horario;
+        }
+    }
+
+    // Adiciona a última reserva se houver
+    if ($reservaAtual) {
+        $result[] = $reservaAtual;
+    }
+
+    return $result;
 }
 
 

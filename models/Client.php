@@ -406,8 +406,6 @@ public function updateClient($name, $email)
                                    AND data = :data 
                                    AND (
                                        (horario_inicio < :horario_fim AND horario_fim > :horario_inicio)
-                                       OR
-                                       (horario_inicio >= :horario_inicio AND horario_inicio < :horario_fim)
                                    )
                                    AND status != 'disponível'");
             $stmt->execute([
@@ -433,17 +431,12 @@ public function updateClient($name, $email)
                 ':valor' => $valorTotal // Adiciona o valor total da reserva
             ]);
     
-            // Atualiza a tabela horarios_disponiveis
-            $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
-                                   SET status = 'reservado' 
+            // Obtém todos os horários disponíveis para aquela quadra e data
+            $stmt = $pdo->prepare("SELECT * FROM horarios_disponiveis 
                                    WHERE quadra_id = :quadra_id 
                                    AND data = :data 
                                    AND (
-                                       (horario_inicio >= :horario_inicio AND horario_inicio < :horario_fim)
-                                       OR
-                                       (horario_fim > :horario_inicio AND horario_fim <= :horario_fim)
-                                       OR
-                                       (horario_inicio <= :horario_inicio AND horario_fim >= :horario_fim)
+                                       (horario_inicio < :horario_fim AND horario_fim > :horario_inicio)
                                    )");
             $stmt->execute([
                 ':quadra_id' => $quadraId,
@@ -452,6 +445,59 @@ public function updateClient($name, $email)
                 ':horario_fim' => $horarioFim
             ]);
     
+            $horariosDisponiveis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($horariosDisponiveis as $horarioDisponivel) {
+                $inicioDisponivel = strtotime($horarioDisponivel['horario_inicio']);
+                $fimDisponivel = strtotime($horarioDisponivel['horario_fim']);
+                $inicioReserva = strtotime($horarioInicio);
+                $fimReserva = strtotime($horarioFim);
+    
+                // Se o horário disponível for inteiramente coberto pela reserva, apenas atualizamos seu status
+                if ($inicioReserva <= $inicioDisponivel && $fimReserva >= $fimDisponivel) {
+                    $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                           SET status = 'reservado' 
+                                           WHERE id = :horario_id");
+                    $stmt->execute([
+                        ':horario_id' => $horarioDisponivel['id']
+                    ]);
+                } else {
+                    // Se a reserva cobre parte do horário disponível, ajustamos
+                    if ($inicioReserva > $inicioDisponivel) {
+                        // Se a reserva começa depois do início do horário disponível
+                        $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                               SET horario_fim = :novo_fim 
+                                               WHERE id = :horario_id");
+                        $stmt->execute([
+                            ':novo_fim' => date('H:i:s', $inicioReserva),
+                            ':horario_id' => $horarioDisponivel['id']
+                        ]);
+                    }
+    
+                    if ($fimReserva < $fimDisponivel) {
+                        // Se a reserva termina antes do fim do horário disponível
+                        $stmt = $pdo->prepare("INSERT INTO horarios_disponiveis 
+                                               (quadra_id, data, horario_inicio, horario_fim, status) 
+                                               VALUES (:quadra_id, :data, :novo_inicio, :horario_fim, 'disponível')");
+                        $stmt->execute([
+                            ':quadra_id' => $quadraId,
+                            ':data' => $dataReserva,
+                            ':novo_inicio' => date('H:i:s', $fimReserva),
+                            ':horario_fim' => $horarioDisponivel['horario_fim']
+                        ]);
+                    }
+    
+                    // Finalmente, atualizamos o horário original para indicar a parte reservada
+                    $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                           SET horario_fim = :novo_fim, status = 'reservado' 
+                                           WHERE id = :horario_id");
+                    $stmt->execute([
+                        ':novo_fim' => date('H:i:s', $fimReserva),
+                        ':horario_id' => $horarioDisponivel['id']
+                    ]);
+                }
+            }
+    
             $pdo->commit();
             return "Reserva realizada com sucesso!";
         } catch (Exception $e) {
@@ -459,6 +505,8 @@ public function updateClient($name, $email)
             return "Erro ao realizar a reserva: " . $e->getMessage();
         }
     }
+    
+    
 public function getReservas()
 {
     $pdo = Conexao::getInstance(); // Assume que existe um método estático para obter a conexão com o banco de dados.

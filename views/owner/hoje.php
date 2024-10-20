@@ -54,51 +54,51 @@
                     </tr>
                 </thead>
                 <tbody>
-    <?php foreach ($horarios as $horario): ?>
-        <tr class="<?php echo ($horario['status'] == 'reservado') ? 'reservado' : ''; ?>">
-            <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
-            <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
-            <td><?php echo htmlspecialchars($horario['status']); ?></td>
-            <td>
-                <?php 
-                if ($horario['status'] == 'reservado' && !empty($horario['nome_cliente'])) {
-                    echo '@' . htmlspecialchars($horario['username_cliente']);
-                } else {
-                    echo '-';
-                }
-                ?>
-            </td>
-            <td>
-                <?php 
-                if ($horario['status'] == 'reservado' && isset($horario['valor_reserva'])) {
-                    // Multiplicando o valor pela quantidade de horas reservadas
-                    $valorTotal = $horario['valor_reserva'] * $horario['num_horas'];
-                    echo 'R$ ' . number_format($valorTotal, 2, ',', '.');
-                } else {
-                    echo '-';
-                }
-                ?>
-            </td>
-            <td>
-                <?php if ($horario['status'] == 'disponível'): ?>
-                    <form action="../../controllers/OwnerController.php?action=reservar" method="POST">
-                        <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
-                        <input type="hidden" name="data" value="<?php echo $dataHoje; ?>">
-                        <input type="hidden" name="horario_inicio" value="<?php echo $horario['horario_inicio']; ?>">
-                        <input type="hidden" name="horario_fim" value="<?php echo $horario['horario_fim']; ?>">
-                        
-                        <select name="cliente_id" required>
-                            <option value=""></option>
-                            <option value="">Cliente por fora</option>
-                        </select>
-                        
-                        <button type="submit" name="reservar">Reservar</button>
-                    </form>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
+<?php foreach ($horarios as $horario): ?>
+    <tr class="<?php echo ($horario['status'] == 'reservado') ? 'reservado' : ''; ?>">
+        <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
+        <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
+        <td><?php echo htmlspecialchars($horario['status']); ?></td>
+        <td>
+            <?php 
+            if ($horario['status'] == 'reservado' && !empty($horario['username_cliente'])) {
+                echo '@' . htmlspecialchars($horario['username_cliente']);
+            } else {
+                echo '-';
+            }
+            ?>
+        </td>
+        <td>
+            <?php 
+            if ($horario['status'] == 'reservado' && isset($horario['valor_reserva'])) {
+                // Exibir o valor total já somado
+                echo 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.');
+            } else {
+                echo '-';
+            }
+            ?>
+        </td>
+        <td>
+            <?php if ($horario['status'] == 'disponível'): ?>
+                <form action="../../controllers/OwnerController.php?action=reservar" method="POST">
+                    <input type="hidden" name="quadra_id" value="<?php echo htmlspecialchars($quadra['id']); ?>">
+                    <input type="hidden" name="data" value="<?php echo $dataHoje; ?>">
+                    <input type="hidden" name="horario_inicio" value="<?php echo $horario['horario_inicio']; ?>">
+                    <input type="hidden" name="horario_fim" value="<?php echo $horario['horario_fim']; ?>">
+
+                    <select name="cliente_id" required>
+                        <option value=""></option>
+                        <option value="">Cliente por fora</option>
+                    </select>
+                    
+                    <button type="submit" name="reservar">Reservar</button>
+                </form>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
 </tbody>
+
             </table>
         <?php else: ?>
             <p>Não há horários disponíveis para hoje.</p>
