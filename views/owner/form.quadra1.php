@@ -22,9 +22,12 @@
       <input type="text" placeholder="Nome" id="nome" name="nome">
       <select id="esporte" name="esporte" required>
         <option value="" disabled selected>Esporte</option>
-        <option value="Futebol">Futebol</option>
+        <option value="Futebol Society">Futebol Society</option>
+        <option value="Futebol de Campo">Futebol de Campo</option>
         <option value="Futsal">Futsal</option>
         <option value="Futvôlei">Futvôlei</option>
+        <option value="Basquete">Basquete</option>
+        <option value="Vôlei">Vôlei</option>
       </select>
       <select id="quadrac" name="quadrac" required>
         <option value="coberta">Quadra coberta</option>
