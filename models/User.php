@@ -3,15 +3,20 @@ require_once 'Client.php';
 
 class User
 {
-    public static function getAllQuadras($esporte = null, $valor_min = null, $valor_max = null) {
+    public static function getAllQuadras($esporte = null, $valor_min = null, $valor_max = null, $regiao = null) {
         try {
             $pdo = Conexao::getInstance();
-            $sql = "SELECT q.*, p.nome_espaco as nome_proprietario 
+            $sql = "SELECT q.*, p.nome_espaco as nome_proprietario, p.regiao 
                     FROM quadra q
                     LEFT JOIN proprietario p ON q.proprietario_id = p.id
                     WHERE 1=1";
             
             $params = [];
+    
+            if ($regiao && $regiao !== 'todos') {
+                $sql .= " AND p.regiao = :regiao";
+                $params[':regiao'] = $regiao;
+            }
     
             if ($esporte && $esporte !== 'todos') {
                 $sql .= " AND q.esporte = :esporte";

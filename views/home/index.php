@@ -19,17 +19,20 @@
 require_once '../../models/User.php'; // Ajuste o caminho conforme necessário
 
 $esporte = isset($_GET['esporte']) && $_GET['esporte'] !== 'todos' ? $_GET['esporte'] : null;
+$regiao = isset($_GET['regiao']) && $_GET['regiao'] !== 'todos' ? $_GET['regiao'] : null;
 $valor_min = isset($_GET['valor_min']) ? floatval($_GET['valor_min']) : null;
 $valor_max = isset($_GET['valor_max']) ? floatval($_GET['valor_max']) : null;
 
 // Para depuração
-error_log("Filtros aplicados - Esporte: " . ($esporte ?? 'todos') . ", Valor Min: " . ($valor_min ?? 'não definido') . ", Valor Max: " . ($valor_max ?? 'não definido'));
-// Chamada da função
-$quadras = User::getAllQuadras($esporte, $valor_min, $valor_max);
+error_log("Filtros aplicados - Região: " . ($regiao ?? 'todas') . ", Esporte: " . ($esporte ?? 'todos') . 
+          ", Valor Min: " . ($valor_min ?? 'não definido') . ", Valor Max: " . ($valor_max ?? 'não definido'));
+
+// Chamada da função atualizada
+$quadras = User::getAllQuadras($esporte, $valor_min, $valor_max, $regiao);
 
 // Verificação de erros
 if ($quadras === false) {
-    echo "Ocorreu um erro ao buscar as quadras.";
+    echo "Ocorreu um erro ao buscar as quadras.";;
 } else {
 }
 ?>
