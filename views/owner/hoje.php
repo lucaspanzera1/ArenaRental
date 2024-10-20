@@ -50,6 +50,7 @@
                         <th>Horário Fim</th>
                         <th>Status</th>
                         <th>Cliente</th>
+                        <th>Valor</th> <!-- Nova coluna de valor -->
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -63,6 +64,15 @@
                 <?php 
                 if ($horario['status'] == 'reservado' && !empty($horario['nome_cliente'])) {
                     echo '@' . htmlspecialchars($horario['username_cliente']);
+                } else {
+                    echo '-';
+                }
+                ?>
+            </td>
+            <td>
+                <?php 
+                if ($horario['status'] == 'reservado' && isset($horario['valor_reserva'])) {
+                    echo 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.');
                 } else {
                     echo '-';
                 }
@@ -94,6 +104,7 @@
         <?php endif; ?>
     </div>
 </section>
-</body>
 
+
+</body>
 </html>

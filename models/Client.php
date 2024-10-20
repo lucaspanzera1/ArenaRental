@@ -393,14 +393,14 @@ public function updateClient($name, $email)
         exit();
     }
     
-    public function reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim)
+    public function reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim, $valorTotal)
     {
         $pdo = Conexao::getInstance();
     
         try {
             $pdo->beginTransaction();
     
-            // Check if there's any overlap with existing reservations
+            // Verifica se há sobreposição de reservas existentes
             $stmt = $pdo->prepare("SELECT * FROM horarios_disponiveis 
                                    WHERE quadra_id = :quadra_id 
                                    AND data = :data 
@@ -421,18 +421,19 @@ public function updateClient($name, $email)
                 throw new Exception("O horário selecionado não está totalmente disponível.");
             }
     
-            // Insert the reservation
-            $stmt = $pdo->prepare("INSERT INTO reservas (cliente_id, quadra_id, data, horario_inicio, horario_fim) 
-                                   VALUES (:cliente_id, :quadra_id, :data, :horario_inicio, :horario_fim)");
+            // Insere a reserva com o valor total
+            $stmt = $pdo->prepare("INSERT INTO reservas (cliente_id, quadra_id, data, horario_inicio, horario_fim, valor) 
+                                   VALUES (:cliente_id, :quadra_id, :data, :horario_inicio, :horario_fim, :valor)");
             $stmt->execute([
                 ':cliente_id' => $this->id,
                 ':quadra_id' => $quadraId,
                 ':data' => $dataReserva,
                 ':horario_inicio' => $horarioInicio,
-                ':horario_fim' => $horarioFim
+                ':horario_fim' => $horarioFim,
+                ':valor' => $valorTotal // Adiciona o valor total da reserva
             ]);
     
-            // Update the horarios_disponiveis table
+            // Atualiza a tabela horarios_disponiveis
             $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
                                    SET status = 'reservado' 
                                    WHERE quadra_id = :quadra_id 

@@ -293,12 +293,14 @@ public static function getHorariosDisponiveis($quadraId, $data)
 {
     $pdo = Conexao::getInstance();
 
+    // Consulta para obter todos os horários
     $stmt = $pdo->prepare("
         SELECT 
             hd.horario_inicio, 
             hd.horario_fim, 
             hd.status,
             r.id AS reserva_id,
+            r.valor AS valor_reserva,
             c.nome AS nome_cliente,
             c.username AS username_cliente
         FROM 
@@ -320,8 +322,44 @@ public static function getHorariosDisponiveis($quadraId, $data)
     $stmt->bindParam(':data', $data, PDO::PARAM_STR);
     $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Lógica para combinar horários contínuos
+    $result = [];
+    $reservaAtual = null;
+
+    foreach ($horarios as $horario) {
+        if ($horario['status'] == 'reservado') {
+            // Se for o mesmo cliente e os horários forem contínuos, combinamos
+            if ($reservaAtual && $horario['nome_cliente'] == $reservaAtual['nome_cliente'] && $horario['horario_inicio'] == $reservaAtual['horario_fim']) {
+                // Apenas atualizar o horário de fim da reserva atual
+                $reservaAtual['horario_fim'] = $horario['horario_fim'];
+            } else {
+                // Caso contrário, começar uma nova reserva
+                if ($reservaAtual) {
+                    $result[] = $reservaAtual; // Armazenar a reserva anterior
+                }
+                $reservaAtual = $horario; // Iniciar nova reserva
+            }
+        } else {
+            // Para horários disponíveis, apenas adicionar ao resultado
+            if ($reservaAtual) {
+                $result[] = $reservaAtual; // Armazenar a reserva anterior
+                $reservaAtual = null;
+            }
+            $result[] = $horario; // Adicionar horário disponível
+        }
+    }
+
+    // Adicionar a última reserva se houver
+    if ($reservaAtual) {
+        $result[] = $reservaAtual;
+    }
+
+    return $result;
 }
+
+
 
 public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim)
     {

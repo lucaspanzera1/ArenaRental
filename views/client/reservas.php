@@ -42,6 +42,7 @@
                                 <th>Quadra</th>
                                 <th>Horário de Início</th>
                                 <th>Horário de Fim</th>
+                                <th>Valor</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -51,6 +52,7 @@
                                 <td><?= htmlspecialchars($reserva['nome_proprietario'] . '  ' . $reserva['nome_quadra']); ?></td>
                                 <td><?= htmlspecialchars($reserva['horario_inicio']); ?></td>
                                 <td><?= htmlspecialchars($reserva['horario_fim']); ?></td>
+                                <td>R$<?= htmlspecialchars($reserva['valor']); ?></td>
                                 <td><?= htmlspecialchars($reserva['status']); ?></td>
                             </tr>
                 <?php endforeach; ?>

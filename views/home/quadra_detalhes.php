@@ -269,6 +269,7 @@ const recursoInfo = {
                 <span>R$<span id="total_pagar">0</span></span>
               </div>
               <input type="hidden" name="id_quadra" value="<?= $id_quadra ?>">
+              <input type="hidden" id="valor_total" name="valor_total"> 
             </div>
           </form>
         </div>
@@ -371,17 +372,20 @@ document.addEventListener('DOMContentLoaded', function () {
   horarioFim.addEventListener('change', atualizarCalculo);
 
   function atualizarCalculo() {
-    if (horarioInicio.value && horarioFim.value) {
-      const duracao = calcularDuracao(horarioInicio.value, horarioFim.value);
-      duracaoSpan.textContent = duracao.toFixed(2);
-      totalPagarSpan.textContent = (duracao * precoHora).toFixed(2);
-      btnReservar.disabled = false;
-    } else {
-      duracaoSpan.textContent = '0';
-      totalPagarSpan.textContent = '0';
-      btnReservar.disabled = true;
+      if (horarioInicio.value && horarioFim.value) {
+        const duracao = calcularDuracao(horarioInicio.value, horarioFim.value);
+        duracaoSpan.textContent = duracao.toFixed(2);
+        const total = (duracao * precoHora).toFixed(2);
+        totalPagarSpan.textContent = total;
+        document.getElementById('valor_total').value = total; // Envia o valor total no campo oculto
+        btnReservar.disabled = false;
+      } else {
+        duracaoSpan.textContent = '0';
+        totalPagarSpan.textContent = '0';
+        document.getElementById('valor_total').value = '0';
+        btnReservar.disabled = true;
+      }
     }
-  }
 
   function calcularDuracao(inicio, fim) {
     const [horaInicio, minInicio] = inicio.split(':').map(Number);

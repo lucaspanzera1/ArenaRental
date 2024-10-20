@@ -67,17 +67,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </script>";
             exit();
         }
-
+    
         $quadraId = $_POST['id_quadra'];
         $dataReserva = $_POST['data_reserva'];
         $horarioInicio = $_POST['horario_inicio'];
         $horarioFim = $_POST['horario_fim'];
-
-        $mensagem = $client->reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim);
-
+        $valorTotal = $_POST['valor_total']; // Recebe o valor total enviado pelo formulário
+    
+        $mensagem = $client->reserveCourt($quadraId, $dataReserva, $horarioInicio, $horarioFim, $valorTotal);
+    
         $_SESSION['mensagem'] = $mensagem;
     
-        
         header("Location: ../views/home/quadra_detalhes.php?id=" . $quadraId);
         exit();
     }
