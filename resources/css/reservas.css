@@ -1,0 +1,102 @@
+body{
+    font-family: "Inter", sans-serif;
+    background-attachment: fixed;
+    background-position: 100%;
+    transition: background-image 0.3s ease, color 0.3s ease;
+}
+body.dark-mode {
+    background-attachment: fixed;
+    background-color: #262626;
+    color: white;
+}
+#Info{
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 150px;
+    line-height: 1.0;
+}
+#Info h1{
+    font-size: 62px;
+}
+#Info h2{
+    font-size: 25px;
+    font-weight: 400;
+}
+#Info h3{
+    font-size: 32px;
+    font-weight: 200;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+form {
+    display: inline-block;
+}
+.reserva-tabela {
+    display: block; /* Esconde as reservas por padrão */
+}
+/* Estilo do título da data */
+.data-titulo {
+    cursor: pointer; /* Muda o cursor para indicar que pode ser clicado */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.5rem; /* Tamanho da fonte */
+    color: #333; /* Cor da fonte */
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f0f0f0; /* Fundo da área clicável */
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+/* Estilo da seta */
+.data-titulo .seta {
+    font-size: 1.5rem; /* Tamanho da seta */
+    transition: transform 0.3s ease; /* Transição suave ao rotacionar */
+}
+
+/* Muda o fundo ao passar o mouse */
+.data-titulo:hover {
+    background-color: #e0e0e0;
+}
+
+/* Tabelas visíveis por padrão */
+.reserva-tabela {
+    display: block; /* Todas as reservas começam visíveis */
+    margin-bottom: 20px;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 1000px; /* Altura máxima quando visível */
+    opacity: 1;
+    overflow: hidden;
+}
+
+/* Quando a tabela está oculta */
+.reserva-tabela:not(.visivel) {
+    max-height: 0; /* Esconde gradualmente */
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    display: none; /* Depois da animação, esconde de fato */
+}
+
+/* A seta começa já rotacionada para baixo */
+.data-titulo .seta {
+    transform: rotate(90deg); /* Rotacionada para baixo */
+    transition: transform 0.3s ease;
+}
+
+/* Quando a tabela está oculta, a seta volta para a direita */
+.data-titulo.closed .seta {
+    transform: rotate(0deg); /* Volta a seta para a direita */
+}
+
+

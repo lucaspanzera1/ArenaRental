@@ -65,6 +65,27 @@
     <h6>Altere sua senha.</h6>
     </a>
 </div>
+
+<div class="quadrado">
+    <a href="reservas.php">
+    
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_545_2)">
+<path d="M66 28H63.5V23H58.5V28H38.5V23H33.5V28H31C28.225 28 26.025 30.25 26.025 33L26 68C26 70.75 28.225 73 31 73H66C68.75 73 71 70.75 71 68V33C71 30.25 68.75 28 66 28ZM66 68H31V43H66V68ZM41 53H36V48H41V53ZM51 53H46V48H51V53ZM61 53H56V48H61V53ZM41 63H36V58H41V63ZM51 63H46V58H51V63ZM61 63H56V58H61V63Z" fill="black"/>
+</g>
+<defs>
+<clipPath id="clip0_545_2">
+<rect width="96" height="96" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+
+
+    <h5>Reservas</h5>
+    <h6>Minhas reservas.</h6>
+    </a>
+</div>
+
 <?php if ($client->getType() === 'Dono'): ?>
 <div class="quadrado">
   <a href="../owner/gerenciador.php">

@@ -45,6 +45,7 @@ if (isset($_SESSION['client'])) {
 } else {
     //echo "Bem-vindo!";
 }
+
 ?>
 <link rel="stylesheet" href="../../resources/css/header.css?v=<?= time() ?>">
 

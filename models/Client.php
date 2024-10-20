@@ -458,6 +458,24 @@ public function updateClient($name, $email)
             return "Erro ao realizar a reserva: " . $e->getMessage();
         }
     }
+public function getReservas()
+{
+    $pdo = Conexao::getInstance(); // Assume que existe um método estático para obter a conexão com o banco de dados.
+    $stmt = $pdo->prepare('
+        SELECT 
+            reservas.*, 
+            quadra.nome AS nome_quadra, 
+            proprietario.nome_espaco AS nome_proprietario
+        FROM reservas
+        JOIN quadra ON reservas.quadra_id = quadra.id
+        JOIN proprietario ON quadra.proprietario_id = proprietario.id
+        WHERE reservas.cliente_id = :cliente_id
+    ');
+    $stmt->bindParam(':cliente_id', $this->id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
     
 }
 ?>

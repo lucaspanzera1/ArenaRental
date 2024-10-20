@@ -35,5 +35,5 @@ if (isset($_SESSION['client']['id'])) {
     exit(); // Pare a execução do script para garantir que o redirecionamento aconteça
 }
 
-
+$reservas = $client->getReservas();
 ?>
