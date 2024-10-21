@@ -80,7 +80,8 @@ if (isset($_GET['id'])) {
     <nav class="center-nav">
         <?php echo "<a href='editar_quadra.php?id=" . $quadra['id'] . "' class='quadra-link'>Espaço</a>"; ?>
         <?php echo "<a href='hoje.php?id=" . $quadra['id'] . "' class='quadra-link'>Hoje</a>"; ?>
-        <a href="">Calendário</a>
+        <?php echo "<a href='calendario.php?id=" . $quadra['id'] . "' class='quadra-link'>Calendário</a>"; ?>
+
     </nav>
 
     <?php if (isset($_SESSION['client'])): ?>
@@ -116,5 +117,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <?php endif; ?>
+    <?php echo $quadra['id']; ?>
+    
 </header>
 

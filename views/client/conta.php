@@ -18,7 +18,9 @@
 
 <div id="Info">
     <h1>Conta</h1>
-    <h2><?php echo "" . htmlspecialchars($client->getName()) . ", " .  htmlspecialchars($client->getEmail());  ?></h2>
+    <h2> <?php  $nomeCompleto = htmlspecialchars($client->getName());
+                $primeiroNome = explode(' ', $nomeCompleto)[0];
+                echo $primeiroNome; ?>, <?php echo htmlspecialchars($client->getEmail());  ?></h2>
 </div>
 
 <section id="Quadrados">

@@ -289,11 +289,13 @@ class Owner extends Client
         return false;
     }
 }
+
 public static function getHorariosDisponiveis($quadraId, $data)
 {
+    var_dump($data); // Verifique o valor da data que está sendo passado aqui
     $pdo = Conexao::getInstance();
 
-    // Consulta para obter todos os horários
+    // Consulta SQL
     $stmt = $pdo->prepare("
         SELECT 
             hd.horario_inicio, 
@@ -321,45 +323,8 @@ public static function getHorariosDisponiveis($quadraId, $data)
     $stmt->bindParam(':data', $data, PDO::PARAM_STR);
     $stmt->execute();
 
-    $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Lógica para combinar horários contínuos
-    $result = [];
-    $reservaAtual = null;
-
-    foreach ($horarios as $horario) {
-        if ($horario['status'] == 'reservado') {
-            // Se for o mesmo cliente e os horários forem contínuos
-            if ($reservaAtual && $horario['username_cliente'] == $reservaAtual['username_cliente'] && $horario['horario_inicio'] == $reservaAtual['horario_fim']) {
-                // Atualiza o horário de fim e o valor da reserva
-                $reservaAtual['horario_fim'] = $horario['horario_fim'];
-                $reservaAtual['valor_reserva'] += $horario['valor_reserva']; // Somar valor da reserva contínua
-            } else {
-                // Adiciona a reserva anterior ao resultado e inicia uma nova reserva
-                if ($reservaAtual) {
-                    $result[] = $reservaAtual;
-                }
-                $reservaAtual = $horario; // Iniciar nova reserva
-            }
-        } else {
-            // Para horários disponíveis, adiciona diretamente ao resultado
-            if ($reservaAtual) {
-                $result[] = $reservaAtual; // Adiciona a reserva anterior
-                $reservaAtual = null;
-            }
-            $result[] = $horario;
-        }
-    }
-
-    // Adiciona a última reserva se houver
-    if ($reservaAtual) {
-        $result[] = $reservaAtual;
-    }
-
-    return $result;
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
 
 
 public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horario_fim)
