@@ -138,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['mensagem'] = $mensagem;
     
             // Redireciona para a página onde a mensagem será exibida
-            header("Location: ../views/owner/hoje.php?id=" . $quadra_id);
+            header("Location: ../views/owner/reservas.php?id=" . $quadra_id . "&data=" .$data);
             exit();
         }
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {

@@ -54,6 +54,7 @@
     text-align: center;
     border: 1px solid #ddd;
     position: relative;
+    transition: 0.6s;
 }
 
 .calendar td:after {
@@ -84,11 +85,16 @@
 }
 
 .calendar .today {
-    background-color: #e8f4ff;
+    background-color: #d68c02;
+    color: white;
     font-weight: bold;
+    transition: 0.6s;
 }
 
 .calendar td:hover {
-    background-color: #f0f0f0;
+    background-color: #FEA500;
     cursor: pointer;
+}
+#dataHoje {
+    display: none;
 }

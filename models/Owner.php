@@ -292,7 +292,6 @@ class Owner extends Client
 
 public static function getHorariosDisponiveis($quadraId, $data)
 {
-    var_dump($data); // Verifique o valor da data que está sendo passado aqui
     $pdo = Conexao::getInstance();
 
     // Consulta SQL

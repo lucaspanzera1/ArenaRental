@@ -52,7 +52,6 @@ $dataFormatada = date('d/m/Y', strtotime($dataHoje));
 <?php include '../layouts/mensagem.php'; ?>
         <h1><?php echo htmlspecialchars($owner->getNomeEspaco()) ?> <?php echo htmlspecialchars($quadra['nome']); ?></h1>
         <h2>Reservas para <?php echo isset($dataFormatada) ? htmlspecialchars($dataFormatada) : 'hoje'; ?>.</h2>
-        <h3><span id="dataHoje"></span></h3>
 
         <?php
 // Agora usar $dataHoje para buscar os horários no banco de dados
