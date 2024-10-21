@@ -81,6 +81,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: ../views/home/quadra_detalhes.php?id=" . $quadraId);
         exit();
     }
+    if ($action === 'cancelarReserva') {
+        if (!$client) {
+            echo "<script type='text/javascript'>
+                alert('Você precisa estar logado para cancelar uma reserva.');
+                window.location.href='../views/auth/login.php';
+            </script>";
+            exit();
+        }
+    
+        $reservaId = $_POST['reserva_id'];
+    
+        $mensagem = $client->cancelarReserva($reservaId);
+    
+        $_SESSION['mensagem'] = $mensagem;
+    
+        header("Location: ../views/client/reservas.php");
+        exit();
+    }
+    
 } else {
     // Handle GET requests or invalid actions
     if ($action === 'logoff' && $client) {

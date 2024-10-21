@@ -16,6 +16,7 @@
 <?php include '../layouts/verification.php'; ?>
 
 <div id="Info">
+<?php include '../layouts/mensagem.php'; ?>
     <h1>Minhas Reservas</h1>
 
     <?php if (!empty($reservas)): ?>
@@ -54,6 +55,12 @@
                                 <td><?= htmlspecialchars($reserva['horario_fim']); ?></td>
                                 <td>R$<?= htmlspecialchars($reserva['valor']); ?></td>
                                 <td><?= htmlspecialchars($reserva['status']); ?></td>
+                                <td>
+                <form action="../../controllers/ClientController.php?action=cancelarReserva" method="POST">
+                    <input type="hidden" name="reserva_id" value="<?= $reserva['id']; ?>">
+                    <button type="submit">Cancelar</button>
+                </form>
+            </td>
                             </tr>
                 <?php endforeach; ?>
                         </tbody>
