@@ -499,7 +499,7 @@ public function updateClient($name, $email)
             }
     
             $pdo->commit();
-            return "Reserva realizada com sucesso!";
+            return "Reserva realizada com sucesso! Aguarde a confirmação do proprietário!";
         } catch (Exception $e) {
             $pdo->rollBack();
             return "Erro ao realizar a reserva: " . $e->getMessage();

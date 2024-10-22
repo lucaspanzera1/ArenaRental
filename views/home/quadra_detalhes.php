@@ -228,7 +228,17 @@ const recursoInfo = {
             <a href="perfil_dono.php?id=<?php echo htmlspecialchars($quadra['proprietario_id']); ?>"
               id="client-container">
               <div>
-                <h4>Anfitriã(o): <?php echo htmlspecialchars($quadra['nome_proprietario']); ?></h4>
+                <h4>Anfitriã(o): <?php $nomeCompleto = htmlspecialchars($quadra['nome_proprietario']); 
+
+// Divide o nome completo em partes usando espaço como delimitador
+$partesNome = explode(' ', $nomeCompleto);
+
+// Obtém o primeiro e o último nome
+$primeiroNome = $partesNome[0];
+$ultimoNome = $partesNome[count($partesNome) - 1];
+
+// Exibe o primeiro e o último nome
+echo $primeiroNome . ' ' . $ultimoNome; ?></h4>
                 <h5>Entrou em <?php 
                     $data_registro = new DateTime($quadra['data_registro_proprietario']);
                     $data_atual = new DateTime();

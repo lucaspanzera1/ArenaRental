@@ -1,5 +1,6 @@
 header{
   background-color: white;
+  z-index: 1;
 }
 section{
   padding-top: 150px;
@@ -163,11 +164,13 @@ svg path{
   object-fit: cover;
   cursor: pointer;
   transition: opacity 0.3s;
+  z-index: 0;
 }
 
 .quadra-image-large:hover {
   opacity: 0.8;
 }
+
 
 /* Modal/Lightbox */
 .modal {

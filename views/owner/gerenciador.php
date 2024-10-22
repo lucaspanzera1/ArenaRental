@@ -19,6 +19,7 @@
   <?php 
          if ($owner){ ?>
   <section id="SecInfo">
+  <?php include '../layouts/mensagem.php'; ?>
   <div>
   <div id="Info">
       <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> </h1>
@@ -152,11 +153,10 @@ if (!empty($quadras)) {
                         <td><?php echo htmlspecialchars($reserva['nome_cliente']); ?></td>
                         <td>R$ <?php echo number_format($reserva['valor'], 2, ',', '.'); ?></td>
                         <td>
-                            <form action="confirmar_reserva.php" method="POST" style="display: inline;">
-                                <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
-                                <button type="submit" name="action" value="confirmar" class="btn-confirmar">Confirmar</button>
-                                <button type="submit" name="action" value="cancelar" class="btn-cancelar">Cancelar</button>
-                            </form>
+                        <form method="POST" action="../../controllers/OwnerController.php?action=cancelarReserva"">
+                        <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
+                        <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
+                        </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

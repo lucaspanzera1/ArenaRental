@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove o elemento após a animação
             setTimeout(() => {
                 alertBox.remove();
-            }, 500);
+            }, 1000);
         }, 2500);
     }
 });

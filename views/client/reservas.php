@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link rel='shortcut icon' href="../../resources/images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="../../resources/css/reservas.css?v=<?= time() ?>">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
@@ -55,11 +57,11 @@
                                 <td><?= htmlspecialchars($reserva['horario_fim']); ?></td>
                                 <td>R$<?= htmlspecialchars($reserva['valor']); ?></td>
                                 <td><?= htmlspecialchars($reserva['status']); ?></td>
-                                <td>
-                <form action="../../controllers/ClientController.php?action=cancelarReserva" method="POST">
-                    <input type="hidden" name="reserva_id" value="<?= $reserva['id']; ?>">
-                    <button type="submit">Cancelar</button>
-                </form>
+                                <td id="cancelar-btn">
+                    <form onsubmit="return confirmarCancelamento(event, <?= $reserva['id']; ?>)">
+                        <input type="hidden" name="reserva_id" value="<?= $reserva['id']; ?>">
+                        <button type="submit" class="btn-cancelar">Cancelar</button>
+                    </form>
             </td>
                             </tr>
                 <?php endforeach; ?>
@@ -96,6 +98,43 @@
             }
         });
     });
+
+    function confirmarCancelamento(event, reservaId) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você realmente deseja cancelar esta reserva?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, cancelar!',
+        cancelButtonText: 'Não, manter',
+        customClass: {
+            popup: 'swal-wide',
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Se confirmou, envia o formulário
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '../../controllers/ClientController.php?action=cancelarReserva';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'reserva_id';
+            input.value = reservaId;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+    
+    return false;
+}
+
 </script>
 
 

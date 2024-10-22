@@ -141,6 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../views/owner/reservas.php?id=" . $quadra_id . "&data=" .$data);
             exit();
         }
+        
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
         $clientData = $_SESSION['client'];
         $quadraId = $_POST['quadra_id'];
