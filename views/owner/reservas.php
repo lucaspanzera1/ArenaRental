@@ -74,7 +74,7 @@ if (isset($horarios) && !empty($horarios)): ?>
         </thead>
         <tbody>
     <?php foreach ($horarios as $horario): ?>
-        <tr class="<?php echo ($horario['status'] == 'reservado') ? 'reservado' : ''; ?>">
+        <tr class="<?php echo ($horario['status'] == 'pendente') ? 'reservado' : ''; ?>">
             <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
             <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
             <td><?php echo htmlspecialchars($horario['status']); ?></td>

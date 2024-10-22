@@ -57,6 +57,7 @@ class User
         try {
             $pdo = Conexao::getInstance();
             
+            // Consulta SQL atualizada para incluir a data de registro
             $sql = "SELECT 
                         q.*, 
                         p.nome_espaco, 
@@ -69,7 +70,7 @@ class User
                         p.imagem1,
                         p.imagem2,
                         p.imagem3,
-                        p.imagem4, 
+                        p.imagem4,
                         c.nome as nome_proprietario, 
                         c.email as email_proprietario, 
                         c.telefone as telefone_proprietario, 

@@ -55,13 +55,13 @@
                 </thead>
                 <tbody>
 <?php foreach ($horarios as $horario): ?>
-    <tr class="<?php echo ($horario['status'] == 'reservado') ? 'reservado' : ''; ?>">
+    <tr class="<?php echo ($horario['status'] == 'pendente') ? 'reservado' : ''; ?>">
         <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
         <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
         <td><?php echo htmlspecialchars($horario['status']); ?></td>
         <td>
             <?php 
-            if ($horario['status'] == 'reservado' && !empty($horario['username_cliente'])) {
+            if ($horario['status'] == 'pendente' && !empty($horario['username_cliente'])) {
                 echo '@' . htmlspecialchars($horario['username_cliente']);
             } else {
                 echo '-';
@@ -70,7 +70,7 @@
         </td>
         <td>
             <?php 
-            if ($horario['status'] == 'reservado' && isset($horario['valor_reserva'])) {
+            if ($horario['status'] == 'pendente' && isset($horario['valor_reserva'])) {
                 // Exibir o valor total já somado
                 echo 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.');
             } else {

@@ -456,7 +456,7 @@ public function updateClient($name, $email)
                 // Se o horário disponível for inteiramente coberto pela reserva, apenas atualizamos seu status
                 if ($inicioReserva <= $inicioDisponivel && $fimReserva >= $fimDisponivel) {
                     $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
-                                           SET status = 'reservado' 
+                                           SET status = 'pendente' 
                                            WHERE id = :horario_id");
                     $stmt->execute([
                         ':horario_id' => $horarioDisponivel['id']
@@ -489,7 +489,7 @@ public function updateClient($name, $email)
     
                     // Finalmente, atualizamos o horário original para indicar a parte reservada
                     $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
-                                           SET horario_fim = :novo_fim, status = 'reservado' 
+                                           SET horario_fim = :novo_fim, status = 'pendente' 
                                            WHERE id = :horario_id");
                     $stmt->execute([
                         ':novo_fim' => date('H:i:s', $fimReserva),
