@@ -49,19 +49,19 @@ if (!$quadra) {
   <?php endif; ?>
 
   <div  id="mini-images-container" class="mini-images">
-    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+  <img src="../<?php echo htmlspecialchars($quadra['imagem1']); ?>" 
       alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
       class="quadra-image-large" onclick="openModal(this)">
-    <img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+    <img src="../<?php echo htmlspecialchars($quadra['imagem2']); ?>"
       alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
       class="quadra-image-large" onclick="openModal(this)">
   </div>
 
   <div id="mini-images-container">
-  <div id="mini1"><img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+  <div id="mini1"><img src="../<?php echo htmlspecialchars($quadra['imagem3']); ?>"
       alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
       class="quadra-image-large" onclick="openModal(this)">    </div>
-      <div id="mini2"><img src="../<?php echo htmlspecialchars($quadra['imagem_quadra']); ?>"
+      <div id="mini2"><img src="../<?php echo htmlspecialchars($quadra['imagem4']); ?>"
       alt="<?php echo htmlspecialchars($quadra['nome']); ?>" 
       class="quadra-image-large" onclick="openModal(this)"> </div>
   </div>
