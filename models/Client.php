@@ -612,6 +612,90 @@ public function getReservas()
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+public function uploadPropertyImages($origem = null)
+{
+    // Inicia a sessão se necessário
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Configurações de upload
+    $_UP['pasta'] = '../upload/propriedade/';
+    $_UP['tamanho'] = 1024 * 1024 * 100; // 100MB
+    $_UP['extensoes'] = array('png', 'jpg', 'jpeg', 'gif');
+    
+    // Array para armazenar os caminhos das imagens
+    $imagens = array();
+    
+    // Processa cada arquivo
+    for ($i = 1; $i <= 4; $i++) {
+        $arquivo = "arquivo{$i}";
+        
+        // Verifica se o arquivo foi enviado
+        if (!isset($_FILES[$arquivo]) || $_FILES[$arquivo]['error'] != 0) {
+            $_SESSION['mensagem'] = "Erro no upload da imagem {$i}: " . $_FILES[$arquivo]['error'];
+            $this->redirecionar($origem);
+            return;
+        }
+        
+        // Verifica o tamanho
+        if ($_UP['tamanho'] < $_FILES[$arquivo]['size']) {
+            $_SESSION['mensagem'] = "Arquivo {$i} muito grande.";
+            $this->redirecionar($origem);
+            return;
+        }
+        
+        // Verifica a extensão
+        $extensao = strtolower(pathinfo($_FILES[$arquivo]['name'], PATHINFO_EXTENSION));
+        if (!in_array($extensao, $_UP['extensoes'])) {
+            $_SESSION['mensagem'] = "Extensão não permitida para o arquivo {$i}.";
+            $this->redirecionar($origem);
+            return;
+        }
+        
+        // Define nome único para o arquivo
+        $nome_final = uniqid() . "_{$i}." . $extensao;
+        
+        // Move o arquivo
+        if (move_uploaded_file($_FILES[$arquivo]['tmp_name'], $_UP['pasta'] . $nome_final)) {
+            $imagens["imagem{$i}"] = $_UP['pasta'] . $nome_final;
+        } else {
+            $_SESSION['mensagem'] = "Erro ao mover o arquivo {$i}.";
+            $this->redirecionar($origem);
+            return;
+        }
+    }
+    
+    try {
+        $pdo = Conexao::getInstance();
+        
+        // Atualiza as imagens na tabela proprietario
+        $stmt = $pdo->prepare("UPDATE proprietario SET 
+            imagem1 = :imagem1,
+            imagem2 = :imagem2,
+            imagem3 = :imagem3,
+            imagem4 = :imagem4
+            WHERE id = :id_user");
+            
+        $stmt->bindParam(':imagem1', $imagens['imagem1']);
+        $stmt->bindParam(':imagem2', $imagens['imagem2']);
+        $stmt->bindParam(':imagem3', $imagens['imagem3']);
+        $stmt->bindParam(':imagem4', $imagens['imagem4']);
+        $stmt->bindParam(':id_user', $this->id, PDO::PARAM_INT);
+        
+        if ($stmt->execute()) {
+            $_SESSION['mensagem'] = "Imagens da propriedade atualizadas com sucesso!";
+        } else {
+            $_SESSION['mensagem'] = "Erro ao atualizar as imagens no banco de dados.";
+        }
+        
+    } catch (Exception $e) {
+        $_SESSION['mensagem'] = "Erro ao processar as imagens: " . $e->getMessage();
+    }
+    
+    $this->redirecionar($origem);
+    exit();
+}
 
     
 }

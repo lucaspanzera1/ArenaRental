@@ -99,6 +99,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: ../views/client/reservas.php");
         exit();
     }
+    if ($action === 'uploadPropertyImages' && $client) {
+        $origem = isset($_POST['origem']) ? $_POST['origem'] : null;
+        $client->uploadPropertyImages($origem);
+        exit();
+    }
     
 } else {
     // Handle GET requests or invalid actions

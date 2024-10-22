@@ -5,34 +5,24 @@ body {
     padding: 0;
     background-color: #f5f5f5;
   }
-  
-  section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 0;
-  }
-  
-  section h1 {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-  
-  section h2 {
-    font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 40px;
-    text-align: center;
-  }
-  
-  /* Estilos do Formulário */
+ #Info{
+  padding-top: 8%;
+  line-height: 0.8;
+  margin-left: 10%;
+  margin-right: 10%;
+ } 
+ #Info h1{
+  font-size: 32px;
+}
+#Info h2{
+  font-size: 20px;
+  font-weight: 300;
+}
   form {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 300px 300px;
     grid-gap: 20px;
   }
-  
   .picture {
     width: 300px;
     height: 300px;
@@ -112,4 +102,29 @@ body {
   
   body.dark-mode .picture__image {
     color: #ccc;
+  }
+  form button{
+    position: absolute;
+    top: 87%;
+    left: 77%;
+    margin-top: 10px;
+    width: 380px;
+    height: 75px;
+    border-radius: 20px;
+    font-size: 32px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    color: white;
+    transition: 0.6s;
+    border-style: none;
+    border: 1px solid #FEA500;
+    background-color: transparent;
+    color: #FEA500;
+  }
+
+  form button:hover{
+    background-color: #FEA500;
+    color: white;
+    font-weight: 600;
   }

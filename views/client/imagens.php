@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem vindo! | © 2024 Arena Rental, Inc.</title>
+    <title>Adicione fotos da quadra. | © 2024 Arena Rental, Inc.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -20,11 +20,10 @@
   <?php include '../layouts/header.php'; ?>
   <?php include '../layouts/verification.php'; ?>
     
-    <section>
-    <h1>Adicione algumas fotos da sua quadra</h1>
-    <h2>Você deve ter pelo menos 1 foto para publicar seu anúncio. Você pode adicionar ou alterar mais tarde.</h2>
-
-      <form method="POST" action="../../controllers/ClientController.php?action=FotoPerfil" enctype="multipart/form-data">
+<div id="Info">
+<h1>Adicione algumas fotos da sua quadra</h1>
+<h2>Você deve ter pelo menos 4 fotos para publicar seu anúncio. Você pode alterar mais tarde.</h2>
+<form method="POST" action="../../controllers/ClientController.php?action=uploadPropertyImages" enctype="multipart/form-data">
    <div>
    <label class="picture" for="picture__input1" tabIndex="0">
         <span class="picture__image" id="picture__image1"></span>
@@ -53,9 +52,9 @@
     <input name="arquivo4" type="file" id="picture__input4">
 </div>
 
-    <input type="submit" id="Continuar" value="Enviar">
-      </form>
-    </section>
+<button type="submit">Enviar</button>
+    </form>
+</div>
 
     <script>
     const inputFiles = document.querySelectorAll('input[type="file"]');
