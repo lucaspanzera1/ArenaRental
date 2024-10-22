@@ -120,4 +120,38 @@ form {
 .btn-cancelar:hover {
     background-color: #cc0000;
 }
+.filtro-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filtro-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    outline: none;
+}
+
+.filtro-select:hover {
+    border-color: #999;
+}
+
+.filtro-select:focus {
+    border-color: #666;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.filtro-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.reserva-container {
+    transition: all 0.3s ease;
+}
 

@@ -42,6 +42,9 @@ if (isset($mensagem)) {
     opacity: 0;
     transform: translateY(-20px);
 }
+a{
+    text-decoration: underline;
+}
 </style>
 
 <script>

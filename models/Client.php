@@ -499,7 +499,7 @@ public function updateClient($name, $email)
             }
     
             $pdo->commit();
-            return "Reserva realizada com sucesso! Aguarde a confirmação do proprietário!";
+            return "Reserva realizada com sucesso! Aguarde a confirmação do proprietário! Acesse <a href='../client/reservas.php'>Minhas reservas.</a>";
         } catch (Exception $e) {
             $pdo->rollBack();
             return "Erro ao realizar a reserva: " . $e->getMessage();
@@ -612,6 +612,7 @@ public function getReservas()
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 public function uploadPropertyImages($origem = null)
 {
     // Inicia a sessão se necessário

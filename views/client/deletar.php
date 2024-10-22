@@ -54,7 +54,7 @@ function confirmarDelete(event) {
             <ul style="text-align: left; display: inline-block;">
                 <li>Seu histórico de reservas</li>
                 <li>Suas preferências salvas</li>
-                <li>Acesso à sua conta Arena Rental</li>
+                <li>Acesso à sua conta ArenaRental</li>
             </ul>
         `,
         icon: 'warning',
