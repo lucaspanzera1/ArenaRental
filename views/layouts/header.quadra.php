@@ -117,7 +117,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <?php endif; ?>
-    <?php echo $quadra['id']; ?>
+    
     
 </header>
 

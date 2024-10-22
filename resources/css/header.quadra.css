@@ -21,6 +21,7 @@ header {
     transform: translate(-50%);
     border-bottom: 3px solid #22222217;
     transition: 0.6s;
+    background-color: white;
 }
 header a{
     color: black;

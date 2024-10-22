@@ -382,7 +382,7 @@ public function updateClient($name, $email)
     
             if ($stmt->rowCount() > 0) {
                 echo "<script>alert('Recursos registrados com sucesso!'); 
-                      window.location.href='../views/owner/gerenciador.php';</script>";
+                      window.location.href='../views/client/imagens.php';</script>";
             } else {
                 throw new Exception("Nenhum registro foi atualizado. Verifique se o proprietário existe.");
             }
