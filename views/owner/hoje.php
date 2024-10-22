@@ -54,30 +54,19 @@
                     </tr>
                 </thead>
                 <tbody>
-<?php foreach ($horarios as $horario): ?>
-    <tr class="<?php echo ($horario['status'] == 'pendente') ? 'reservado' : ''; ?>">
+                <?php foreach ($horarios as $horario): ?>
+        <tr class="<?php 
+    if ($horario['status'] == 'pendente') {
+        echo 'pendente';
+    } elseif ($horario['status'] == 'reservado') {
+        echo 'reservado';
+    }
+?>">
         <td><?php echo htmlspecialchars($horario['horario_inicio']); ?></td>
         <td><?php echo htmlspecialchars($horario['horario_fim']); ?></td>
         <td><?php echo htmlspecialchars($horario['status']); ?></td>
-        <td>
-            <?php 
-            if ($horario['status'] == 'pendente' && !empty($horario['username_cliente'])) {
-                echo '@' . htmlspecialchars($horario['username_cliente']);
-            } else {
-                echo '-';
-            }
-            ?>
-        </td>
-        <td>
-            <?php 
-            if ($horario['status'] == 'pendente' && isset($horario['valor_reserva'])) {
-                // Exibir o valor total já somado
-                echo 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.');
-            } else {
-                echo '-';
-            }
-            ?>
-        </td>
+        <td><?php echo !empty($horario['username_cliente']) ? '@' . htmlspecialchars($horario['username_cliente']) : '-'; ?></td>
+        <td><?php echo isset($horario['valor_reserva']) ? 'R$ ' . number_format($horario['valor_reserva'], 2, ',', '.') : '-'; ?></td>
         <td>
             <?php if ($horario['status'] == 'disponível'): ?>
                 <form action="../../controllers/OwnerController.php?action=reservar" method="POST">

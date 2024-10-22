@@ -1,10 +1,18 @@
+<?php
+// Recuperar a data passada pela URL, ou usar a data atual como padrão
+$dataHoje = isset($_GET['data']) ? $_GET['data'] : date('Y-m-d');
+
+// Converter a data do formato yyyy-mm-dd para dd/mm/yyyy
+$dataFormatada = date('d/m/Y', strtotime($dataHoje));
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservas para <?php echo isset($dataFormatada) ? htmlspecialchars($dataFormatada) : 'hoje'; ?> | © 2024 Arena Rental, Inc.</title>
+  <title>Reservas para <?php echo $dataFormatada ?> | © 2024 Arena Rental, Inc.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -34,14 +42,6 @@
     }
 </script>
 </head>
-
-<?php
-// Recuperar a data passada pela URL, ou usar a data atual como padrão
-$dataHoje = isset($_GET['data']) ? $_GET['data'] : date('Y-m-d');
-
-// Converter a data do formato yyyy-mm-dd para dd/mm/yyyy
-$dataFormatada = date('d/m/Y', strtotime($dataHoje));
-?>
 <body>
 
 <?php include '../layouts/header.quadra.php'; ?>
