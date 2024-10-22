@@ -61,10 +61,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     if ($action === 'reservarQuadra') {
         if (!$client) {
-            echo "<script type='text/javascript'>
-                alert('Você precisa estar logado para fazer uma reserva.');
-                window.location.href='../views/auth/login.php';
-            </script>";
+            $quadraId = $_POST['id_quadra'];
+            $_SESSION['erro'] = "Você precisa estar logado para fazer uma reserva.";
+            header("Location: ../views/home/quadra_detalhes.php?id=" . $quadraId);
             exit();
         }
     
@@ -83,10 +82,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     if ($action === 'cancelarReserva') {
         if (!$client) {
-            echo "<script type='text/javascript'>
-                alert('Você precisa estar logado para cancelar uma reserva.');
-                window.location.href='../views/auth/login.php';
-            </script>";
+            $quadraId = $_POST['id_quadra'];
+            $_SESSION['erro'] = "Você precisa estar logado para fazer uma reserva.";
+            header("Location: ../views/home/quadra_detalhes.php?id=" . $quadraId);
             exit();
         }
     

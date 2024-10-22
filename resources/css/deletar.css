@@ -80,6 +80,44 @@ body.dark-mode #Continuar:hover{
     background-color: black;
     font-weight: 600;
 }
+.swal-wide {
+    width: 500px !important;
+    padding: 25px;
+    font-family: 'Inter', sans-serif;
+}
+
+.swal-title {
+    font-size: 24px !important;
+    color: #333;
+    font-weight: 600;
+}
+
+.swal-text {
+    font-size: 16px;
+    color: #666;
+}
+
+.swal-text ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.swal-text li {
+    margin: 8px 0;
+}
+
+.swal-confirm {
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+}
+
+.swal-cancel {
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+}
+
 @media (max-width: 1000px){
   }
 
