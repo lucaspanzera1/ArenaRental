@@ -16,10 +16,10 @@
 
   <?php include '../layouts/header.php'; ?>
   <?php include '../layouts/verification.php'; ?>
+  </div>
   <?php 
          if ($owner){ ?>
   <section id="SecInfo">
-  <?php include '../layouts/mensagem.php'; ?>
   <div>
   <div id="Info">
       <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> </h1>
@@ -122,8 +122,11 @@ if (!empty($quadras)) {
     }
     </script>
   </div>
+
+  
   <div>
   <h2>Confirmar reservas</h2>
+  <?php include '../layouts/mensagem.php'; ?>
   <div class="reservas-pendentes">
     <?php
     $reservasPendentes = $owner->getReservasPendentes();
@@ -155,6 +158,7 @@ if (!empty($quadras)) {
                         <td>
                         <form method="POST" action="../../controllers/OwnerController.php?action=cancelarReserva"">
                         <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
+                        <?php echo $reserva['reserva_id']; ?>
                         <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
                         </form>
                         </td>
@@ -169,7 +173,6 @@ if (!empty($quadras)) {
     ?>
 </div>
 
-  </section>''
-  <script src="../java/dark.js"></script>
+  </section>
 </body>
 </html>

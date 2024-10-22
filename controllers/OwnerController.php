@@ -141,7 +141,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../views/owner/reservas.php?id=" . $quadra_id . "&data=" .$data);
             exit();
         }
+        if ($action === 'cancelarReserva') {
+            $clientData = $_SESSION['client'];
+            $owner = Owner::getOwnerById($clientData['id']);
+
+            $reservaId = $_POST['reserva_id'];
         
+            $mensagem = $owner->cancelarReserva($reservaId);
+        
+            $_SESSION['mensagem'] = $mensagem;
+        
+            header("Location: ../views/owner/gerenciador.php");
+            exit();
+        }
+
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
         $clientData = $_SESSION['client'];
         $quadraId = $_POST['quadra_id'];

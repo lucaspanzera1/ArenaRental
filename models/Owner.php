@@ -407,5 +407,92 @@ public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horar
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } 
+        public function cancelarReserva($reservaId)
+{
+    $pdo = Conexao::getInstance();
+
+    try {
+        $pdo->beginTransaction();
+
+        // Obtém os detalhes da reserva para buscar o horário e a quadra
+        $stmt = $pdo->prepare("SELECT quadra_id, data, horario_inicio, horario_fim FROM reservas WHERE id = :reserva_id");
+        $stmt->execute([':reserva_id' => $reservaId]);
+        $reserva = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$reserva) {
+            throw new Exception("Reserva não encontrada.");
+        }
+
+        $quadraId = $reserva['quadra_id'];
+        $dataReserva = $reserva['data'];
+        $horarioInicio = $reserva['horario_inicio'];
+        $horarioFim = $reserva['horario_fim'];
+
+        // Exclui a reserva
+        $stmt = $pdo->prepare("DELETE FROM reservas WHERE id = :reserva_id");
+        $stmt->execute([':reserva_id' => $reservaId]);
+
+        // Atualiza os horários disponíveis
+        $stmt = $pdo->prepare("SELECT * FROM horarios_disponiveis 
+                               WHERE quadra_id = :quadra_id 
+                               AND data = :data 
+                               AND (
+                                   (horario_inicio <= :horario_fim AND horario_fim >= :horario_inicio)
+                               )");
+        $stmt->execute([
+            ':quadra_id' => $quadraId,
+            ':data' => $dataReserva,
+            ':horario_inicio' => $horarioInicio,
+            ':horario_fim' => $horarioFim
+        ]);
+
+        $horariosDisponiveis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($horariosDisponiveis as $horario) {
+            $inicioDisponivel = strtotime($horario['horario_inicio']);
+            $fimDisponivel = strtotime($horario['horario_fim']);
+            $inicioReserva = strtotime($horarioInicio);
+            $fimReserva = strtotime($horarioFim);
+
+            // Atualiza o status para 'disponível'
+            if ($inicioReserva <= $inicioDisponivel && $fimReserva >= $fimDisponivel) {
+                $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                       SET status = 'disponível' 
+                                       WHERE id = :horario_id");
+                $stmt->execute([':horario_id' => $horario['id']]);
+            } else {
+                if ($inicioReserva > $inicioDisponivel) {
+                    // Atualiza o horário de fim do horário disponível
+                    $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                           SET horario_fim = :novo_fim 
+                                           WHERE id = :horario_id");
+                    $stmt->execute([
+                        ':novo_fim' => date('H:i:s', $inicioReserva),
+                        ':horario_id' => $horario['id']
+                    ]);
+                }
+
+                if ($fimReserva < $fimDisponivel) {
+                    // Insere um novo horário disponível após o fim da reserva
+                    $stmt = $pdo->prepare("INSERT INTO horarios_disponiveis 
+                                           (quadra_id, data, horario_inicio, horario_fim, status) 
+                                           VALUES (:quadra_id, :data, :novo_inicio, :horario_fim, 'disponível')");
+                    $stmt->execute([
+                        ':quadra_id' => $quadraId,
+                        ':data' => $dataReserva,
+                        ':novo_inicio' => date('H:i:s', $fimReserva),
+                        ':horario_fim' => $horario['horario_fim']
+                    ]);
+                }
+            }
+        }
+
+        $pdo->commit();
+        return "Reserva cancelada com sucesso!";
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        return "Erro ao cancelar a reserva: " . $e->getMessage();
+    }
+}
     }
     
