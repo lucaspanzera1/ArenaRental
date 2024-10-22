@@ -164,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             $_SESSION['mensagem'] = $mensagem;
             
-            header("Location: ../views/owner/gerenciador.php");
+            
             exit();
         }
 
