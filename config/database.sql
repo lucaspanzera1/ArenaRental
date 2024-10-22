@@ -35,6 +35,10 @@ CREATE TABLE proprietario (
     regiao VARCHAR(255) NOT NULL,
     descricao TEXT,
     recursos TEXT,
+    imagem1 VARCHAR(220) NOT NULL,
+    imagem2 VARCHAR(220) NOT NULL,
+    imagem3 VARCHAR(220) NOT NULL,
+    imagem4 VARCHAR(220) NOT NULL,
     FOREIGN KEY (id) REFERENCES Cliente(id)
 );
 
@@ -57,7 +61,7 @@ CREATE TABLE horarios_disponiveis (
     dia_da_semana VARCHAR(100) NOT NULL,
     horario_inicio TIME,
     horario_fim TIME,
-	status ENUM('disponível', 'reservado', 'intervalo') DEFAULT 'disponível',
+	status ENUM('disponível', 'reservado', 'pendente','intervalo') DEFAULT 'disponível',
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)
 );
 CREATE TABLE reservas (

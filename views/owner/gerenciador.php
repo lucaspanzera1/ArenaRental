@@ -19,7 +19,8 @@
   <?php 
          if ($owner){ ?>
   <section id="SecInfo">
-    <div id="Info">
+  <div>
+  <div id="Info">
       <h1><?php echo "" . htmlspecialchars($owner->getNomeEspaco()) ?> </h1>
       <h2><?php echo "" . htmlspecialchars($owner->getLocalizacao()) . ", " .  htmlspecialchars($owner->getCep());  ?>
       </h2>
@@ -48,12 +49,8 @@ if (!empty($quadras)) {
       <?php }
 } else { ?>
       <p>Não há quadras cadastradas.</p>
-      <?php } ?>
+      <?php } } ?>
     </section>
-
-
-
-
 
 
     <script>
@@ -123,11 +120,56 @@ if (!empty($quadras)) {
       document.getElementById("recursos").innerHTML = "Nenhum recurso disponível";
     }
     </script>
-  </section>
+  </div>
+  <div>
+  <h2>Confirmar reservas</h2>
+  <div class="reservas-pendentes">
+    <?php
+    $reservasPendentes = $owner->getReservasPendentes();
+    if (!empty($reservasPendentes)) {
+    ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Quadra</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($reservasPendentes as $reserva): 
+                    $data = date('d/m/Y', strtotime($reserva['data']));
+                    $inicio = date('H:i', strtotime($reserva['horario_inicio']));
+                    $fim = date('H:i', strtotime($reserva['horario_fim']));
+                ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($reserva['nome_quadra']); ?></td>
+                        <td><?php echo $data; ?></td>
+                        <td><?php echo $inicio . ' às ' . $fim; ?></td>
+                        <td><?php echo htmlspecialchars($reserva['nome_cliente']); ?></td>
+                        <td>R$ <?php echo number_format($reserva['valor'], 2, ',', '.'); ?></td>
+                        <td>
+                            <form action="confirmar_reserva.php" method="POST" style="display: inline;">
+                                <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
+                                <button type="submit" name="action" value="confirmar" class="btn-confirmar">Confirmar</button>
+                                <button type="submit" name="action" value="cancelar" class="btn-cancelar">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php
+    } else {
+        echo "<p>Não há reservas pendentes no momento.</p>";
+    }
+    ?>
+</div>
 
-
-  <?php } ?>
+  </section>''
   <script src="../java/dark.js"></script>
 </body>
-
 </html>

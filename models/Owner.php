@@ -380,4 +380,32 @@ public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horar
             return "Erro ao realizar a reserva: " . $e->getMessage();
         }
     }
-}
+    public function getReservasPendentes() {
+        $pdo = Conexao::getInstance();
+
+        $stmt = $pdo->prepare("
+                SELECT 
+                    r.id as reserva_id,
+                    r.data,
+                    r.horario_inicio,
+                    r.horario_fim,
+                    r.valor,
+                    q.nome as nome_quadra,
+                    c.nome as nome_cliente,
+                    c.email as email_cliente,
+                    c.telefone as telefone_cliente
+                FROM reservas r
+                INNER JOIN quadra q ON r.quadra_id = q.id
+                INNER JOIN cliente c ON r.cliente_id = c.id
+                WHERE q.proprietario_id = :proprietario_id 
+                AND r.status = 'pendente'
+                ORDER BY r.data ASC, r.horario_inicio ASC
+            ");
+            
+            $stmt->bindValue(':proprietario_id', $this->id);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } 
+    }
+    

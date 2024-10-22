@@ -10,13 +10,19 @@ body.dark-mode {
 header{
     background-color: #FFFFFF;
 }
+#SecInfo{
+    display: grid;
+    grid-template-columns: 40% 50%;
+}
+#Info{
+    line-height: 0.6;
+}
 #Info h1{
     font-size: 62px;
 }
 #Info h2{
     font-size: 40px;
     font-weight: 400;
-    margin-top: -2%;
 }
 #SecInfo{
     padding-top: 150px;
@@ -59,6 +65,7 @@ a{
     border-radius: 15px;
     background-color: white;
     transition: 0.6s;
+    line-height: 0.6;
 }
 body.dark-mode #quadra-item{
     border: 1px solid white;
@@ -77,7 +84,6 @@ body.dark-mode #quadra-item{
 #quadra-item h2{
     font-size: 30px;
     font-weight: 300;
-    margin-top: -5%;
     margin-left: 5%;
 }
 p{
@@ -91,6 +97,17 @@ a{
 }
 body.dark-mode a{
     color: white;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 @media (max-height: 800px){
     body{
