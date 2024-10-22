@@ -47,8 +47,10 @@ form {
     background-color: #45a049;
 }
 
-.reservado {
-    background-color: orange;
-    color: white;
-    font-weight: 500;
+tr.pendente {
+    background-color: #ffdab9;
+}
+
+tr.reservado {
+    background-color: #dff0d8;
 }

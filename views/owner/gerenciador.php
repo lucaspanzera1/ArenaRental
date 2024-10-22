@@ -156,12 +156,17 @@ if (!empty($quadras)) {
                         <td><?php echo htmlspecialchars($reserva['nome_cliente']); ?></td>
                         <td>R$ <?php echo number_format($reserva['valor'], 2, ',', '.'); ?></td>
                         <td>
-                        <form method="POST" action="../../controllers/OwnerController.php?action=cancelarReserva"">
-                        <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
-                        <?php echo $reserva['reserva_id']; ?>
-                        <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
-                        </form>
-                        </td>
+                        <form method="POST" action="../../controllers/OwnerController.php?action=confirmarReserva" style="display: inline-block;">
+        <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
+        <button type="submit" class="btn btn-success">Confirmar</button>
+    </form>
+
+    <form method="POST" action="../../controllers/OwnerController.php?action=cancelarReserva" style="display: inline-block;">
+        <input type="hidden" name="reserva_id" value="<?php echo $reserva['reserva_id']; ?>">
+        <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
+    </form>
+    
+</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

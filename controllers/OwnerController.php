@@ -154,6 +154,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../views/owner/gerenciador.php");
             exit();
         }
+        if ($action === 'confirmarReserva') {
+            $clientData = $_SESSION['client'];
+            $owner = Owner::getOwnerById($clientData['id']);
+            
+            $reservaId = $_POST['reserva_id'];
+            
+            $mensagem = $owner->confirmarReserva($reservaId);
+            
+            $_SESSION['mensagem'] = $mensagem;
+            
+            header("Location: ../views/owner/gerenciador.php");
+            exit();
+        }
 
     if ($action === 'UpdateFotoQuadra' && isset($_SESSION['client'])) {
         $clientData = $_SESSION['client'];

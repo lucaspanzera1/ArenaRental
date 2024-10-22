@@ -109,6 +109,10 @@ th, td {
     border: 1px solid #ddd;
     text-align: left;
 }
+
+.quadra-link{
+text-decoration: none;
+}
 @media (max-height: 800px){
     body{
 background-position:  40% 23%;
