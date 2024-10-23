@@ -8,9 +8,8 @@ select * from proprietario;
 select * from horarios_disponiveis;
 select * from horarios_disponiveis where status = "reservado";
 select * from reservas;
+select * from  notificacoes;
 
-
--- Tabela Cliente
 CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL,
@@ -24,8 +23,6 @@ CREATE TABLE cliente (
     username VARCHAR(50) NOT NULL,
     imagem_perfil VARCHAR(220) NOT NULL
 );
-
--- Tabela Proprietario (herda de Cliente)
 CREATE TABLE proprietario (
     id INT PRIMARY KEY,
     nome_espaco VARCHAR(255) NOT NULL,
@@ -41,8 +38,6 @@ CREATE TABLE proprietario (
     imagem4 VARCHAR(220) NOT NULL,
     FOREIGN KEY (id) REFERENCES Cliente(id)
 );
-
-
 CREATE TABLE quadra (
     id INT PRIMARY KEY AUTO_INCREMENT,
     proprietario_id INT,
@@ -75,4 +70,17 @@ CREATE TABLE reservas (
     status ENUM('pendente', 'confirmada', 'cancelada') DEFAULT 'pendente',
     FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (quadra_id) REFERENCES quadra(id)
+);
+CREATE TABLE notificacoes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    destinatario_id INT NOT NULL,
+    remetente_id INT NOT NULL,
+    tipo ENUM('nova_reserva', 'confirmacao_reserva', 'cancelamento_reserva') NOT NULL,
+    mensagem TEXT NOT NULL,
+    reserva_id INT,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lida BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (destinatario_id) REFERENCES cliente(id),
+    FOREIGN KEY (remetente_id) REFERENCES cliente(id),
+    FOREIGN KEY (reserva_id) REFERENCES reservas(id)
 );

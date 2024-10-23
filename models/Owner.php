@@ -411,63 +411,71 @@ public static function reservarQuadra($quadra_id, $data, $horario_inicio, $horar
         } 
 
         public function confirmarReserva($reservaId)
-{
-    $pdo = Conexao::getInstance();
-
-    try {
-        $pdo->beginTransaction();
-
-        // Obtém os detalhes da reserva
-        $stmt = $pdo->prepare("SELECT r.*, c.nome as cliente_nome 
-                              FROM reservas r 
-                              JOIN cliente c ON r.cliente_id = c.id 
-                              WHERE r.id = :reserva_id");
-        $stmt->execute([':reserva_id' => $reservaId]);
-        $reserva = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$reserva) {
-            throw new Exception("Reserva não encontrada.");
+        {
+            $pdo = Conexao::getInstance();
+        
+            try {
+                $pdo->beginTransaction();
+        
+                // Obtém os detalhes da reserva, incluindo o nome da quadra e do espaço
+                $stmt = $pdo->prepare("
+                    SELECT r.*, c.nome as cliente_nome, q.nome as quadra_nome, p.nome_espaco 
+                    FROM reservas r 
+                    JOIN cliente c ON r.cliente_id = c.id 
+                    JOIN quadra q ON r.quadra_id = q.id
+                    JOIN proprietario p ON q.proprietario_id = p.id
+                    WHERE r.id = :reserva_id");
+                $stmt->execute([':reserva_id' => $reservaId]);
+                $reserva = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+                if (!$reserva) {
+                    throw new Exception("Reserva não encontrada.");
+                }
+        
+                // Atualiza o status da reserva para 'confirmada'
+                $stmt = $pdo->prepare("UPDATE reservas SET status = 'confirmada' WHERE id = :reserva_id");
+                $stmt->execute([':reserva_id' => $reservaId]);
+        
+                // Atualiza o status na tabela horarios_disponiveis
+                $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
+                                     SET status = 'reservado' 
+                                     WHERE quadra_id = :quadra_id 
+                                     AND data = :data 
+                                     AND horario_inicio = :horario_inicio 
+                                     AND horario_fim = :horario_fim");
+        
+                $stmt->execute([
+                    ':quadra_id' => $reserva['quadra_id'],
+                    ':data' => $reserva['data'],
+                    ':horario_inicio' => $reserva['horario_inicio'],
+                    ':horario_fim' => $reserva['horario_fim']
+                ]);
+        
+                // Criar notificação para o cliente com o nome da quadra e do espaço
+                $notification = new Notification();
+                $mensagem = "Sua reserva para o dia " . date('d/m/Y', strtotime($reserva['data'])) . 
+                           " às " . date('H:i', strtotime($reserva['horario_inicio'])) . 
+                           " até " . date('H:i', strtotime($reserva['horario_fim'])) . 
+                           " em " . $reserva['nome_espaco'] . 
+                           " " . $reserva['quadra_nome'] . 
+                           " foi confirmada!";
+        
+                $notification->criarNotificacao(
+                    $reserva['cliente_id'],  // destinatário (cliente)
+                    $this->id,               // remetente (proprietário)
+                    'confirmacao_reserva',
+                    $mensagem,
+                    $reservaId
+                );
+        
+                $pdo->commit();
+                return "Reserva confirmada com sucesso!";
+            } catch (Exception $e) {
+                $pdo->rollBack();
+                return "Erro ao confirmar a reserva: " . $e->getMessage();
+            }
         }
-
-        $stmt = $pdo->prepare("UPDATE reservas SET status = 'confirmada' WHERE id = :reserva_id");
-        $stmt->execute([':reserva_id' => $reservaId]);
-
-        // Atualiza o status na tabela horarios_disponiveis
-        $stmt = $pdo->prepare("UPDATE horarios_disponiveis 
-                             SET status = 'reservado' 
-                             WHERE quadra_id = :quadra_id 
-                             AND data = :data 
-                             AND horario_inicio = :horario_inicio 
-                             AND horario_fim = :horario_fim");
         
-        $stmt->execute([
-            ':quadra_id' => $reserva['quadra_id'],
-            ':data' => $reserva['data'],
-            ':horario_inicio' => $reserva['horario_inicio'],
-            ':horario_fim' => $reserva['horario_fim']
-        ]);
-        
-        // Criar notificação para o cliente
-        $notification = new Notification();
-        $mensagem = "Sua reserva para o dia " . date('d/m/Y', strtotime($reserva['data'])) . 
-                   " às " . date('H:i', strtotime($reserva['horario_inicio'])) . 
-                   " foi confirmada!";
-                   
-        $notification->criarNotificacao(
-            $reserva['cliente_id'],  // destinatário (cliente)
-            $this->id,               // remetente (proprietário)
-            'confirmacao_reserva',
-            $mensagem,
-            $reservaId
-        );
-
-        $pdo->commit();
-        return "Reserva confirmada com sucesso!";
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        return "Erro ao confirmar a reserva: " . $e->getMessage();
-    }
-}
 
 public function cancelarReserva($reservaId)
 {
@@ -477,10 +485,12 @@ public function cancelarReserva($reservaId)
         $pdo->beginTransaction();
 
         // Obtém os detalhes da reserva
-        $stmt = $pdo->prepare("SELECT r.*, c.nome as cliente_nome 
-                              FROM reservas r 
-                              JOIN cliente c ON r.cliente_id = c.id 
-                              WHERE r.id = :reserva_id");
+        $stmt = $pdo->prepare("SELECT r.*, c.nome as cliente_nome, q.nome as quadra_nome, p.nome_espaco 
+                               FROM reservas r 
+                               JOIN cliente c ON r.cliente_id = c.id 
+                               JOIN quadra q ON r.quadra_id = q.id 
+                               JOIN proprietario p ON q.proprietario_id = p.id 
+                               WHERE r.id = :reserva_id");
         $stmt->execute([':reserva_id' => $reservaId]);
         $reserva = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -492,6 +502,8 @@ public function cancelarReserva($reservaId)
         $dataReserva = $reserva['data'];
         $horarioInicio = $reserva['horario_inicio'];
         $horarioFim = $reserva['horario_fim'];
+        $nomeQuadra = $reserva['quadra_nome'];
+        $nomeEspaco = $reserva['nome_espaco'];
 
         // Exclui a reserva
         $stmt = $pdo->prepare("DELETE FROM reservas WHERE id = :reserva_id");
@@ -552,12 +564,13 @@ public function cancelarReserva($reservaId)
             }
         }
 
-
         // Criar notificação para o cliente
         $notification = new Notification();
-        $mensagem = "Sua reserva para o dia " . date('d/m/Y', strtotime($reserva['data'])) . 
-                   " às " . date('H:i', strtotime($reserva['horario_inicio'])) . 
-                   " foi cancelada.";
+        $mensagem = "Sua reserva em " . $nomeEspaco . " " . $nomeQuadra . " no dia " . 
+                    date('d/m/Y', strtotime($reserva['data'])) . 
+                    " às " . date('H:i', strtotime($reserva['horario_inicio'])) . 
+                    " até " . date('H:i', strtotime($reserva['horario_fim'])) . 
+                    " foi cancelada.";
                    
         $notification->criarNotificacao(
             $reserva['cliente_id'],  // destinatário (cliente)
@@ -574,5 +587,6 @@ public function cancelarReserva($reservaId)
         return "Erro ao cancelar a reserva: " . $e->getMessage();
     }
 }
+
     }
     
