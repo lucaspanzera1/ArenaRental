@@ -48,10 +48,23 @@ if (isset($_SESSION['client'])) {
 
 ?>
 <link rel="stylesheet" href="../../resources/css/header.css?v=<?= time() ?>">
-
+<link rel="stylesheet" href="../../resources/css/notifications.css?v=<?= time() ?>">
+<script src="../../resources/js/notifications.js"></script>
+    <script>
+        console.log('Session ID:', <?php echo json_encode($_SESSION['user_id'] ?? null); ?>);
+    </script>
+    <script>
+        console.log('Header carregado');
+    </script>
 <header>
     <div>
         <a href="../home/index.php"><h2 id="imgH2"></h2></a>
+        <div class="notifications-wrapper">
+            <button class="notifications-toggle">
+                🔔 
+            </button>
+            <?php include 'notifications.php'; ?>
+        </div>
         <h1></h1>
     </div>
 
