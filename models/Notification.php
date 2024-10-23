@@ -39,13 +39,11 @@ class Notification {
             $stmt = $this->conn->prepare($query);
             $stmt->execute([':usuario_id' => $usuario_id]);
             
-            // Adicione este debug para verificar o resultado
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            var_dump($usuario_id); // Verificar o ID do usuário
-            var_dump($result);     // Verificar o resultado da consulta
-            return $result;
+            // Removi os var_dump e mantive apenas o retorno
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo "Erro: " . $e->getMessage(); // Debug do erro
+            // Modificando para não exibir o erro diretamente
+            error_log("Erro ao buscar notificações: " . $e->getMessage());
             return [];
         }
     }

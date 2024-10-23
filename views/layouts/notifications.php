@@ -2,12 +2,9 @@
 require_once '../../models/Notification.php';
 
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['client']['id'])) {
     $notification = new Notification();
-    $notificacoes = $notification->buscarNotificacoesUsuario($_SESSION['user_id']);
-    
-    // Debug para verificar as notificações
-    var_dump($notificacoes);
+    $notificacoes = $notification->buscarNotificacoesUsuario($_SESSION['client']['id']);
 }
 ?>
 
@@ -38,3 +35,22 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.querySelector('.notifications-toggle');
+    const dropdown = document.querySelector('.notifications-dropdown');
+    
+    // Toggle do dropdown
+    toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    });
+    
+    // Fechar ao clicar fora
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+});
+</script>

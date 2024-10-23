@@ -1,3 +1,5 @@
+
+
 class NotificationSystem {
     constructor() {
         this.checkInterval = 30000; // 30 segundos
