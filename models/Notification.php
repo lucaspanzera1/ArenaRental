@@ -47,13 +47,21 @@ class Notification {
             return [];
         }
     }
-
     public function marcarComoLida($notificacao_id) {
         try {
+            // Adicionando log para debug
+            error_log("Executando marcarComoLida para notificação ID: $notificacao_id");
+            
             $query = "UPDATE notificacoes SET lida = TRUE WHERE id = :id";
             $stmt = $this->conn->prepare($query);
-            return $stmt->execute([':id' => $notificacao_id]);
+            $result = $stmt->execute([':id' => $notificacao_id]);
+            
+            // Log do resultado
+            error_log("Resultado da atualização: " . ($result ? 'sucesso' : 'falha'));
+            
+            return $result;
         } catch (PDOException $e) {
+            error_log("Erro no marcarComoLida: " . $e->getMessage());
             return false;
         }
     }

@@ -130,3 +130,15 @@
   .notifications-dropdown::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+  .notification-item.unread {
+    background-color: #f0f7ff;
+}
+
+.notification-item.read {
+    background-color: #ffffff;
+}
+
+.notification-count {
+    display: none;
+    /* Adicione mais estilos conforme necessário */
+}

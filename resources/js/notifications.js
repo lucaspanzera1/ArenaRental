@@ -1,30 +1,76 @@
-
-
 class NotificationSystem {
     constructor() {
-        this.checkInterval = 30000; // 30 segundos
+        this.checkInterval = 30000;
         this.init();
+        this.bindEvents();
     }
 
     init() {
-        // Checa imediatamente ao iniciar
         this.checkNotifications();
-        // Configura o intervalo de checagem
         setInterval(() => this.checkNotifications(), this.checkInterval);
-        
-        // Para debug
         console.log('Sistema de notificações iniciado');
+    }
+
+    bindEvents() {
+        // Melhorando a captura do evento de clique
+        const notificationsList = document.querySelector('.notifications-list');
+        if (notificationsList) {
+            notificationsList.addEventListener('click', (e) => {
+                const notificationItem = e.target.closest('.notification-item');
+                if (notificationItem) {
+                    const notificationId = notificationItem.dataset.id;
+                    console.log('Clique na notificação:', notificationId);
+                    
+                    if (!notificationItem.classList.contains('read')) {
+                        this.markAsRead(notificationId, notificationItem);
+                    }
+                }
+            });
+        }
+    }
+
+    async markAsRead(notificationId, notificationElement) {
+        try {
+            console.log('Iniciando marcação como lida:', notificationId);
+            
+            const formData = new FormData();
+            formData.append('notification_id', notificationId);
+
+            const response = await fetch('../../api/mark_notification_read.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log('Resposta do servidor:', data);
+
+            if (data.success) {
+                console.log('Notificação marcada como lida com sucesso');
+                
+                // Atualiza visual da notificação
+                notificationElement.classList.remove('unread');
+                notificationElement.classList.add('read');
+
+                // Atualiza contador
+                const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+                this.updateNotificationCount(unreadCount);
+
+                // Força uma verificação das notificações
+                this.checkNotifications();
+            } else {
+                console.error('Erro ao marcar como lida:', data.error || 'Erro desconhecido');
+            }
+        } catch (error) {
+            console.error('Erro ao marcar notificação como lida:', error);
+        }
     }
 
     async checkNotifications() {
         try {
-            console.log('Verificando notificações...'); // Debug
-            const response = await fetch('/api/check_notifications.php');
+            const response = await fetch('../../api/check_notifications.php');
             const data = await response.json();
-            
-            console.log('Resposta recebida:', data); // Debug
-            
-            if (data.notifications && data.notifications.length > 0) {
+
+            if (data.success && data.notifications) {
                 this.updateNotificationsUI(data.notifications);
             }
         } catch (error) {
@@ -36,25 +82,25 @@ class NotificationSystem {
         const container = document.querySelector('.notifications-list');
         if (!container) return;
 
-        container.innerHTML = ''; // Limpa o container
+        if (notifications.length === 0) {
+            container.innerHTML = '<div class="no-notifications">Nenhuma notificação no momento</div>';
+            this.updateNotificationCount(0);
+            return;
+        }
 
-        notifications.forEach(notif => {
-            const notificationHTML = `
-                <div class="notification-item ${notif.lida ? '' : 'unread'}" data-id="${notif.id}">
-                    <div class="notification-content">
-                        ${notif.mensagem}
-                    </div>
-                    <div class="notification-time">
-                        ${this.formatDate(notif.data_criacao)}
-                    </div>
+        container.innerHTML = notifications.map(notif => `
+            <div class="notification-item ${notif.lida ? 'read' : 'unread'}" data-id="${notif.id}">
+                <div class="notification-content">
+                    ${this.escapeHtml(notif.mensagem)}
                 </div>
-            `;
-            container.innerHTML += notificationHTML;
-        });
+                <div class="notification-time">
+                    ${this.formatDate(notif.data_criacao)}
+                </div>
+            </div>
+        `).join('');
 
-        // Atualiza o contador
-        const count = notifications.filter(n => !n.lida).length;
-        this.updateNotificationCount(count);
+        const unreadCount = notifications.filter(n => !n.lida).length;
+        this.updateNotificationCount(unreadCount);
     }
 
     updateNotificationCount(count) {
@@ -67,7 +113,7 @@ class NotificationSystem {
 
     formatDate(dateString) {
         const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR', { 
+        return date.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -75,10 +121,19 @@ class NotificationSystem {
             minute: '2-digit'
         });
     }
+
+    escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 }
 
-// Inicia o sistema de notificações quando a página carregar
+// Inicia o sistema
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM carregado, iniciando sistema de notificações'); // Debug
+    console.log('Iniciando sistema de notificações');
     new NotificationSystem();
 });
