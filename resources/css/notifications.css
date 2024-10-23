@@ -67,8 +67,8 @@ body.dark-mode .notifications-toggle svg path{
 .notification-count {
   background: #ff4444;
   color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
+  width: 20px;
+  height: 20px;
   font-size: 0.8rem;
   min-width: 24px;
   text-align: center;
@@ -84,6 +84,7 @@ grid-template-columns: auto;
 }
 .notifications-list div{
   display: flex;
+  text-align: justify;
 }
 
 /* Item individual da notificação */
@@ -216,11 +217,6 @@ grid-template-columns: auto;
   }
 }
 
-/* Efeito de foco para acessibilidade */
-.notifications-toggle:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
 
 /* Estilo para notificações importantes */
 .notification-item.important {
@@ -238,4 +234,168 @@ grid-template-columns: auto;
   gap: 8px;
   width: 100%;
   box-sizing: border-box; /* Garante que o padding não adicione largura extra */
+}
+
+/* Container do sino de notificações */
+.notifications-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo do botão do sino */
+.notifications-toggle {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+}
+
+/* Apenas o SVG do sino terá a animação de rotação */
+.notifications-toggle svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+.notifications-toggle:hover svg {
+  transform: rotate(8deg) scale(1.1);
+}
+
+.notifications-toggle svg path {
+  fill: #2D3748;
+  transition: fill 0.3s ease;
+}
+
+/* Contador de notificações */
+.notification-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #EF4444;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  height: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0 6px;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
+  animation: pulseNotification 2s infinite;
+}
+
+/* Dropdown das notificações - sem rotação */
+.notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 312px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 0;
+  transform: none !important; /* Garante que o dropdown nunca rotacione */
+}
+
+.notifications-dropdown.active {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+/* Animação do contador */
+@keyframes pulseNotification {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animação de entrada do dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modo escuro */
+body.dark-mode .notifications-toggle svg path {
+  fill: #E2E8F0;
+}
+
+/* Efeito de clique apenas no sino */
+.notifications-toggle:active svg {
+  transform: scale(0.95);
+}
+
+/* Efeito de foco para acessibilidade */
+.notifications-toggle:focus {
+  outline: none;
+  border-radius: 50%;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+  .notifications-toggle {
+    padding: 6px;
+  }
+  
+  .notifications-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .notification-count {
+    height: 18px;
+    min-width: 18px;
+    font-size: 11px;
+  }
+}
+
+/* Mantendo os estilos originais da lista de notificações */
+.notifications-list {
+  display: grid;
+  grid-template-columns: auto;
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.notification-item {
+  padding: 16px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+  transform: none; /* Garante que o item não rotacione no hover */
 }

@@ -11,10 +11,8 @@ if (isset($_SESSION['client']['id'])) {
 <div id="notifications-container" class="notifications-dropdown">
     <div class="notifications-header">
         <span>Notificações</span>
-        <?php if (!empty($notificacoes)): ?>
-            <span class="notification-count"><?= count($notificacoes) ?></span>
-        <?php endif; ?>
     </div>
+    <a href="../client/reservas.php ">
     <div class="notifications-list">
         <?php if (empty($notificacoes)): ?>
             <div class="no-notifications">
@@ -34,6 +32,7 @@ if (isset($_SESSION['client']['id'])) {
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    </a>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
