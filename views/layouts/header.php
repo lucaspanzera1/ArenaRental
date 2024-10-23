@@ -59,16 +59,17 @@ if (isset($_SESSION['client'])) {
 <header>
     <div>
         <a href="../home/index.php"><h2 id="imgH2"></h2></a>
+        <h1></h1>
+    </div>
+
+<div>
+<?php if (isset($_SESSION['client'])): ?>
         <div class="notifications-wrapper">
             <button class="notifications-toggle">
                 🔔 
             </button>
             <?php include 'notifications.php'; ?>
         </div>
-        <h1></h1>
-    </div>
-
-    <?php if (isset($_SESSION['client'])): ?>
         <div class="dropdown">
     <div id="ImgPerfil" class="mainmenubtn">
         <img src="<?php echo htmlspecialchars($client->getProfilePicture()); ?>" alt="AAAA">
@@ -91,6 +92,7 @@ if (isset($_SESSION['client'])) {
 
 
     <?php else: ?>
+</div>
     <div class="dropdown">
         <button class="mainmenubtn"></button>
         <div class="dropdown-child">

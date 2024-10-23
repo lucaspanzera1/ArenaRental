@@ -1,6 +1,6 @@
 class NotificationSystem {
     constructor() {
-        this.checkInterval = 30000;
+        this.checkInterval = 10000;
         this.init();
         this.bindEvents();
     }
